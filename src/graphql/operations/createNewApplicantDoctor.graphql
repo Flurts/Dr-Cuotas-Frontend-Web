@@ -1,0 +1,15 @@
+mutation CreateNewApplicantDoctor(
+  $specialty: String!
+  $registrationNumber: String!
+  $phone: String!
+  $email: String!
+  $name: String!
+) {
+  createNewApplicantDoctor(
+    specialty: $specialty
+    registration_number: $registrationNumber
+    phone: $phone
+    email: $email
+    name: $name
+  )
+}

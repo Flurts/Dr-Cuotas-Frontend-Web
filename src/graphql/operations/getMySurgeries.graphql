@@ -1,0 +1,10 @@
+query GetMySurgeries {
+  getMySurgeries {
+    id
+    status
+    name
+    type
+    category
+    amount
+  }
+}

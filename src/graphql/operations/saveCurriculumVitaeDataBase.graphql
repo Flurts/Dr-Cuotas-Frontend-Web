@@ -1,0 +1,11 @@
+mutation saveCurriculumVitaeDataBase(
+  $curriculumLocation: String!
+  $curriculumKey: String!
+  $fileType: String!
+) {
+  saveCurriculumVitaeDataBase(
+    curriculumLocation: $curriculumLocation
+    curriculumKey: $curriculumKey
+    file_type: $fileType
+  )
+}

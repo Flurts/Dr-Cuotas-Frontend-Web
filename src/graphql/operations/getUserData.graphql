@@ -1,0 +1,28 @@
+query GetUserData {
+  getUserData {
+    user {
+      id
+      email
+      phone_number
+      first_name
+      last_name
+      birth_date
+      identification_document
+      gender
+      profile_picture
+      role
+      status
+      last_access
+      created_at
+      updated_at
+      deleted_at
+      doctor {
+        id
+      }
+      social_media {
+        link
+        type
+      }
+    }
+  }
+}

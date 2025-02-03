@@ -1,0 +1,3 @@
+mutation VerifyAdjudicated($adjudicatedId: String!) {
+  verifyAdjudicated(adjudicatedId: $adjudicatedId)
+}

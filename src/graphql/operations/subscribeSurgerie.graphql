@@ -1,0 +1,19 @@
+mutation SubscribeSurgerie(
+  $surgerieId: String!
+  $phone: String!
+  $email: String!
+  $documentIdentification: String!
+  $lastName: String!
+  $firstName: String!
+  $coments: String
+) {
+  subscribeSurgerie(
+    surgerieId: $surgerieId
+    phone: $phone
+    email: $email
+    document_identification: $documentIdentification
+    last_name: $lastName
+    first_name: $firstName
+    coments: $coments
+  )
+}

@@ -1,0 +1,9 @@
+mutation SaveImageUserS3(
+  $profileImageKey: String!
+  $profileImageLocation: String!
+) {
+  saveImageUserS3(
+    profileImageKey: $profileImageKey
+    profileImageLocation: $profileImageLocation
+  )
+}

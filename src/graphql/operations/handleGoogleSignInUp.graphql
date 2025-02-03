@@ -1,0 +1,3 @@
+mutation HandleGoogleSignInUp($token: String!) {
+  handleGoogleSignInUp(token: $token)
+}

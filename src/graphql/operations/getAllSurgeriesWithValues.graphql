@@ -1,0 +1,15 @@
+query GetAllSurgeriesWithValues($offset: Float, $limit: Float) {
+  getAllSurgeriesWithValues(offset: $offset, limit: $limit) {
+    name
+    description
+    rating
+    type
+    id
+    category
+    amount
+    status
+    file_banner {
+      file_link
+    }
+  }
+}

@@ -1,0 +1,25 @@
+query getDoctor($doctorId: String!) {
+  getDoctor(doctorId: $doctorId) {
+    status
+    doctor {
+      profession
+      description
+      status
+      created_at
+      updated_at
+      user {
+        first_name
+        last_name
+        profile_picture
+        social_media {
+          link
+          status
+          type
+        }
+      }
+    }
+    curriculum {
+      file_link
+    }
+  }
+}

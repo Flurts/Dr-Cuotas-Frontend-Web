@@ -1,0 +1,26 @@
+query GetMyAdjudicated {
+  getMyAdjudicated {
+    id
+    quotas_number
+    quotas_paid
+    quotas_paid
+    total_price
+    start_date_payment
+    end_date_payment
+    comments
+    status
+    doctor {
+      id
+      user {
+        first_name
+      }
+    }
+    surgery {
+      name
+      id
+    }
+    adjudicated_status
+    created_at
+    updated_at
+  }
+}

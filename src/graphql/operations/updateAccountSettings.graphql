@@ -1,0 +1,15 @@
+mutation UpdateAccountSettings(
+  $birthDate: String!
+  $phone: String!
+  $email: String!
+  $lastName: String!
+  $firstName: String!
+) {
+  updateAccountSettings(
+    birth_date: $birthDate
+    phone: $phone
+    email: $email
+    last_name: $lastName
+    first_name: $firstName
+  )
+}

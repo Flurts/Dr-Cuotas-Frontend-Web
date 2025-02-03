@@ -1,0 +1,9 @@
+mutation PaymentUpdateAdjudicated(
+  $quotasNumber: Float!
+  $adjudicatedId: String!
+) {
+  paymentUpdateAdjudicated(
+    quotas_number: $quotasNumber
+    adjudicatedId: $adjudicatedId
+  )
+}

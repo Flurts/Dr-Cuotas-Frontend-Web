@@ -1,0 +1,6 @@
+mutation getCvFile($userId: String!) {
+  getCvFile(user_id: $userId) {
+    status
+    cv
+  }
+}

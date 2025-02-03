@@ -1,0 +1,7 @@
+mutation generatePresignedUrlUserImage($fileType: String!) {
+  generatePresignedUrlUserImage(file_type: $fileType) {
+    status
+    key
+    url
+  }
+}

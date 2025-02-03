@@ -1,0 +1,16 @@
+mutation UpdateInfoDoctor(
+  $description: String!
+  $status: String!
+  $profession: String!
+) {
+  updateInfoDoctor(
+    description: $description
+    status: $status
+    profession: $profession
+  ) {
+    profession
+    description
+    status
+    updated_at
+  }
+}

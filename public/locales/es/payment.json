@@ -1,0 +1,65 @@
+{
+    "discountCodeTitle": "Código de descuento",
+    "discountCodeRequired": "Código de descuento requerido",
+    "discountTitle": "Descuentos",
+    "discountCodeTitleInvalid": "Título de código de descuento inválido",
+    "discountCodeDescriptionInvalid": "El código de descuento ingresado no es válido. Por favor, intenta de nuevo.",
+    "userThanksMessage": "{{firstName}} {{lastName}}, gracias por elegir Dr. Cuotas!",
+    "billingCycleConfirm": "Confirma tu ciclo de facturación",
+    "surgeryNameTitle": "Nombre de la cirugía",
+    "surgeryNameValue": "Cirugía de {{surgeryName}}",
+    "surgeryDataTitle": "Datos de la cirugía",
+    "descriptionTitle": "Descripción",
+    "noDescriptionMessage": "No se ha proporcionado una descripción",
+    "surgeryTypeTitle": "Tipo de cirugía",
+    "userCommentsTitle": "Comentarios del usuario",
+    "noCommentsMessage": "No se han proporcionado comentarios",
+    "billingCycleDatesTitle": "Fechas del ciclo de facturación",
+    "billingCycleDatesValue": "Del {{startDate}} al {{endDate}} de cada mes",
+    "billingCycleTitle": "Ciclo de facturación",
+    "billingCycleValue": "Mensual",
+    "billingQuotesNumber": "Cantidad de cuotas",
+    "TotalTitle": "Total",
+    "discountCodeButton": "Aplicar código de descuento",
+    "paymentResumeTitle": "Resumen de la compra",
+    "subtotalTitle": "Subtotal",
+    "totalPaymentTitle": "Total de Compra",
+    "startDatePlan": {
+        "descriptionOne": "Tu plan comienza hoy y se renovará automáticamente",
+        "inputValue": "del {{startDate}} al {{endDate}} de cada mes ",
+        "descriptionTwo": "hasta que se cancele."
+    },
+    "paymentCharge": {
+        "descriptionOne": "Te cobraremos la cantidad de",
+        "inputValue": " {{totalPayment}} ARS (impuestos no incluidos) ",
+        "descriptionTwo": "al mes."
+    },
+    "termsAndConditions": {
+        "descriptionOne": "Al hacer clic en el botón de abajo, aceptas nuestras",
+        "terms": "condiciones del servicio.",
+        "descriptionTwo": "Para garantizar la continuidad del servicio, almacenaremos y actualizaremos tu forma de pago. Obtén más información sobre",
+        "howToCancel": "cómo cancelar tu suscripción",
+        "descriptionThree": "y sobre nuestra",
+        "privacyPolicy": "política de reembolsos."
+    },
+    "confirmPaymentButton": "Confirmar pago",
+    "frecuentQuestions": {
+        "title": "Preguntas frecuentes",
+        "questions": {
+            "questionOne": "¿Qué pasa si no estoy satisfecho con el servicio?",
+            "answerOne": "Si no estás satisfecho con el servicio, puedes cancelar tu suscripción en cualquier momento. No hay cargos por cancelación.",
+            "questionTwo": "¿Puedo cancelar mi suscripción en cualquier momento?",
+            "answerTwo": "Sí, puedes cancelar tu suscripción en cualquier momento. No hay cargos por cancelación.",
+            "questionThree": "¿Cómo puedo cancelar mi suscripción?",
+            "answerThree": "Puedes cancelar tu suscripción en cualquier momento. Para hacerlo, ve a la sección de configuración de tu cuenta y haz clic en el botón de cancelar suscripción.",
+            "questionFour": "¿Qué pasa si no puedo pagar mi suscripción?",
+            "answerFour": "Si no puedes pagar tu suscripción, ponte en contacto con nuestro equipo de soporte para obtener ayuda. Estaremos encantados de ayudarte a encontrar una solución.",
+            "questionFive": "¿Qué pasa si tengo problemas con mi cuenta?",
+            "answerFive": "Si tienes problemas con tu cuenta, ponte en contacto con nuestro equipo de soporte para obtener ayuda. Estaremos encantados de ayudarte a resolver cualquier problema que puedas tener."
+        }
+    },
+    "paymentSuccessTitle": "¡Pago exitoso!",
+    "paymentSuccessDescription": "Tu pago ha sido procesado con éxito. Gracias por elegir Dr. Cuotas. Te hemos enviado un correo electrónico con los detalles de tu compra.",
+    "paymentErrorTitle": "¡Error en el pago!",
+    "paymentErrorDescription": "Ha ocurrido un error al procesar tu pago. Por favor, inténtalo de nuevo más tarde."
+}

@@ -1,0 +1,7 @@
+mutation GeneratePresignedUrlSurgeryImage($fileType: String!) {
+  generatePresignedUrlSurgeryImage(file_type: $fileType) {
+    status
+    url
+    key
+  }
+}

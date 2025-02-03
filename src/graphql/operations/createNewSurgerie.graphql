@@ -1,0 +1,3 @@
+mutation CreateNewSurgerie($surgery: SurgeryInput!) {
+  createNewSurgerie(surgery: $surgery)
+}

@@ -1,0 +1,6 @@
+mutation UpdateUserProfileImage($profileImage: String!) {
+  updateUserProfileImage(profile_image: $profileImage) {
+    status
+    profile_picture
+  }
+}

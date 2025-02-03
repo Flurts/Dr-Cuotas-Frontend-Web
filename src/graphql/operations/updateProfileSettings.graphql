@@ -1,0 +1,11 @@
+mutation UpdateProfileSettings(
+  $socialMedia: [SocialMediaInput!]!
+  $gender: String!
+  $identificationDocument: String!
+) {
+  updateProfileSettings(
+    social_media: $socialMedia
+    gender: $gender
+    identification_document: $identificationDocument
+  )
+}

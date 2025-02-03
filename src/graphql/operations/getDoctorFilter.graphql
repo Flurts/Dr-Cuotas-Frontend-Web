@@ -1,0 +1,15 @@
+query GetDoctorsFilter($offset: Int, $limit: Int) {
+  getDoctorFilter(offset: $offset, limit: $limit) {
+    id
+    profession
+    user {
+      first_name
+      profile_picture
+      social_media {
+        link
+        status
+        type
+      }
+    }
+  }
+}

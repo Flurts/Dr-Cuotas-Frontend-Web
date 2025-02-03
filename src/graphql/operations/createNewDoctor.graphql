@@ -1,0 +1,8 @@
+mutation CreateNewDoctor {
+  createNewDoctor {
+    id
+    description
+    status
+    created_at
+  }
+}

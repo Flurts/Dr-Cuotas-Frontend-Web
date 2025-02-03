@@ -1,0 +1,14 @@
+query GetSurgerieById($getSurgerieByIdId: String!) {
+  getSurgerieById(id: $getSurgerieByIdId) {
+    id
+    name
+    amount
+    status
+    description
+    type
+    category
+    file_banner {
+      file_link
+    }
+  }
+}

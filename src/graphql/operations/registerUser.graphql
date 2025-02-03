@@ -1,0 +1,36 @@
+mutation RegisterUser(
+  $gender: String!
+  $birthDate: String!
+  $password: String!
+  $phoneEmail: String!
+  $lastName: String!
+  $firstName: String!
+) {
+  registerUser(
+    gender: $gender
+    birth_date: $birthDate
+    password: $password
+    phone_email: $phoneEmail
+    last_name: $lastName
+    first_name: $firstName
+  ) {
+    user {
+      id
+      email
+      phone_number
+      first_name
+      last_name
+      birth_date
+      identification_document
+      gender
+      profile_picture
+      role
+      status
+      last_access
+      created_at
+      updated_at
+      deleted_at
+    }
+    token
+  }
+}

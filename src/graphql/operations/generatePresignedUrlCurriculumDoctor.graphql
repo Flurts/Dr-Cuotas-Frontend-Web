@@ -1,0 +1,7 @@
+mutation generatePresignedUrlCurriculumDoctor($fileType: String!) {
+  generatePresignedUrlCurriculumDoctor(file_type: $fileType) {
+    status
+    key
+    url
+  }
+}

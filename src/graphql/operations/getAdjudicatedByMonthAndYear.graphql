@@ -1,0 +1,30 @@
+query GetAdjudicatedByMonthAndYear(
+  $year: Float!
+  $month: Float!
+  $limit: Float
+  $offset: Float
+) {
+  getAdjudicatedByMonthAndYear(
+    year: $year
+    month: $month
+    limit: $limit
+    offset: $offset
+  ) {
+    quotas_number
+    quotas_paid
+    quotas_paid
+    total_price
+    start_date_payment
+    end_date_payment
+    user {
+      first_name
+      last_name
+    }
+    surgery {
+      name
+    }
+    locality {
+      name
+    }
+  }
+}

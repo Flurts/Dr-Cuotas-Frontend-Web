@@ -1,0 +1,25 @@
+query GetAdjudicatedById($adjudicatedId: String!) {
+  getAdjudicatedById(adjudicatedId: $adjudicatedId) {
+    id
+    comments
+    doctor {
+      id
+      user {
+        first_name
+      }
+    }
+    surgery {
+      name
+      type
+      description
+      category
+      amount
+      status
+    }
+    user {
+      first_name
+      id
+      last_name
+    }
+  }
+}

@@ -1,0 +1,13 @@
+query GetAdjudicatedListDoctor {
+  getAdjudicatedListDoctor {
+    id
+    status
+    user {
+      id
+      first_name
+      last_name
+    }
+    total_price
+    adjudicated_status
+  }
+}
