@@ -1,9 +1,7 @@
 'use client';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
-import { Button } from '@/components/ui/button';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 import TitleElements from './TitleElements';
@@ -28,12 +26,12 @@ const OurSpecialties = () => {
   }, [data, error]);
 
   return (
-    <div className="w-full h-screen">
-      <div className="flex flex-col items-center justify-center w-full h-full gap-2 py-16">
+    <div className="w-full h-full  p-20">
+      <div className="flex flex-col items-center justify-center w-full h-full gap-2">
         <TitleElements
-          primaryText="Especialidades"
+          primaryText="Nuestros Servicios"
           secondaryText="Cirugías Disponibles"
-          descriptionText="Entérate de todas aquellas especialidades y cirugías que puedes encontrar en nuestra tienda"
+          descriptionText="Realza tu belleza con nuestras cirugías estéticas. ¡Agenda hoy!"
         />
 
         <div className="flex flex-row gap-6 items-center justify-center w-full mt-12">
@@ -52,21 +50,21 @@ const OurSpecialties = () => {
             ))
           ) : (
             <div className="flex flex-row items-center justify-center w-full h-full gap-2">
-              <span className="text-drcuotasSecondary-text">
+              <span className="text-[#737373] w-full text-[10px] sm:text-base text-center">
                 No hay especialidades disponibles
               </span>
             </div>
           )}
         </div>
 
-        <Link href="/store">
+        {/* <Link href="/store">
           <Button
             variant="outline"
             className="rounded-full border-drcuotasPrimary-bg text-drcuotasPrimary-text mt-10 hover:text-white hover:bg-drcuotasPrimary-bg"
           >
             Ver más
           </Button>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

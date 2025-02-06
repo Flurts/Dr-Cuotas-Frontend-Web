@@ -12,15 +12,31 @@ const TitleElements: React.FC<TitleElementsProps> = ({
   descriptionText,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <span className="font-semibold text-drcuotasPrimary">{primaryText}</span>
-      <span className="font-semibold text-4xl text-drcuotasSecondary-text">
-        {secondaryText}
-      </span>
-      <p className="w-8/12 text-center text-drcuotasTertiary-text text-sm">
-        {descriptionText}
-      </p>
-    </div>
+    <>
+      <div className="w-screen sm:w-full h-40 flex flex-col items-center justify-center">
+        <>
+          <div className="w-full h-auto text-center ">
+            <span className="text-xs sm:text-sm font-bold text-drcuotasPrimary uppercase leading-tight tracking-tight">
+              {primaryText}
+            </span>
+          </div>
+        </>
+        <>
+          <div className="w-full h-auto text-center ">
+            <span className="text-lg sm:text-2xl lg:text-4xl font-extrabold uppercase leading-tight tracking-tight">
+              {secondaryText}
+            </span>
+          </div>
+        </>
+        <>
+          <div className="w-8/12 h-auto text-center flex justify-center">
+            <span className="text-[10px] sm:text-sm  leading-tight tracking-wide text-[#737373] ">
+              {descriptionText}
+            </span>
+          </div>
+        </>
+      </div>
+    </>
   );
 };
 

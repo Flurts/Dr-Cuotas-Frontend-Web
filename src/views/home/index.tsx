@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 
 import CarouselHome from '@/components/common/ViewElements/Corousel';
 import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
-import OurAdjudicated from '@/components/common/ViewElements/OurAdjudicated';
-import OurProfessionals from '@/components/common/ViewElements/OurProfessionals';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import SubscribeComponent from '@/components/common/ViewElements/Subscribe';
@@ -30,14 +28,14 @@ export default function HomeView() {
 
   return (
     <>
-      <CarouselHome />
-      <OurServices />
+      <>
+        <CarouselHome />
+      </>
       <OurSpecialties />
-
       <KnowOurProfessionals />
-      <OurAdjudicated />
-      <OurProfessionals />
-
+      <OurServices />
+      {/* <OurAdjudicated /> */}
+      {/* <OurProfessionals /> */}
       <SubscribeComponent />
     </>
   );

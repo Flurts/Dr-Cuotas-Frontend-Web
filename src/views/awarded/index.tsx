@@ -5,7 +5,9 @@ import OurAdjudicated from '@/components/common/ViewElements/OurAdjudicated';
 const ParentComponent = () => {
   return (
     <>
-      <OurAdjudicated />
+      <div className="w-full h-60 lg:h-screen flex justify-center items-center">
+        <OurAdjudicated />
+      </div>
     </>
   );
 };

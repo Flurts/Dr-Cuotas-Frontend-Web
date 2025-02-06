@@ -5,7 +5,9 @@ import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 export default function StoreView() {
   return (
     <>
-      <OurSpecialties />
+      <div className="w-full h-screen flex justify-center items-center">
+        <OurSpecialties />
+      </div>
     </>
   );
 }

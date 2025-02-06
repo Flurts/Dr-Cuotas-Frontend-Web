@@ -1,13 +1,4 @@
-import Image from 'next/image';
 import React from 'react';
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 
 const CarouselHome = () => {
   const mediaItems = [
@@ -25,9 +16,25 @@ const CarouselHome = () => {
   ];
 
   return (
-    <div className="w-full h-screen flex justify-center items-center ">
-      <Carousel className="w-auto  ">
-        <CarouselContent className="w-[180vh] h-full flex justify-center items-center">
+    <div
+      className="w-full h-screen flex justify-center items-center bg-[#E5F9F7] bg-opacity-40 shadow-md"
+      style={{
+        backgroundImage: 'url(/images/banners/BannerBody.svg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="  lg:max-w-screen-2xl h-full flex flex-col justify-center gap-0">
+        <h1 className="text-xl sm:text-4xl  lg:text-5xl  xl:text-6xl  font-extrabold text-drcuotasPrimary leading-tight uppercase tracking-tight text-center">
+          Transforma tu belleza con los mejores expertos en cirugía estética
+        </h1>
+        <p className="text-xs sm:text-2xl text-[#737373] text-center tracking-tight hidden lg:block">
+          Resultados excepcionales, cuidados personalizados.
+        </p>
+      </div>
+
+      {/* <Carousel>
+        <CarouselContent className="w-screen h-full flex justify-center items-center">
           {mediaItems.map((item, index) => (
             <CarouselItem
               key={index}
@@ -60,7 +67,7 @@ const CarouselHome = () => {
         </CarouselContent>
         <CarouselPrevious className="absolute -left-20 top-1/2 transform -translate-y-1/2 z-10" />
         <CarouselNext className="absolute -right-20 top-1/2 transform -translate-y-1/2 z-10" />
-      </Carousel>
+      </Carousel> */}
     </div>
   );
 };

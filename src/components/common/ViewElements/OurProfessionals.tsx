@@ -51,14 +51,14 @@ const OurProfessionals = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full h-full gap-2 py-16">
+      <div className="flex flex-col items-center justify-center w-full h-60 lg:h-screen gap-10 ">
         <TitleElements
-          primaryText="Equipo"
+          primaryText="Profesionales"
           secondaryText="Nuestros Profesionales"
           descriptionText="Conoce a los profesionales de la salud que te ayudarán a mejorar tu calidad de vida."
         />
 
-        <div className="flex flex-row gap-6 items-center justify-center w-full mt-12">
+        <div className="flex flex-row gap-8 items-center justify-center w-full">
           {doctorsList?.length ? (
             doctorsList?.map((doctor) => (
               <DoctorInfoCard key={doctor.id} doctor={doctor} />
