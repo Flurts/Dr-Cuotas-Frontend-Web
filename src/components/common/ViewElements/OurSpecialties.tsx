@@ -5,7 +5,7 @@ import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 import TitleElements from './TitleElements';
-import { Carousel, CarouselContent } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 const OurSpecialties = () => {
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
@@ -27,63 +27,39 @@ const OurSpecialties = () => {
   }, [data, error]);
 
   return (
-    <div className="w-full h-full  p-20">
-      <div className="flex flex-col items-center justify-center w-full h-full gap-2">
+    <div className="w-full h-full flex flex-col justify-center items-center lg:p-20">
+      <div className="w-full h-full flex flex-col justify-center items-center">
         <TitleElements
           primaryText="Nuestros Servicios"
           secondaryText="Cirugías Disponibles"
           descriptionText="Realza tu belleza con nuestras cirugías estéticas. ¡Agenda hoy!"
         />
+      </div>
 
-        <div className="flex flex-row gap-6 items-center justify-center w-full mt-12">
-          {surgeriesList.length ? (
-            surgeriesList.map((surgery) => (
-              <Carousel className="w-full h-60 lg:h-full max-w-screen-2xl flex items-center justify-center ">
-              <CarouselContent className="w-96 sm:w-full h-full flex gap-4 lg:gap-6 p-20 ">
-                {services.length > 0 ? (
-                  services.map((service, index) => (
-                    <SpecialtyCard
-                key={surgery.id}
+    <Carousel className="w-[30vw] h-full flex justify-center items-center">
+      <CarouselContent className="w-full h-full  lg:gap-6  border-4">
+        {surgeriesList.length > 0 ? (
+          surgeriesList.map((surgery) => (
+            <CarouselItem key={surgery.id} className="w-96 sm:w-full hidden">
+              <SpecialtyCard
                 title={surgery.name}
                 description={surgery.description ?? 'Descripción no disponible'}
                 rating={surgery.rating}
                 imageUrl={
-                  surgery.file_banner?.file_link ??
-                  '/images/elements/specialty.svg'
+                  surgery.file_banner?.file_link ?? '/images/elements/specialty.svg'
                 }
               />
-                  ))
-                ) : (
-                  <div className="flex flex-row items-center justify-center w-full h-full">
-                    <span className="text-[#737373] tracking-tight leading-tight">
-                      No hay especialidades disponibles
-                    </span>
-                  </div>
-                )}
-              </CarouselContent>
-            </Carousel>
-            
-            
-            ))
-          ) : (
-            <div className="flex flex-row items-center justify-center w-full h-full gap-2">
-              <span className="text-[#737373] w-full text-[10px] sm:text-sm text-center tracking-tight leading-tight">
-                No hay especialidades disponibles
-              </span>
-            </div>
-          )}
-        </div>
+            </CarouselItem>
+          ))
+        ) : (
+          <div className="flex flex-row items-center justify-center w-full h-full">
+            <span className="text-[#737373] leading-tight tracking-tight w-full text-center ">No hay especialidades disponibles</span>
+          </div>
+        )}
+      </CarouselContent>
+    </Carousel>
+  </div>
 
-        {/* <Link href="/store">
-          <Button
-            variant="outline"
-            className="rounded-full border-drcuotasPrimary-bg text-drcuotasPrimary-text mt-10 hover:text-white hover:bg-drcuotasPrimary-bg"
-          >
-            Ver más
-          </Button>
-        </Link> */}
-      </div>
-    </div>
   );
 };
 

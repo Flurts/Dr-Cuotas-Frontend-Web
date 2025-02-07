@@ -121,7 +121,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
       <div className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 z-50`}>        
         <button className="absolute top-4 right-4 text-gray-600" onClick={handleMenuToggle}>
           <IoClose className="text-2xl" />
-        </button>
+        </button> 
         <div className="flex flex-col items-start mt-12 p-6 space-y-4">
           <a href='/login' className='uppercase font-black text-lg text-[#737373] hover:text-drcuotasPrimary'>Login</a>
           <a href='/store' className='uppercase font-black text-lg text-[#737373] hover:text-drcuotasPrimary'>Tienda</a>
