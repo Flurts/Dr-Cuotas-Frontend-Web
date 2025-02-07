@@ -10,35 +10,36 @@ function OurServices() {
     {
       imageSrc: '/images/elements/specialty.svg',
       link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
+      title: 'Cirugía General',
+      description: 'Procedimientos quirúrgicos en órganos internos y tejidos blandos.',
     },
     {
       imageSrc: '/images/elements/specialty.svg',
       link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
+      title: 'Plástica y Estética',
+      description: 'Intervenciones para mejorar la apariencia o corregir defectos físicos.',
     },
     {
       imageSrc: '/images/elements/specialty.svg',
       link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
+      title: 'Ortopédica',
+      description: 'Tratamiento de fracturas, lesiones óseas y articulares.',
     },
   ];
+  
 
   return (
-    <div className="w-full h-full hidden lg:flex flex-col justify-center items-center p-20">
-      <div>
+    <div className="w-full h-full flex flex-col justify-center items-center  lg:p-20">
+      <div className="w-full h-full flex flex-col justify-center items-center ">
         <TitleElements
           primaryText="Nuestra Categorias"
-          secondaryText="Especialidades"
-          descriptionText="Descubre nuestras especialidades en cirugía estética, diseñadas para realzar tu belleza con los mejores profesionales a tu servicio"
+          secondaryText="nuestras especialidades"
+          descriptionText="Descubre nuestras especialidades en cirugía estética."
         />
       </div>
 
-      <Carousel className="w-full h-80 max-w-screen-2xl flex justify-center items-center">
-        <CarouselContent className="w-auto h-full flex justify-center items-center gap-8 p-20">
+      <Carousel className="w-full h-60 lg:h-full max-w-screen-2xl flex items-center justify-center ">
+        <CarouselContent className="w-96 sm:w-full h-full flex gap-4 lg:gap-6 p-20 ">
           {services.length > 0 ? (
             services.map((service, index) => (
               <ServiceCard

@@ -6,6 +6,9 @@ import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import SubscribeComponent from '@/components/common/ViewElements/Subscribe';
 import { useGetUserDataLazyQuery } from '@/types';
+import { Sidebar } from 'lucide-react';
+import { FiShoppingCart } from 'react-icons/fi';
+import Link from 'next/link';
 
 export default function HomeView() {
   const [getUserData] = useGetUserDataLazyQuery();
@@ -31,14 +34,14 @@ export default function HomeView() {
       <>
         <CarouselHome />
       </>
-      <div className='w-full h-full bg-[#E5F9F7] bg-opacity-80 shadow-md'>
-      <OurSpecialties />
-      <KnowOurProfessionals />
-      <OurServices />
-      </div>
+        <div className="w-full h-auto lg:bg-[#E5F9F7] lg:bg-opacity-80 border-t ">
+          <OurSpecialties />
+          <KnowOurProfessionals />
+        </div>
+          <OurServices />
       {/* <OurAdjudicated /> */}
       {/* <OurProfessionals /> */}
-      <SubscribeComponent />
+      {/* <SubscribeComponent /> */}
     </>
   );
 }

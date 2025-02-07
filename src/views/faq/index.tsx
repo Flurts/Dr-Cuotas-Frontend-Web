@@ -70,7 +70,7 @@ export default function FaqView() {
 
   return (
     <>
-      <div className="w-full h-60 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 lg:p-20">
+      <div className="w-full h-80 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 lg:p-20">
         <div className="w-full h-full flex flex-col justify-start">
           <Accordion
             type="single"

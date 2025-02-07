@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { BiGroup } from 'react-icons/bi';
+import { FiZoomIn } from 'react-icons/fi';
 
 interface ServiceCardProps {
   imageSrc: string;
@@ -16,33 +18,24 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => {
   return (
     <>
-      <button className="w-[320px] h-[199px] flex flex-col justify-center items-center  shadow-lg hover:shadow-md hover:shadow-drcuotasSecondaryPrimaryColor hover:z-50 hover:scale-105 transition-all duration-300  rounded-3xl gap-4">
-        <Link href={link} className="relative w-full h-full">
+      <button className="w-auto h-auto min-w-[200px] min-h-[150px] lg:w-[320px] lg:h-[199px] flex flex-col shadow-lg hover:shadow-md hover:shadow-drcuotasSecondaryPrimaryColor hover:z-50 hover:scale-105 transition-all duration-300 rounded-3xl gap-4">
+        <Link href={link} className="relative w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full rounded-xl">
           <Image
             src={imageSrc}
             alt="Service Image"
             layout="fill"
             objectFit="cover"
-            className="rounded-[16px]  blur-sm"
+            className="rounded-[16px] blur-sm"
           />
-          <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center gap-2 p-4 bg-white bg-opacity-40  rounded-[16px]">
-            <h1 className="text-drcuotasPrimary text-xl font-bold uppercase">
+          <div className=" w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full flex flex-col justify-center items-center   rounded-xl">
+            <h1 className="text-white lg:text-2xl font-bold leading-tight uppercase tracking-tight z-50">
               {title}
             </h1>
-            <p className="text-drcuotasTertiary-text text-xs w-40 line-clamp-2 text-center">
-              {description}
+            <p className="text-white font-bold w-full flex justify-center items-center line-clamp-2 text-center leading-tight tracking-tight z-50">
+            <FiZoomIn className='text-6xl'/>
             </p>
           </div>
         </Link>
-
-        {/* <div className="w-full flex flex-col justify-center items-center gap-2 p-5">
-          <h1 className="text-drcuotasSecondary-text text-lg font-bold">
-            {title}
-          </h1>
-          <p className="text-drcuotasTertiary-text text-base w-40 line-clamp-2 text-center">
-            {description}
-          </p>
-        </div> */}
       </button>
     </>
 
