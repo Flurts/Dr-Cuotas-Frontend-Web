@@ -39,6 +39,7 @@
     "@reduxjs/toolkit": "^2.2.2",
     "@sentry/nextjs": "^7.107.0",
     "@sentry/profiling-node": "^7.107.0",
+    "@shadcn/ui": "^0.0.4",
     "@tanstack/react-table": "^8.17.3",
     "accept-language": "^3.0.18",
     "apollo-upload-client": "^17.0.0",

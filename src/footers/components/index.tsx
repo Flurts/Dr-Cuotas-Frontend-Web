@@ -36,7 +36,7 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
 
   return (
     <>
-      <div className="w-full h-full flex lg:hidden flex-col-reverse lg:flex-row gap-4 lg:gap-0 p-4 opacity-80 bg-[#E5F9F7] bg-opacity-40 ">
+      <div className="w-full h-40 flex lg:hidden flex-col-reverse lg:flex-row gap-4 lg:gap-0 p-4 opacity-80 ">
         {/* Options */}
         <div className="hidden w-full flex-row items-center justify-center lg:flex gap-4">
           <>

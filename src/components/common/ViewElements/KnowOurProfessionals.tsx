@@ -6,7 +6,7 @@ import { PiArrowRight } from 'react-icons/pi';
 function KnowOurProfessionals() {
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full h-full p-20 bg-[#E5F9F7] bg-opacity-40">
+      <div className="flex flex-col items-center justify-center w-full h-full p-20 ">
         <div className="w-full max-w-screen-xl h-full  flex flex-col sm:flex-row justify-center items-center gap-20">
           <>
             {/* Conoce a nuestros Profesionales */}

@@ -31,9 +31,11 @@ export default function HomeView() {
       <>
         <CarouselHome />
       </>
+      <div className='w-full h-full bg-[#E5F9F7] bg-opacity-80 shadow-md'>
       <OurSpecialties />
       <KnowOurProfessionals />
       <OurServices />
+      </div>
       {/* <OurAdjudicated /> */}
       {/* <OurProfessionals /> */}
       <SubscribeComponent />

@@ -28,7 +28,7 @@ function OurServices() {
   ];
 
   return (
-    <div className="w-full h-full bg-[#E5F9F7] bg-opacity-40 hidden lg:flex flex-col justify-center items-center p-20">
+    <div className="w-full h-full hidden lg:flex flex-col justify-center items-center p-20">
       <div>
         <TitleElements
           primaryText="Nuestra Categorias"
