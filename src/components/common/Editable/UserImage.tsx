@@ -36,17 +36,17 @@ const CustomImageUploader: React.FC<ImageUploaderProps> = ({
           types={fileTypes}
           className=""
         >
-          <div className="flex flex-col justify-center items-center rounded-full cursor-pointer relative">
+          <div className="flex flex-col justify-center items-center rounded-xl cursor-pointer relative">
             <Image
               src={image}
               alt="avatar"
               width={width}
               height={height}
               quality={80}
-              className="rounded-full border-2 border-[#8565ff]"
+              className="rounded-xl border-2 border-drcuotasPrimary"
             />
             <span
-              className={`absolute bottom-0 ${style === 'color' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white text-[#8565ff] text-lg font-semibold'} w-[80px] md:w-[60%] rounded-full text-center`}
+              className={`absolute bottom-0 ${style === 'color' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white text-drcuotasPrimary-text text-lg font-semibold'} w-[80px] md:w-[60%] rounded-xl text-center`}
             >
               Editar
             </span>
@@ -59,7 +59,7 @@ const CustomImageUploader: React.FC<ImageUploaderProps> = ({
         width={width}
         height={height}
         quality={80}
-        className="rounded-full border-2 border-[#8565ff] md:hidden"
+        className="rounded-xl shadow-2xl border-2 border-[#8565ff] md:hidden"
       />
     </>
   );

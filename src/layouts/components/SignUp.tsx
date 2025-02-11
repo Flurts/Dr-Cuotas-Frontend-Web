@@ -332,16 +332,17 @@ export default function RegisterModal() {
               {t('common:registerDescription')}
             </p>
 
-            <button
+            <a
+              href='/'
               type="submit"
-              className="bg-drcuotasPrimary-bg text-white  h-12 w-full rounded-md justify-center items-center leading-tight tracking-tight uppercase  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
+              className="bg-drcuotasPrimary-bg text-white  h-12 w-full rounded-lg flex justify-center text-center items-center leading-tight tracking-tight uppercase  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
             >
               {formik.isSubmitting ? (
                 <ImSpinner9 className="animate-spin h-6 text-white w-full" />
               ) : (
                 t('Registrarse')
               )}
-            </button>
+            </a>
           </Form>
         </FormikProvider>
           <div className="flex flex-col gap-6 w-full justify-center items-center">

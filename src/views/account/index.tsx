@@ -2,7 +2,6 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
-import { LuCalendarClock } from 'react-icons/lu';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
@@ -159,56 +158,34 @@ export default function AccountView() {
 
   return (
     <>
-      <div className="bg-[#f1f2f1] flex flex-col justify-center items-center w-full bg">
-        <div className="flex flex-col justify-center w-full bg-drcuotasPrimary-bg relative py-2">
-          <div className="absolute top-0 flex justify-center items-center text-center w-full h-full">
-            <span className="md:text-7xl xl:text-8xl font-extrabold text-[#7863f7]">
-              {t('bestLuck')}
-            </span>
-          </div>
-          <div className="flex flex-col justify-center items-center gap-1 p-3 h-auto z-10">
-            <span className="text-white md:text-base xl:text-xl ml-5 md:ml-10">
-              {t('nextDrawing')}
-            </span>
-            <div className="flex flex-row justify-center items-center gap-2">
-              <LuCalendarClock className="text-3xl md:text-5xl xl:text-6xl text-white" />
-              <span className="text-white font-bold text-xl md:text-3xl xl:text-4xl">
-                10/12/2024
-              </span>
+      <div className="w-full h-96 lg:h-80  flex flex-col justify-center items-center bg-[#E5F9F7] bg-opacity-80 p-20">
+        <UserInfoImageEditable user={user} handleChange={handleChange} />
+        <div className="flex flex-col w-full justify-center items-center gap-4 ">
+          {adjudicatedLoading ? (
+            <div>Loading...</div>
+          ) : adjudicatedData &&
+            adjudicatedData?.getMyAdjudicated?.length > 0 ? (
+            adjudicatedData.getMyAdjudicated.map((adjudicated, index) => (
+              <React.Fragment key={index}>
+                {/* @ts-expect-error Missing type definition for CardCirugia */}
+                <CardCirugia adjudicated={adjudicated} />
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="hidden flex-col gap-10 justify-center items-center w-full">
+              <Link
+                href="/store"
+                className="w-80 lg:w-96 h-12 bg-drcuotasPrimary rounded-xl  hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center  hover:shadow-drcuotasPrimary hover:shadow-2xl hover:bg-white hover:border hover:text-drcuotasPrimary-text hover:border-drcuotasPrimary"
+              >
+                {t('startSurgery')}
+              </Link>
             </div>
-          </div>
-        </div>
-
-        <div className="max-w-screen-2xl w-full flex flex-col items-center justify-center">
-          <UserInfoImageEditable user={user} handleChange={handleChange} />
-          <div className="flex flex-col w-full justify-center items-center gap-5 relative px-8 xl:px-20 mb-10">
-            {adjudicatedLoading ? (
-              <div>Loading...</div>
-            ) : adjudicatedData &&
-              adjudicatedData?.getMyAdjudicated?.length > 0 ? (
-              adjudicatedData.getMyAdjudicated.map((adjudicated, index) => (
-                <React.Fragment key={index}>
-                  {/* @ts-expect-error Missing type definition for CardCirugia */}
-                  <CardCirugia adjudicated={adjudicated} />
-                </React.Fragment>
-              ))
-            ) : (
-              <div className="p-20 flex flex-col gap-10 justify-center items-center w-full">
-                <span className="text-[#7863f7] text-2xl font-bold text-center">
-                  {t('noHaveSurgeries')}
-                </span>
-                <Link
-                  href="/store"
-                  className="w-96 h-12 bg-[#6636E2] rounded-full  hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center  hover:shadow-[#B398F5] hover:shadow-2xl hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
-                >
-                  {t('startSurgery')}
-                </Link>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
+    
+        
       {file ? (
         <CustomEditorImage
           toggleModal={toggleModal}

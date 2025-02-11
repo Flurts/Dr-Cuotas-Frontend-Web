@@ -79,10 +79,10 @@ export default function FaqView() {
           >
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index + 1}`}>
-                <AccordionTrigger className="text-drcuotasSecondary-text font-bold text-xs lg:text-sm">
+                <AccordionTrigger className="text-drcuotasSecondary-text font-bold text-xs lg:text-sm ">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-drcuotasSecondary-text text-[10px] lg:text-xs">
+                <AccordionContent className="text-drcuotasSecondary-text text-[10px] lg:text-xs  z-40 p-4">
                   {Array.isArray(faq.answer) ? (
                     <ul className="list-disc list-inside">
                       {faq.answer.map((answer, idx) => (

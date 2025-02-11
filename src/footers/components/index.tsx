@@ -2,20 +2,15 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import {
-  BiLogoFacebook,
-  BiLogoInstagramAlt,
-  BiLogoTiktok,
-  BiLogoWhatsapp,
-  BiLogoYoutube,
-  BiMap,
-  BiMapAlt,
-  BiMessageAltError,
-  BiMessageDetail,
-  BiMoney,
-  BiQuestionMark,
-  BiShieldQuarter,
-} from 'react-icons/bi';
-import { FiCalendar, FiInstagram, FiLogOut, FiMapPin, FiMenu, FiSettings, FiTwitter, FiUser } from 'react-icons/fi';
+  FiCalendar,
+  FiInstagram,
+  FiLogOut,
+  FiServer,
+  FiSettings,
+  FiShoppingCart,
+  FiTwitter,
+  FiUser,
+} from 'react-icons/fi';
 
 // @ts-expect-error
 const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
@@ -43,75 +38,82 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
 
   return (
     <>
-      <div className="w-full h-80 p-20 flex lg:hidden flex-col justify-center items-center opacity-80 gap-4">
-           {/* Options */}
-           <div className="w-full flex-row items-center justify-center flex gap-4">
-              <>
-                <Link
-                  href="/faq"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
-                >
-                 <FiSettings />
-                </Link>
-              </>
-              <>
-                <Link
-                  href="/faq"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
-                >
-                 <FiCalendar />
-                </Link>
-              </>
-              <>
-                <Link
-                  href="/faq"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
-                >
-                 <FiLogOut />
-                </Link>
-              </>
-            </div>
+      <div className="w-full h-80 p-10 flex lg:hidden flex-col justify-end items-end opacity-80 gap-4 -z-20">
+        {/* Options */}
+        <div className="w-full flex-row items-center justify-center flex gap-4">
+          <>
+            <Link
+              href="/account/settings"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
+            >
+              <FiSettings />
+            </Link>
+          </>
+          <>
+            <Link
+              href="/store"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
+            >
+              <FiShoppingCart />
+            </Link>
+          </>
+          <>
+            <Link
+              href="/faq"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
+            >
+              <FiCalendar />
+            </Link>
+          </>
+          <>
+            <Link
+              href="/"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
+            >
+              <FiLogOut />
+            </Link>
+          </>
+        </div>
 
-            {/* By Miguel Angel Jaimes Parra */}
-            <div className="w-full h-auto text-center flex flex-col justify-center">
-              <p className="text-[10px] lg:text-xs tracking-tight leading-tight uppercase  text-[#737373] ">
-              ¡Agenda hoy!
-              </p>
-              <p className="text-[10px] lg:text-xs tracking-tight leading-tight uppercase  text-[#737373] ">
-                {' '}
-                © 2025 Dr.Cuotas All rights reserved.{' '}
-              </p>
-            </div>
+        {/* By Miguel Angel Jaimes Parra */}
+        <div className="w-full h-auto text-center flex flex-col justify-center">
+          <p className="text-[10px] lg:text-xs tracking-tight leading-tight uppercase  text-[#737373] ">
+            ¡Agenda hoy!
+          </p>
+          <p className="text-[10px] lg:text-xs tracking-tight leading-tight uppercase  text-[#737373] ">
+            {' '}
+            © 2025 Dr.Cuotas All rights reserved.{' '}
+          </p>
+        </div>
 
-            {/* Social media */}
-            <div className="w-full flex-row items-center justify-center flex gap-4 hidden">
-              <>
-                <Link
-                  href="https://www.instagram.com/dempserayo/C"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl "
-                >
-                  <FiUser />
-                </Link>
-              </>
-              <>
-                <Link
-                  href="https://www.instagram.com/dempserayo/C"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl "
-                >
-                  <FiTwitter />
-                </Link>
-              </>
-              <>
-                <Link
-                  href="https://www.instagram.com/dempserayo/C"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl "
-                >
-                  <FiInstagram />
-                </Link>
-              </>
-            </div>
+        {/* Social media */}
+        <div className="w-full flex-row items-center justify-center flex gap-4 hidden">
+          <>
+            <Link
+              href="https://www.instagram.com/dempserayo/C"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl "
+            >
+              <FiUser />
+            </Link>
+          </>
+          <>
+            <Link
+              href="https://www.instagram.com/dempserayo/C"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl "
+            >
+              <FiTwitter />
+            </Link>
+          </>
+          <>
+            <Link
+              href="https://www.instagram.com/dempserayo/C"
+              className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl "
+            >
+              <FiInstagram />
+            </Link>
+          </>
+        </div>
       </div>
-
 
       <div
         className={`${
@@ -124,10 +126,26 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
             <div className="hidden w-full flex-row items-center justify-center lg:flex gap-4">
               <>
                 <Link
-                  href="/faq"
+                  href="/account/settings"
                   className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
                 >
-                 <FiSettings />
+                  <FiSettings />
+                </Link>
+              </>
+              <>
+                <Link
+                  href="/login"
+                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
+                >
+                  <FiServer />
+                </Link>
+              </>
+              <>
+                <Link
+                  href="/store"
+                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
+                >
+                  <FiShoppingCart />
                 </Link>
               </>
               <>
@@ -135,15 +153,15 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
                   href="/faq"
                   className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
                 >
-                 <FiCalendar />
+                  <FiCalendar />
                 </Link>
               </>
               <>
                 <Link
-                  href="/faq"
+                  href="/"
                   className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
                 >
-                 <FiLogOut />
+                  <FiLogOut />
                 </Link>
               </>
             </div>

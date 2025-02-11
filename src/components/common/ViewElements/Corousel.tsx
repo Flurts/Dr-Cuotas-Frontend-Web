@@ -13,7 +13,7 @@ const CarouselHome = () => {
     >
       <div className="lg:max-w-screen-2xl h-full flex flex-col justify-center gap-4">
         {/* Título principal (fijo) */}
-        <h1 className="text-xl sm:text-xl lg:text-5xl xl:text-6xl font-black text-drcuotasPrimary leading-tight uppercase tracking-tight text-center">
+        <h1 className="text-xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-drcuotasPrimary leading-tight uppercase tracking-tight text-center">
           Transforma tu belleza con los mejores expertos en cirugía estética
         </h1>
 

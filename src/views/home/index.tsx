@@ -5,6 +5,7 @@ import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfes
 import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import { useGetUserDataLazyQuery } from '@/types';
+import SubscribeComponent from '@/components/common/ViewElements/Subscribe';
 
 export default function HomeView() {
   const [getUserData] = useGetUserDataLazyQuery();
