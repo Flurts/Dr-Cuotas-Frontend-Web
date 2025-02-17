@@ -5,7 +5,6 @@ import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfes
 import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import { useGetUserDataLazyQuery } from '@/types';
-import SubscribeComponent from '@/components/common/ViewElements/Subscribe';
 
 export default function HomeView() {
   const [getUserData] = useGetUserDataLazyQuery();
@@ -31,7 +30,7 @@ export default function HomeView() {
       <>
         <CarouselHome />
       </>
-      <div className="w-full h-auto lg:bg-[#E5F9F7] lg:bg-opacity-80 border-t ">
+      <div className="w-full h-auto lg:bg-[#E5F9F7] lg:bg-opacity-50 border-t border-b border-white">
         <OurSpecialties />
         <KnowOurProfessionals />
       </div>

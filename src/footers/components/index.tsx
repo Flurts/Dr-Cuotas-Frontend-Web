@@ -118,7 +118,7 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
       <div
         className={`${
           visible ? 'translate-y-0' : 'translate-y-full'
-        } fixed bottom-0 left-0 z-50 w-full  transition-transform duration-500 ease-in-out  hidden lg:block`}
+        } fixed bottom-0 left-0 z-40 w-full  transition-transform duration-500 ease-in-out  hidden lg:block`}
       >
         <>
           <div className="w-full h-full flex flex-col-reverse lg:flex-row gap-4 lg:gap-0 p-6 opacity-80">
@@ -130,14 +130,6 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
                   className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
                 >
                   <FiSettings />
-                </Link>
-              </>
-              <>
-                <Link
-                  href="/login"
-                  className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
-                >
-                  <FiServer />
                 </Link>
               </>
               <>

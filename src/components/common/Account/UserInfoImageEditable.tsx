@@ -23,7 +23,7 @@ export default function UserInfoImageEditable({
       <>
         <div className="w-full h-full flex flex-col justify-center items-center">
           <>
-            <span className="md:text-xl xl:text-2xl  text-drcuotasPrimary-text leading-tight tracking-wide uppercase font-black">
+            <span className="text-lg sm:text-2xl lg:text-4xl  text-drcuotasPrimary-text leading-tight tracking-wide uppercase font-black">
               {t('welcome')}
             </span>
           </>

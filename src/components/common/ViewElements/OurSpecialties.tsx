@@ -1,21 +1,19 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 import TitleElements from './TitleElements';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 const OurSpecialties = () => {
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
-    variables: {
-      limit: 3,
-      offset: 0,
-    },
+    variables: { limit: 10, offset: 0 },
   });
 
   const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data && !error) {
@@ -26,40 +24,72 @@ const OurSpecialties = () => {
     }
   }, [data, error]);
 
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 320 * 4; // Tamaño de un item * cantidad visible
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center lg:p-20">
-      <div className="w-full h-full flex flex-col justify-center items-center">
-        <TitleElements
-          primaryText="Nuestros Servicios"
-          secondaryText="Cirugías Disponibles"
-          descriptionText="Realza tu belleza con nuestras cirugías estéticas. ¡Agenda hoy!"
-        />
+    <div className="w-full flex flex-col justify-center items-center lg:p-20">
+      <TitleElements
+        primaryText="Nuestros Servicios"
+        secondaryText="Cirugías Disponibles"
+        descriptionText="Realza tu belleza con nuestras cirugías estéticas. ¡Agenda hoy!"
+      />
+
+      <div className="relative w-full  flex justify-center items-center">
+        <button
+          className="hidden lg:block absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10"
+          onClick={() => {
+            scroll('left');
+          }}
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        <div
+          ref={scrollRef}
+          className="flex lg:gap-8 overflow-x-auto scroll-smooth no-scrollbar  p-16 lg:p-20 justify-center items-center "
+          style={{ scrollBehavior: 'smooth' }}
+        >
+          {surgeriesList.length > 0 ? (
+            surgeriesList.map((surgery) => (
+              <div key={surgery.id} className="w-[300px] flex-shrink-0">
+                <SpecialtyCard
+                  title={surgery.name}
+                  description={
+                    surgery.description ?? 'Descripción no disponible'
+                  }
+                  rating={surgery.rating}
+                  imageUrl={
+                    surgery.file_banner?.file_link ??
+                    '/images/elements/specialty.svg'
+                  }
+                />
+              </div>
+            ))
+          ) : (
+            <span className="text-[#737373] text-center w-full text-xs">
+              No hay Cirugias
+            </span>
+          )}
+        </div>
+
+        <button
+          className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10"
+          onClick={() => {
+            scroll('right');
+          }}
+        >
+          <ChevronRight size={24} />
+        </button>
       </div>
-
-    <Carousel className="w-[30vw] h-full flex justify-center items-center">
-      <CarouselContent className="w-full h-full  lg:gap-6  border-4">
-        {surgeriesList.length > 0 ? (
-          surgeriesList.map((surgery) => (
-            <CarouselItem key={surgery.id} className="w-96 sm:w-full hidden">
-              <SpecialtyCard
-                title={surgery.name}
-                description={surgery.description ?? 'Descripción no disponible'}
-                rating={surgery.rating}
-                imageUrl={
-                  surgery.file_banner?.file_link ?? '/images/elements/specialty.svg'
-                }
-              />
-            </CarouselItem>
-          ))
-        ) : (
-          <div className="flex flex-row items-center justify-center w-full h-full">
-            <span className="text-[#737373] leading-tight tracking-tight w-full text-center ">No hay especialidades disponibles</span>
-          </div>
-        )}
-      </CarouselContent>
-    </Carousel>
-  </div>
-
+    </div>
   );
 };
 

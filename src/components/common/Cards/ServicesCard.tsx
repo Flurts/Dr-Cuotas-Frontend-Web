@@ -18,7 +18,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => {
   return (
     <>
-      <button className="w-auto h-auto min-w-[200px] min-h-[150px] lg:w-[320px] lg:h-[199px] flex flex-col shadow-lg hover:shadow-md hover:shadow-drcuotasSecondaryPrimaryColor hover:z-50 hover:scale-105 transition-all duration-300 rounded-3xl gap-4">
+      <button className="w-auto h-auto min-w-[200px] min-h-[150px] lg:w-[320px] lg:h-[199px] flex flex-col shadow-lg hover:shadow-2xl hover:shadow-drcuotasSecondaryPrimaryColor hover:z-50 hover:scale-105 transition-all duration-300 rounded-3xl gap-4">
         <Link href={link} className="relative w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full rounded-xl">
           <Image
             src={imageSrc}
