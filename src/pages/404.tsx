@@ -6,13 +6,15 @@ const noViewError = () => {
 
   return (
     <>
-      <div className="w-full h-screen flex flex-col justify-center  bg-black bg-opacity-5">
-        <div className="w-full flex flex-col justify-center items-center text-center  h-auto gap-4 animate-pulse text-[#6636E2]">
-          <h1 className="text-8xl font-bold ">404</h1>
-          <h1 className="text-lg lg:text-4xl font-bold ">
+      <div className="w-full h-80 p-20 flex flex-col justify-center items-center ">
+        <div className="w-full h-full flex flex-col justify-center items-center  text-drcuotasPrimary-text">
+          <h1 className="text-6xl font-bold uppercase leading-tight tracking-tight ">
+            404
+          </h1>
+          <h1 className="text-lg lg:text-4xl font-bold uppercase leading-tight tracking-tight text-center w-full">
             ¡Oops! Página no encontrada
           </h1>
-          <p className="text-xs lg:text-2xl ">
+          <p className="text-xs lg:text-xl uppercase leading-tight tracking-tight text-center hidden lg:block">
             Parece que algo salió mal y no podemos encontrar la página que estás
             buscando.
           </p>

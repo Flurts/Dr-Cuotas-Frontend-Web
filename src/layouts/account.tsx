@@ -2,19 +2,12 @@
 import { Box } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
-import { AiOutlineContacts, AiOutlineFileSearch } from 'react-icons/ai';
-import { IoClose, IoCloseCircleSharp } from 'react-icons/io5';
-import { TiThMenu } from 'react-icons/ti';
-import { useDispatch, useSelector } from 'react-redux';
+import { FiLogIn, FiMenu, FiShoppingCart, FiUser } from 'react-icons/fi';
+import { IoClose } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 
-import SocialMedia from '@/components/common/socialMedia';
-import { getCurrentUser, getJwt, isLoggedIn, updateUser } from '@/store';
-import { useCreateNewDoctorMutation, useGetUserDataLazyQuery } from '@/types';
-
-import RegisterModal from './components/SignUp';
+import { getCurrentUser, isLoggedIn } from '@/store';
 
 interface Props {
   children: JSX.Element;
@@ -47,218 +40,213 @@ const MainContent = ({ children }: Props) => {
 };
 
 function AccountLayout({ children, className }: Props) {
-  const { t } = useTranslation('common');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLogged = useSelector(isLoggedIn);
   const user = useSelector(getCurrentUser);
-  const jwt = useSelector(getJwt);
-  const [toggleModal, setToggleModal] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [CreateNewDoctor] = useCreateNewDoctorMutation();
-  const router = useRouter();
-  const [getUserData] = useGetUserDataLazyQuery();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        const result = await getUserData();
-        if (result.data) {
-          dispatch(
-            updateUser({
-              // @ts-expect-error ts-migrate(2339) FIXME: Property 'user' does not exist on type '{}'.
-              user: result.data.getUserData.user,
-            }),
-          );
-        }
-      }
-    };
-
-    void fetchData();
-  }, [router.pathname]);
-
-  const modalHandler = () => {
-    setToggleModal(!toggleModal);
-  };
-
-  useEffect(() => {
-    if (!isLogged) {
-      void router.push('/');
-    }
-  }, [isLogged, router]);
-
-  const handleDoctor = async () => {
-    try {
-      await CreateNewDoctor({
-        context: {
-          headers: {
-            Authorization: jwt,
-          },
-        },
-      });
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-
-  const menuOptions = [
-    { label: t('mySurgery'), href: '#surgeries', icon: AiOutlineFileSearch },
-    {
-      label: t('adjudicadosOfTheMonth'),
-      href: '/awarded',
-      icon: AiOutlineFileSearch,
-    },
-    { label: t('home'), href: '/', icon: AiOutlineContacts },
-  ];
+  const [sticky, setSticky] = useState(true);
+  const [hidden, setHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+
+      setHidden(true);
+
+      const timeout = setTimeout(() => {
+        setHidden(false);
+      }, 300);
+
+      setScrollTimeout(timeout);
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+    };
+  }, [lastScrollY, scrollTimeout]);
+
   return (
     <div className={`${className}`}>
-      <div>
-        {/* flex justify-center items-center w-full border-b-2 py-4 px-4 */}
-        <div className="flex justify-center items-center w-full border-b-2 p-4">
-          <div className="flex flex-row justify-between w-full max-w-screen-2xl ">
+      <nav
+        className={`${
+          sticky ? 'sticky top-0' : 'relative'
+        } z-50 flex w-full items-center justify-center p-4  bg-white backdrop-blur-3xl transition-transform duration-500 ${
+          hidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
+      >
+        <>
+          <div className="flex w-full items-end justify-start xl:px-20">
             <Link
               href="/"
-              className="w-[570px]  flex items-center justify-center mb-2 -mt-2 lg:-mt-1 "
+              className="font-extrabold uppercase leading-tight tracking-wide text-xs w-auto"
             >
               <Image
                 src="/images/logo/logo-1.svg"
                 alt="Logo"
-                width={200}
-                height={200}
-                className="w-60 flex justify-center items-center"
+                width={110}
+                height={110}
+                className="w-40 h-full"
               />
             </Link>
-
-            <div className="flex justify-end  items-center w-screen  lg:hidden ">
-              <button onClick={handleMenuToggle}>
-                <TiThMenu className="text-2xl text-[#6636E2] text-center mx-2" />
-              </button>
-            </div>
-
-            <div className="hidden lg:flex flex-row items-center justify-end w-full mx-4">
-              {menuOptions.map((tab, index) => (
-                <Link key={index} href={tab.href}>
-                  <span className="text-[#6636E2] text-xl md:text-lg m-2 font-normal md:font-semibold cursor-pointer">
-                    {t(tab.label)}
-                  </span>
-                  {index < menuOptions.length - 1 && (
-                    <span className="text-[#6636E2] text-xl">|</span>
-                  )}
+          </div>
+        </>
+        <>
+          <div className="hidden lg:flex w-full items-center justify-center gap-80">
+            <ul className="flex flex-row justify-center items-center w-auto h-auto gap-4">
+              <Link
+                href="/"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Inicio
+              </Link>
+              <Link
+                href="/store"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Tienda
+              </Link>
+              <Link
+                href="/professionals"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Doctores
+              </Link>
+              <Link
+                href="/faq"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Soporte
+              </Link>
+            </ul>
+          </div>
+        </>
+        <>
+          <div className="flex w-20 lg:w-full items-center justify-center gap-2">
+            {!isLogged ? (
+             <>
+              <Link
+                  href="/login"
+                  className="text-[#737373] hover:text-drcuotasPrimary font-black uppercase border-2 border-[#737373] w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                >
+                  <span className="text-sm">Login</span>
+                  <FiLogIn className="uppercase leading-tight tracking-tight font-black text-xl" />
                 </Link>
-              ))}
-              {user.doctor?.id && (
+              </>
+            ) : (
+              <>
                 <Link
-                  className="bg-[#6636E2]  hover:shadow-2xl hover:shadow-[#B398F5]  hover:scale-105 transition-all duration-300 h-10 w-28 xl:w-32 flex justify-center items-center rounded-full"
-                  href={`/account/doctor/${user.doctor.id}`}
+                  href="/"
+                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  <span className="text-white text-xl md:text-lg m-2 font-normal md:font-semibold cursor-pointer">
-                    {t('Doctor')}
+                  <span className="uppercase leading-tight tracking-tight text-sm">
+                    salir
                   </span>
+                  <FiUser className="text-2xl" />
                 </Link>
-              )}
-              {isLogged && !user.doctor?.id && (
                 <button
-                  onClick={handleDoctor}
-                  className="text-[#6636E2] text-xl md:text-lg m-2 font-normal md:font-semibold cursor-pointer"
+                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  Create new {t('Doctor')}
+                  <FiShoppingCart className="text-2xl" />
                 </button>
-              )}
-
-              <SocialMedia className="lg:mx-8" />
-            </div>
+              </>
+            )}
+            <button
+              className="text-drcuotasPrimary lg:hidden flex items-center justify-center rounded-xl w-10 h-10"
+              onClick={handleMenuToggle}
+            >
+              <FiMenu className="text-2xl" />
+            </button>
           </div>
-        </div>
+        </>
+      </nav>
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-50 z-50"
+          onClick={handleMenuToggle}
+        ></div>
+      )}
+      <div
+        className={`fixed top-0 right-0 h-full w-52 bg-white  border  transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 z-50`}
+      >
+        <button
+          className="absolute top-4 right-4 text-gray-600"
+          onClick={handleMenuToggle}
+        >
+          <IoClose className="text-2xl" />
+        </button>
+        <ul className="p-6 space-y-4">
+          {!isLogged ? (
+            <li>
+              <Link
+                href="/login"
+                className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              >
+                Iniciar Sesión
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link
+                href="/account"
+                className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              >
+                Cuenta
+              </Link>
+            </li>
+          )}
 
-        {isMenuOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md h-screen z-50 flex justify-center items-center"
-            onClick={handleMenuToggle}
-          >
-            <div className="fixed inset-y-0 right-0 w-60 h-screen animate-fade-left bg-white z-50 overflow-y-auto">
-              <div className="flex justify-end px-4  border-b">
-                <button className="text-gray-600" onClick={handleMenuToggle}>
-                  <IoClose className="h-12 w-12 p-2 font-extrabold text-[#6636E2]" />
-                </button>
-              </div>
-              {isLogged && user && (
-                <div className="px-4 py-6  flex items-center justify-center flex-col">
-                  <div className="rounded-full overflow-hidden border-4 border-[#6636E2] w-20 h-20 flex-shrink-0">
-                    <Image
-                      src={user.profile_picture ?? '/images/logo/logo-1.svg'}
-                      alt="Perfil"
-                      width={32}
-                      height={32}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="w-full text-center">
-                    <p className="text-[#6636E2] text-sm font-bold">
-                      {user.first_name}
-                    </p>
-                    <p className="text-[#6636E2] text-sm font-semibold">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              <div className="px-4 py-6">
-                <ul className="space-y-2">
-                  {menuOptions.map((option, index) => (
-                    <li key={index} onClick={handleMenuToggle}>
-                      {option.href ? (
-                        <Link
-                          href={option.href}
-                          className="text-[#6636E2] w-screen  text-lg flex items-center font-bold cursor-pointer gap-3"
-                          onClick={handleMenuToggle}
-                        >
-                          {React.createElement(
-                            option.icon as React.ElementType,
-                            { className: 'text-[#6636E2]' },
-                          )}
-                          {option.label}
-                        </Link>
-                      ) : (
-                        <span className="text-[#6636E2] text-lg flex items-center font-bold cursor-pointer gap-3">
-                          {React.createElement(
-                            option.icon as React.ElementType,
-                            { className: 'text-[#6636E2]' },
-                          )}
-                          {option.label}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* MODAL */}
-        {toggleModal && (
-          <div className="fixed inset-0   bg-black h-screen bg-opacity-50 z-50 flex justify-center items-center">
-            <div className="bg-white rounded-lg p-4 xl:w-[460px] w-[350px] relative">
-              <IoCloseCircleSharp
-                className="text-2xl text-gray-500 absolute top-4 right-4 cursor-pointer"
-                onClick={modalHandler}
-              />
-              <div className="z-50">
-                <RegisterModal modalHandler={modalHandler} />
-              </div>
-            </div>
-          </div>
-        )}
+          <li>
+            <Link
+              href="/"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/store"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Tienda
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/professionals"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Doctores
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/faq"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Soporte
+            </Link>
+          </li>
+        </ul>
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <MainContent>{children}</MainContent>
-      </div>
+      <Box>{children}</Box>
     </div>
   );
 }

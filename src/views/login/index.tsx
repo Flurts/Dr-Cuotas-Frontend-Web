@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
@@ -74,83 +75,64 @@ export default function LoginView() {
   };
 
   return (
-    <div className="flex flex-row justify-center items-center w-full">
-      <div className="max-w-screen-xl flex flex-row justify-center items-center w-full h-screen gap-80">
-        <div className="flex flex-col justify-center items-start gap-8">
-          <div className="flex flex-col gap-2">
-            {tab === 'login' ? (
-              <>
-                <span className="text-drcuotasSecondary-text text-5xl font-semibold">
-                  Inicia sesión
-                </span>
-                <span className="text-drcuotasSecondary-text text-3xl font-medium">
-                  De una manera simple
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="text-drcuotasSecondary-text text-5xl font-semibold">
-                  Regístrate
-                </span>
-                <span className="text-drcuotasSecondary-text text-3xl font-medium">
-                  De una manera simple
-                </span>
-              </>
-            )}
-          </div>
+    <div className="w-full h-full flex flex-col justify-center items-center gap-20 p-20">
+      <div className="flex flex-col justify-center items-start gap-8">
+        <Link href="/" className="w-auto h-auto">
           <Image
             src="/images/logo/logo-1.svg"
             alt="Logo"
             width={190}
             height={190}
           />
-          <span className="line-clamp-2 w-[240px] text-xs">
-            {tab === 'login' ? (
-              <>
-                Si no tienes una cuenta, puedes{' '}
-                <button
-                  onClick={() => {
-                    handleChangeTab('register');
-                  }}
-                  className="text-drcuotasPrimary-text font-semibold"
-                >
-                  Registrarte aquí!
-                </button>
-              </>
-            ) : (
-              <>
-                Si ya tienes una cuenta, puedes{' '}
-                <button
-                  onClick={() => {
-                    handleChangeTab('login');
-                  }}
-                  className="text-drcuotasPrimary-text font-semibold"
-                >
-                  Iniciar sesión aquí!
-                </button>
-              </>
-            )}
-          </span>
-        </div>
-
-        <Tabs
-          defaultValue="login"
-          value={tab}
-          onValueChange={(value) => {
-            setTab(value);
-          }}
-          className="w-[400px] h-full justify-center items-start flex flex-col"
-        >
-          <TabsContent value="login">
-            <SignIn />
-          </TabsContent>
-          <TabsContent value="register">
-            <div className="flex flex-col justify-center items-start gap-5">
-              <RegisterModal />
-            </div>
-          </TabsContent>
-        </Tabs>
+        </Link>
+        <span className="w-full flex flex-col justify-center items-center line-clamp-2  text-xs leading-tight tracking-tight">
+          {tab === 'login' ? (
+            <>
+              Si no tienes una cuenta, puedes{' '}
+              <button
+                onClick={() => {
+                  handleChangeTab('register');
+                }}
+                className="text-drcuotasPrimary-text font-semibold leading-tight tracking-tight"
+              >
+                Registrarte aquí!
+              </button>
+            </>
+          ) : (
+            <>
+              Si ya tienes una cuenta, puedes{' '}
+              <button
+                onClick={() => {
+                  handleChangeTab('login');
+                }}
+                className="text-drcuotasPrimary-text font-semibold leading-tight tracking-tight"
+              >
+                Iniciar sesión aquí!
+              </button>
+            </>
+          )}
+        </span>
       </div>
+
+      <Tabs
+        defaultValue="login"
+        value={tab}
+        onValueChange={(value) => {
+          setTab(value);
+        }}
+        className="w-full h-full justify-center items-center flex flex-col"
+      >
+        <TabsContent value="login">
+          <div className="flex flex-col justify-center items-start gap-4">
+            <SignIn />
+          </div>
+        </TabsContent>
+        <TabsContent value="register">
+          <div className="flex flex-col justify-center items-start gap-4">
+            <RegisterModal />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

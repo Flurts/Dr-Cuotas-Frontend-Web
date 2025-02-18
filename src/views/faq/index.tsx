@@ -1,6 +1,5 @@
 import React from 'react';
 
-import TitleElements from '@/components/common/ViewElements/TitleElements';
 import {
   Accordion,
   AccordionContent,
@@ -11,7 +10,7 @@ import {
 export default function FaqView() {
   const faqs = [
     {
-      question: 'Preguntas Frecuentes',
+      question: 'Sobre Dr.Cuotas',
       answer: [
         '¿Qué es Dr. Cuotas? Dr. Cuotas es la primera plataforma que permite una financiación accesible y de calidad para servicios de cirugía estética.',
         '¿Cómo funciona el proceso de financiación? Ofrecemos planes de capitalización aprobados por los I.G.J.N. Res. 01010 y sus modificatorias. Los detalles específicos sobre cómo acceder a estos planes se pueden encontrar en nuestro sitio web.',
@@ -24,7 +23,7 @@ export default function FaqView() {
       ],
     },
     {
-      question: 'Preguntas Frecuentes para Pacientes',
+      question: 'Sobre Pacientes',
       answer: [
         '¿Qué tipos de cirugías puedo financiar con DrCuotas? Puedes financiar una variedad de procedimientos estéticos, incluyendo aumento de mamas, escultura corporal, y rejuvenecimiento facial.',
         '¿Cómo se realiza la adjudicación de los sorteos? La adjudicación se realiza mediante sorteos mensuales, garantizando una oportunidad justa para todos los participantes.',
@@ -34,7 +33,7 @@ export default function FaqView() {
       ],
     },
     {
-      question: 'Preguntas Frecuentes para Doctores',
+      question: 'Sobre Doctores',
       answer: [
         '¿Cómo puedo afiliarme a DrCuotas como proveedor de servicios? Puedes afiliarte a través de nuestro sitio web llenando un formulario de solicitud y proporcionando la documentación requerida.',
         '¿Qué beneficios ofrece DrCuotas a los doctores afiliados?  Ofrecemos acceso a una amplia base de pacientes potenciales y la posibilidad de recibir pagos seguros a través de nuestra plataforma.',
@@ -44,7 +43,7 @@ export default function FaqView() {
       ],
     },
     {
-      question: 'Preguntas Frecuentes sobre Cirugías',
+      question: 'Sobre Cirugías y Cuidado',
       answer: [
         '¿Cómo debo prepararme para la cirugía? Es importante seguir las indicaciones del médico, que pueden incluir ayuno previo, evitar ciertos medicamentos, y realizarse los exámenes prequirúrgicos necesarios.',
         '¿Cuánto tiempo dura la cirugía? La duración depende del tipo de procedimiento, pero generalmente varía entre 1 a 4 horas.',
@@ -57,7 +56,7 @@ export default function FaqView() {
       ],
     },
     {
-      question: 'Preguntas Frecuentes sobre Confianza y Seguridad',
+      question: 'Sobre Confianza y Seguridad',
       answer: [
         '¿Cómo puedo estar seguro de que el profesional es calificado? Todos los médicos afiliados a DrCuotas tienen licencias vigentes y cumplen con los estándares de calidad establecidos. Además, puedes revisar sus credenciales y experiencia en nuestro sitio web.',
         '¿Qué medidas de seguridad se toman durante la cirugía? Los procedimientos se realizan en clínicas y hospitales certificados que siguen estrictos protocolos de seguridad y esterilización.',
@@ -71,26 +70,19 @@ export default function FaqView() {
 
   return (
     <>
-      <div className="w-full h-[40vh] flex justify-center items-center ">
-        <TitleElements
-          primaryText="Preguntas Frecuentes"
-          secondaryText="Preguntas Frecuentes"
-          descriptionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-        />
-      </div>
-      <div className="w-full h-full flex flex-col justify-center items-center ">
-        <div className="w-[160vh] h-screen flex flex-col justify-start ">
+      <div className="w-full h-80 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 lg:p-20">
+        <div className="w-full h-full flex flex-col justify-start">
           <Accordion
             type="single"
             collapsible
-            className="w-full flex flex-col justify-center"
+            className="w-full flex flex-col justify-center "
           >
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index + 1}`}>
-                <AccordionTrigger className="text-drcuotasSecondary-text font-bold">
+                <AccordionTrigger className="text-drcuotasSecondary-text font-bold text-xs lg:text-sm ">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-drcuotasSecondary-text text-xs">
+                <AccordionContent className="text-drcuotasSecondary-text text-[10px] lg:text-xs  z-40 p-4">
                   {Array.isArray(faq.answer) ? (
                     <ul className="list-disc list-inside">
                       {faq.answer.map((answer, idx) => (

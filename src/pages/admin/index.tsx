@@ -1,4 +1,5 @@
 import { useFormik } from 'formik';
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
@@ -8,7 +9,13 @@ import * as Yup from 'yup';
 import UserInfoImageEditable from '@/components/common/Account/UserInfoImageEditable';
 import CardCirugia from '@/components/common/Cards/CardCirugia';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
+import CarouselHome from '@/components/common/ViewElements/Corousel';
+import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
+import OurServices from '@/components/common/ViewElements/OurServices';
+import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
+import { Head } from '@/components/constants';
 import { toast } from '@/components/ui/use-toast';
+import getServerSideSharedProps from '@/lib/next';
 import { getCurrentUser, updateProfileImage } from '@/store';
 import {
   Gender,
@@ -20,7 +27,7 @@ import {
 } from '@/types';
 import { createS3Url, refFileImage } from '@/utils/refFileImage';
 
-export default function AccountView() {
+export default function Admin() {
   const { t } = useTranslation('common');
   const user = useSelector(getCurrentUser);
   const [generatePresignedUrlUserImage] =
@@ -158,41 +165,60 @@ export default function AccountView() {
 
   return (
     <>
-      <div className="w-full h-96 lg:h-96  flex flex-col justify-center items-center bg-[#E5F9F7] bg-opacity-80 p-20 border-t-8 border-b-8 border-white">
-        <UserInfoImageEditable user={user} handleChange={handleChange} />
-        <div className="flex flex-col w-full justify-center items-center gap-4 ">
-          {adjudicatedLoading ? (
-            <div>Loading...</div>
-          ) : adjudicatedData &&
-            adjudicatedData?.getMyAdjudicated?.length > 0 ? (
-            adjudicatedData.getMyAdjudicated.map((adjudicated, index) => (
-              <React.Fragment key={index}>
-                {/* @ts-expect-error Missing type definition for CardCirugia */}
-                <CardCirugia adjudicated={adjudicated} />
-              </React.Fragment>
-            ))
-          ) : (
-            <div className="hidden flex-col gap-10 justify-center items-center w-full">
-              <Link
-                href="/store"
-                className="w-80 lg:w-96 h-12 bg-drcuotasPrimary rounded-xl  hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center  hover:shadow-drcuotasPrimary hover:shadow-2xl hover:bg-white hover:border hover:text-drcuotasPrimary-text hover:border-drcuotasPrimary"
-              >
-                {t('startSurgery')}
-              </Link>
+      <Head title="Dr.Cuotas" />
+      <>
+        <>
+          <div className="w-full h-96 lg:h-96  flex flex-col justify-center items-center bg-[#E5F9F7] bg-opacity-50 p-20 border-t-8 border-b-8 border-white">
+            <UserInfoImageEditable user={user} handleChange={handleChange} />
+            <div className="flex flex-col w-full justify-center items-center gap-4 ">
+              {adjudicatedLoading ? (
+                <div>Loading...</div>
+              ) : adjudicatedData &&
+                adjudicatedData?.getMyAdjudicated?.length > 0 ? (
+                adjudicatedData.getMyAdjudicated.map((adjudicated, index) => (
+                  <React.Fragment key={index}>
+                    {/* @ts-expect-error Missing type definition for CardCirugia */}
+                    <CardCirugia adjudicated={adjudicated} />
+                  </React.Fragment>
+                ))
+              ) : (
+                <div className="hidden flex-col gap-10 justify-center items-center w-full">
+                  <Link
+                    href="/store"
+                    className="w-80 lg:w-96 h-12 bg-drcuotasPrimary rounded-xl  hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center  hover:shadow-drcuotasPrimary hover:shadow-2xl hover:bg-white hover:border hover:text-drcuotasPrimary-text hover:border-drcuotasPrimary"
+                  >
+                    {t('startSurgery')}
+                  </Link>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
-      <div className="w-full h-80 bg-[#E5F9F7] bg-opacity-80 border-t-8 border-b-8 border-white "></div>
+          </div>
 
-      {file ? (
-        <CustomEditorImage
-          toggleModal={toggleModal}
-          modalHandler={modalHandler}
-          handleChange={EditImageAndUpload}
-          file={file}
-        />
-      ) : null}
+          {file ? (
+            <CustomEditorImage
+              toggleModal={toggleModal}
+              modalHandler={modalHandler}
+              handleChange={EditImageAndUpload}
+              file={file}
+            />
+          ) : null}
+        </>
+        <div className="w-full h-auto bg-[#E5F9F7] bg-opacity-50 border-t border-b border-white ">
+          <OurSpecialties />
+        </div>
+        <OurServices />
+        {/* <OurAdjudicated /> */}
+        {/* <OurProfessionals /> */}
+        {/* <SubscribeComponent /> */}
+      </>
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return {
+    props: {
+      ...(await getServerSideSharedProps(ctx)),
+    },
+  };
+};

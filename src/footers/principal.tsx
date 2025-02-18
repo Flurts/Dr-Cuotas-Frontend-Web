@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import FooterPrincipal from '@/footers/components/index';
+import FooterPrincipal from './components';
 
 interface Props {
   children: JSX.Element;

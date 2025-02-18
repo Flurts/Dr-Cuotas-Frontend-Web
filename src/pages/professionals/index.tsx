@@ -8,7 +8,9 @@ export default function Professionals() {
   return (
     <>
       <Head title="Unete!" />
-      <ProfessionalView />
+      <div className="w-full h-60 lg:h-screen">
+        <ProfessionalView />
+      </div>
     </>
   );
 }

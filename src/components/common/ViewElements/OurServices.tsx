@@ -1,92 +1,65 @@
 import React from 'react';
 
 import ServiceCard from '@/components/common/Cards/ServicesCard';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
+import { Carousel, CarouselContent } from '@/components/ui/carousel';
+
+import TitleElements from './TitleElements';
 
 function OurServices() {
   const services = [
     {
       imageSrc: '/images/elements/specialty.svg',
       link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
+      title: 'Cirugía General',
+      description: 'Procedimientos quirúrgicos en órganos internos y tejidos blandos.',
     },
     {
       imageSrc: '/images/elements/specialty.svg',
       link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
+      title: 'Plástica y Estética',
+      description: 'Intervenciones para mejorar la apariencia o corregir defectos físicos.',
     },
     {
       imageSrc: '/images/elements/specialty.svg',
       link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
-    },
-    {
-      imageSrc: '/images/elements/specialty.svg',
-      link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
-    },
-    {
-      imageSrc: '/images/elements/specialty.svg',
-      link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
-    },
-    {
-      imageSrc: '/images/elements/specialty.svg',
-      link: '/services',
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet.',
+      title: 'Ortopédica',
+      description: 'Tratamiento de fracturas, lesiones óseas y articulares.',
     },
   ];
+  
 
   return (
-    <>
-      <div className="w-full h-full bg-[#E5F9F7] flex flex-col justify-center items-center gap-4">
-        <p className="text-drcuotasPrimary-text font-bold">Nuestro servicio</p>
-        <h1 className="text-6xl text-drcuotasSecondary-text font-bold">
-          Especialidades
-        </h1>
-        <div className="w-[40vh] h-20 border-b-4 border-drcuotasPrimary-bg"></div>
-
-        <Carousel className="w-full max-w-screen-2xl p-10 px-40">
-          <CarouselContent className="-ml-0">
-            {services.length > 0 ? (
-              services.map((service, index) => (
-                <CarouselItem
-                  key={index}
-                  className="overflow-visible md:basis-1/2 xl:basis-1/3 2xl:basis-1/4 pl-0"
-                >
-                  <ServiceCard
-                    imageSrc={service.imageSrc}
-                    link={service.link}
-                    title={service.title}
-                    description={service.description}
-                  />
-                </CarouselItem>
-              ))
-            ) : (
-              <div className="flex flex-row items-center justify-center w-full h-full gap-2">
-                <span className="text-drcuotasSecondary-text">
-                  No hay especialidades disponibles
-                </span>
-              </div>
-            )}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+    <div className="w-full h-full flex flex-col justify-center items-center  lg:p-20">
+      <div className="w-full h-full flex flex-col justify-center items-center ">
+        <TitleElements
+          primaryText="Nuestra Categorias"
+          secondaryText="nuestras especialidades"
+          descriptionText="Descubre nuestras especialidades en cirugía estética."
+        />
       </div>
-    </>
+
+      <Carousel className="w-full h-60 lg:h-full max-w-screen-2xl flex items-center justify-center ">
+        <CarouselContent className="w-96 sm:w-full h-full flex gap-4 lg:gap-6 p-20 ">
+          {services.length > 0 ? (
+            services.map((service, index) => (
+              <ServiceCard
+                key={index}
+                imageSrc={service.imageSrc}
+                link={service.link}
+                title={service.title}
+                description={service.description}
+              />
+            ))
+          ) : (
+            <div className="flex flex-row items-center justify-center w-full h-full">
+              <span className="text-[#737373] tracking-tight">
+                No hay especialidades disponibles
+              </span>
+            </div>
+          )}
+        </CarouselContent>
+      </Carousel>
+    </div>
   );
 }
 

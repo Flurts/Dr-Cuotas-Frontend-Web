@@ -163,8 +163,8 @@ export default function RegisterModal() {
 
   return (
     <>
-      <div className=" flex flex-col gap-5">
-        <span className="text-drcuotasSecondary-text text-2xl font-medium">
+      <div className="w-80 lg:w-[40vw] flex flex-col  justify-center items-center gap-4">
+        <span className="text-drcuotasPrimary-text text-2xl font-black uppercase leading-tight tracking-tight">
           Registrate
         </span>
         <FormikProvider value={formik}>
@@ -176,7 +176,7 @@ export default function RegisterModal() {
                   id="first_name"
                   name="first_name"
                   placeholder={t('form:firstName')}
-                  className="bg-white border rounded-md text-slate-800 w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border rounded-md text-[#737373]  tracking-tight leading-tight w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="first_name"
@@ -218,7 +218,7 @@ export default function RegisterModal() {
                   id="phone_email"
                   name="phone_email"
                   placeholder={t('form:emailOrPhone')}
-                  className="bg-white border rounded-md text-slate-800 w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border rounded-md text-[#737373]  tracking-tight leading-tight w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="phone_email"
@@ -240,7 +240,7 @@ export default function RegisterModal() {
                   id="password"
                   name="password"
                   placeholder={t('form:newPassword')}
-                  className="bg-white border rounded-md text-slate-800 w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border rounded-md text-[#737373]  tracking-tight leading-tight w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="password"
@@ -256,13 +256,13 @@ export default function RegisterModal() {
             </div>
 
             <div className="w-full flex flex-col justify-center">
-              <p className="text-sm">{t('form:dateOfBirth')}</p>
+              <p className="text-sm hidden">{t('form:dateOfBirth')}</p>
               <div className="flex flex-row gap-4 w-full">
                 <Field
                   as="select"
                   id="date_birth.day"
                   name="date_birth.day"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-[#737373]  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 >
                   {dias}
                 </Field>
@@ -271,7 +271,7 @@ export default function RegisterModal() {
                   as="select"
                   id="date_birth.month"
                   name="date_birth.month"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-[#737373]  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 >
                   {meses}
                 </Field>
@@ -280,7 +280,7 @@ export default function RegisterModal() {
                   as="select"
                   id="date_birth.year"
                   name="date_birth.year"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-[#737373]  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 >
                   {anios}
                 </Field>
@@ -298,20 +298,20 @@ export default function RegisterModal() {
             </div>
 
             <div className="w-full flex flex-col justify-center">
-              <p className="text-sm">{t('form:gender')}</p>
+              <p className="text-sm hidden">{t('form:gender')}</p>
 
               <div className="w-full flex justify-center items-center gap-4 ">
-                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-slate-800 text-xs p-2 flex justify-between items-center">
+                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-[#737373] tracking-tight leading-tight text-xs p-2 flex justify-between items-center">
                   {t('constants:woman')}
                   <Field type="radio" name="gender" value="Female" />
                 </label>
 
-                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-slate-800 text-xs p-2 flex justify-between items-center">
+                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-[#737373] tracking-tight leading-tight text-xs p-2 flex justify-between items-center">
                   {t('constants:man')}
                   <Field type="radio" name="gender" value="Male" />
                 </label>
 
-                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-slate-800 text-xs p-2 flex justify-between items-center">
+                <label className="w-full h-8 hidden xl:h-[40px] bg-white border rounded-md text-[#737373] tracking-tight leading-tight text-xs p-2  justify-between items-center">
                   {t('constants:preferNotSay')}
                   <Field type="radio" name="gender" value="PreferNotToSay" />
                 </label>
@@ -328,38 +328,39 @@ export default function RegisterModal() {
               />
             </div>
 
-            <p className="w-full text-justify text-xs text-gray-500">
+            <p className="w-full text-justify text-xs text-gray-500 hidden">
               {t('common:registerDescription')}
             </p>
 
-            <button
+            <a
+              href='/'
               type="submit"
-              className="bg-drcuotasPrimary-bg text-white  h-12 w-full rounded-md justify-center items-center  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
+              className="bg-drcuotasPrimary-bg text-white  h-12 w-full rounded-lg flex justify-center text-center items-center leading-tight tracking-tight uppercase  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
             >
               {formik.isSubmitting ? (
                 <ImSpinner9 className="animate-spin h-6 text-white w-full" />
               ) : (
                 t('Registrarse')
               )}
-            </button>
+            </a>
           </Form>
         </FormikProvider>
-        <div className="flex flex-col gap-6 w-full justify-center items-center">
-          <span className="text-drcuotasTertiary-text text-xs w-full text-center">
-            o continuar con
-          </span>
-          <div className="flex flex-row items-center justify-center w-full gap-2">
-            <button
-              type="button"
-              className=""
-              onClick={async () => {
-                await signIn('google');
-              }}
-            >
-              <FcGoogle className="w-7 h-7" />
-            </button>
+          <div className="flex flex-col gap-6 w-full justify-center items-center">
+            <span className="text-drcuotasTertiary-text text-xs w-full text-center leading-tight tracking-tight">
+              o continuar con
+            </span>
+            <div className="flex flex-row items-center justify-center w-full gap-2">
+              <button
+                type="button"
+                className=""
+                onClick={async () => {
+                  await signIn('google');
+                }}
+              >
+                <FcGoogle className="w-7 h-7" />
+              </button>
+            </div>
           </div>
-        </div>
       </div>
     </>
   );

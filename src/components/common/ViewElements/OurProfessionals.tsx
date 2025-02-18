@@ -51,21 +51,21 @@ const OurProfessionals = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full h-full gap-2 py-16">
+      <div className="w-full h-full flex flex-col">
         <TitleElements
-          primaryText="Equipo"
-          secondaryText="Nuestros Profesionales"
-          descriptionText="Conoce a los profesionales de la salud que te ayudarán a mejorar tu calidad de vida."
+          primaryText="¡Los mejores en el área!"
+          secondaryText="Nuestros Equipo"
+          descriptionText='¡Los mejores expertos en estética de la ciudad!'
         />
 
-        <div className="flex flex-row gap-6 items-center justify-center w-full mt-12">
+        <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full p-20 lg:p-0">
           {doctorsList?.length ? (
             doctorsList?.map((doctor) => (
               <DoctorInfoCard key={doctor.id} doctor={doctor} />
             ))
           ) : (
             <>
-              <span className="text-lg font-bold text-drcuotasSecondary-text">
+              <span className="text-[10px] sm:text-sm  leading-tight tracking-wide text-[#737373]">
                 No hay profesionales disponibles
               </span>
             </>

@@ -1,22 +1,19 @@
 'use client';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
-import { Button } from '@/components/ui/button';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 import TitleElements from './TitleElements';
 
 const OurSpecialties = () => {
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
-    variables: {
-      limit: 3,
-      offset: 0,
-    },
+    variables: { limit: 10, offset: 0 },
   });
 
   const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data && !error) {
@@ -27,46 +24,70 @@ const OurSpecialties = () => {
     }
   }, [data, error]);
 
-  return (
-    <div className="w-full h-screen">
-      <div className="flex flex-col items-center justify-center w-full h-full gap-2 py-16">
-        <TitleElements
-          primaryText="Especialidades"
-          secondaryText="Cirugías Disponibles"
-          descriptionText="Entérate de todas aquellas especialidades y cirugías que puedes encontrar en nuestra tienda"
-        />
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 320 * 4; // Tamaño de un item * cantidad visible
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
-        <div className="flex flex-row gap-6 items-center justify-center w-full mt-12">
-          {surgeriesList.length ? (
+  return (
+    <div className="w-full flex flex-col justify-center items-center lg:p-20">
+      <TitleElements
+        primaryText="Nuestros Servicios"
+        secondaryText="Cirugías Disponibles"
+        descriptionText="Realza tu belleza con nuestras cirugías estéticas. ¡Agenda hoy!"
+      />
+
+      <div className="relative w-full  flex justify-center items-center">
+        <button
+          className="hidden lg:block absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10"
+          onClick={() => {
+            scroll('left');
+          }}
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        <div
+          ref={scrollRef}
+          className="flex lg:gap-8 overflow-x-auto scroll-smooth no-scrollbar  p-16 lg:p-20 justify-center items-center "
+          style={{ scrollBehavior: 'smooth' }}
+        >
+          {surgeriesList.length > 0 ? (
             surgeriesList.map((surgery) => (
-              <SpecialtyCard
-                key={surgery.id}
-                title={surgery.name}
-                description={surgery.description ?? 'Descripción no disponible'}
-                rating={surgery.rating}
-                imageUrl={
-                  surgery.file_banner?.file_link ??
-                  '/images/elements/specialty.svg'
-                }
-              />
+              <div key={surgery.id} className="w-[300px] flex-shrink-0">
+                <SpecialtyCard
+                  title={surgery.name}
+                  description={
+                    surgery.description ?? 'Descripción no disponible'
+                  }
+                  rating={surgery.rating}
+                  imageUrl={
+                    surgery.file_banner?.file_link ??
+                    '/images/elements/specialty.svg'
+                  }
+                />
+              </div>
             ))
           ) : (
-            <div className="flex flex-row items-center justify-center w-full h-full gap-2">
-              <span className="text-drcuotasSecondary-text">
-                No hay especialidades disponibles
-              </span>
-            </div>
+            <span className="text-[#737373] text-center w-full text-xs">
+              No hay Cirugias
+            </span>
           )}
         </div>
 
-        <Link href="/store">
-          <Button
-            variant="outline"
-            className="rounded-full border-drcuotasPrimary-bg text-drcuotasPrimary-text mt-10 hover:text-white hover:bg-drcuotasPrimary-bg"
-          >
-            Ver más
-          </Button>
-        </Link>
+        <button
+          className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10"
+          onClick={() => {
+            scroll('right');
+          }}
+        >
+          <ChevronRight size={24} />
+        </button>
       </div>
     </div>
   );

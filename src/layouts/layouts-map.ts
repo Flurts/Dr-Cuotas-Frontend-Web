@@ -10,6 +10,7 @@ const layoutsMap: Record<string, React.FC<{ children: JSX.Element }>> = {
   '/forgotYourPassword': SimpleLayout,
   '/forgotYourPassword/OTP': SimpleLayout,
   '/forgotYourPassword/newPassword': SimpleLayout,
+  '/admin': AccountLayout,
   '/account': AccountLayout,
   '/account/doctor/[slug]': AccountLayout,
   '/account/settings': AccountLayout,

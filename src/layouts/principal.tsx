@@ -1,20 +1,10 @@
 'use client';
-import { Box } from '@mui/material';
+import { Box, Modal, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router'; // Import useRouter
-import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
-import {
-  AiOutlineFileAdd,
-  AiOutlineFileDone,
-  AiOutlineFileSearch,
-  AiOutlineFileText,
-} from 'react-icons/ai';
-import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FiLogIn, FiMenu, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
-import { PiArrowRight } from 'react-icons/pi';
-import { TiThMenu } from 'react-icons/ti';
 import { useSelector } from 'react-redux';
 
 import { getCurrentUser, isLoggedIn } from '@/store';
@@ -24,225 +14,287 @@ interface Props {
   className?: string;
 }
 
-const MemoizedChildren = React.memo(function MemoizedChildren({
-  children,
-}: Props) {
-  return (
-    <Box sx={{ pb: '0px' }} position="relative">
-      {children}
-    </Box>
-  );
-});
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
 
-const MainContent = ({ children }: Props) => {
-  return (
-    <Box
-      sx={{
-        mt: '0px',
-        pb: '0px',
-        minHeight: '80vh',
-        width: '100%',
-      }}
-    >
-      <MemoizedChildren>{children}</MemoizedChildren>
-    </Box>
-  );
-};
-
-const navItems = [
-  { text: 'Inicio', href: '/' },
-  { text: 'Cirugía', href: '/store' },
-  { text: 'Adjudicado', href: '/awarded' },
-  { text: 'Profesionales', href: '/professionals' },
-  { text: 'Financiación', href: '/financing' },
-  { text: 'Preguntas Frecuentes', href: '/faq' },
-];
-
-function PrincipalLayout({ children, className }: Props) {
-  const { t } = useTranslation('common');
+const PrincipalLayout = ({ children, className }: Props) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLogged = useSelector(isLoggedIn);
   const user = useSelector(getCurrentUser);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
-
-  const registerHandler = () => {
-    void router.push('/login?view=register');
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const tabs = [
-    { text: 'Home', href: '/' },
-    { text: 'About', href: '/faq' },
-    { text: 'Contact Us', href: '/professionals' },
-  ];
-
-  const menuOptions = [
-    {
-      label: 'Iniciar Sesión',
-      href: '/login',
-      icon: FaSignInAlt,
-      showIfNotLogged: true,
-    },
-    {
-      label: 'Registrarse',
-      href: '#',
-      icon: FaUserPlus,
-      onClick: registerHandler,
-      showIfNotLogged: true,
-    },
-    { label: 'Home', href: '/', icon: AiOutlineFileText },
-    { label: 'About', href: '/faq', icon: AiOutlineFileText },
-    {
-      label: 'Contact',
-      href: '/professionals',
-      icon: AiOutlineFileAdd,
-    },
-    { label: 'Cirugías', href: '/store', icon: AiOutlineFileSearch },
-    { label: 'Adjudicados', href: '/awarded', icon: AiOutlineFileDone },
-  ];
+  const [sticky, setSticky] = useState(true);
+  const [hidden, setHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const isActive = (href: string) => router.pathname === href;
+  const handleCartOpen = () => {
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
+    }
+    setCartOpen(true);
+  };
+
+  const handleCartClose = () => {
+    setCartOpen(false);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+      setHidden(true);
+      const timeout = setTimeout(() => {
+        setHidden(false);
+      }, 300);
+      setScrollTimeout(timeout);
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+    };
+  }, [lastScrollY, scrollTimeout]);
 
   return (
     <div className={`${className}`}>
-      <div>
-        <div className="w-full flex flex-row justify-center items-center p-4">
-          <Link href="/" className="w-full flex justify-center items-center">
-            <Image
-              src="/images/logo/logo-1.svg"
-              alt="Logo"
-              width={150}
-              height={150}
-            />
-          </Link>
-
-          <div className="w-full flex justify-end items-center lg:hidden text-xl text-[#6636E2] text-center">
-            <button onClick={handleMenuToggle}>
-              <TiThMenu />
-            </button>
+      <nav
+        className={`${
+          sticky ? 'sticky top-0' : 'relative'
+        } z-50 flex w-full items-center justify-center p-4  bg-white backdrop-blur-3xl transition-transform duration-500 ${
+          hidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
+      >
+        <>
+          <div className="flex w-full items-end justify-start xl:px-20">
+            <Link
+              href="/"
+              className="font-extrabold uppercase leading-tight tracking-wide text-xs w-auto"
+            >
+              <Image
+                src="/images/logo/logo-1.svg"
+                alt="Logo"
+                width={110}
+                height={110}
+                className="w-40 h-full"
+              />
+            </Link>
           </div>
-
-          <div className="w-full hidden lg:flex flex-row items-center justify-center">
-            <ul className="xl:w-full   flex flex-row justify-center items-center gap-4 text-xs 2xl:text-[14px] font-bold">
-              {navItems.map((item, index) => (
-                <Link href={item.href} key={index}>
-                  <p
-                    className={`w-full truncate  ${
-                      isActive(item.href)
-                        ? 'text-[#737373] border-b-2 border-[#6636E2]'
-                        : 'text-[#737373]'
-                    }`}
-                  >
-                    {item.text}
-                  </p>
-                </Link>
-              ))}
+        </>
+        <>
+          <div className="hidden lg:flex w-full items-center justify-center gap-80">
+            <ul className="flex flex-row justify-center items-center w-auto h-auto gap-4">
+              <Link
+                href="/"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Inicio
+              </Link>
+              <Link
+                href="/store"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Tienda
+              </Link>
+              <Link
+                href="/professionals"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Doctores
+              </Link>
+              <Link
+                href="/faq"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Soporte
+              </Link>
             </ul>
           </div>
-
-          <div className="w-full flex flex-row items-center justify-center">
+        </>
+        <>
+          <div className="flex w-20 lg:w-full items-center justify-center gap-2">
             {!isLogged ? (
               <>
                 <Link
-                  className="text-[#6636E2] font-semibold w-52 h-12  flex flex-row justify-center items-center  group rounded-full hover:scale-100 transition-all duration-300"
                   href="/login"
+                  className="text-[#737373] hover:text-drcuotasPrimary font-black uppercase border-2 border-[#737373] w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  <span> {t('login')}</span>
+                  <span className="text-sm">Login</span>
+                  <FiLogIn className="uppercase leading-tight tracking-tight font-black text-xl" />
                 </Link>
-
-                <div
-                  className="bg-[#6636E2] gap-2 hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2] text-white text-[14px] font-bold hover:shadow-[#B398F5] hover:shadow-2xl w-52 h-12  flex flex-row justify-center items-center group rounded-[10px] hover:scale-100 transition-all duration-300"
-                  onClick={registerHandler}
+                <Link
+                  href="/login"
+                  className="bg-[#737373] hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-[#737373] hover:border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  <span> {t('register')}</span>
-                  <PiArrowRight />
-                </div>
+                  <FiShoppingCart className="text-2xl" />
+                </Link>
               </>
             ) : (
-              <Link
-                className="bg-[#6636E2]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2] text-white text-[14px] font-semibold hover:shadow-[#B398F5] hover:shadow-2xl w-52 h-12  flex flex-row justify-center items-center gap-2 group rounded-full hover:scale-105 transition-all duration-300"
-                href="/account"
-              >
-                <span>{t('MyAccount')}</span>
-                <PiArrowRight />
-              </Link>
+              <>
+                <Link
+                  href="/account"
+                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                >
+                  <span className="uppercase leading-tight tracking-tight text-sm">
+                    Cuenta
+                  </span>
+                  <FiUser className="text-2xl" />
+                </Link>
+                <button
+                  onClick={handleCartOpen}
+                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                >
+                  <FiShoppingCart className="text-2xl" />
+                </button>
+              </>
             )}
-          </div>
-        </div>
 
-        {isMenuOpen && (
-          <>
-            <div
-              className="h-screen w-screen  flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm  z-50"
+            <button
+              className="text-drcuotasPrimary lg:hidden flex items-center justify-center rounded-xl w-10 h-10"
               onClick={handleMenuToggle}
             >
-              <div className="fixed inset-y-0 right-0 w-60 h-screen animate-fade-left bg-white z-50 overflow-y-auto animation-fade-in-030">
-                <div className="flex justify-end border-b p-2 ">
-                  <button onClick={handleMenuToggle}>
-                    <IoClose className="h-6 w-6 text-[#6636E2]" />
-                  </button>
-                </div>
-                {!isLogged && user && (
-                  <div className="px-4 py-6  flex items-center justify-center flex-col">
-                    <div className="rounded-full overflow-hidden border-4 border-[#6636E2] w-20 h-20 flex-shrink-0">
-                      <Image
-                        src={user.profile_picture ?? '/images/logo/logo-1.svg'}
-                        alt="Perfil"
-                        width={32}
-                        height={32}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="w-full text-center bg-red-500 text-[#6636E2] text-sm font-bold">
-                      <p>{user.first_name}</p>
-                      <p>{user.email}</p>
-                    </div>
-                  </div>
-                )}
+              <FiMenu className="text-2xl" />
+            </button>
+          </div>
+        </>
+      </nav>
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-50 z-50"
+          onClick={handleMenuToggle}
+        ></div>
+      )}
+      <div
+        className={`fixed top-0 right-0 h-full w-52 lg:w-64 bg-white  border  transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 z-50`}
+      >
+        <button
+          className="absolute top-4 right-4 text-gray-600"
+          onClick={handleMenuToggle}
+        >
+          <IoClose className="text-2xl" />
+        </button>
+        <ul className="p-6 space-y-4">
+          {!isLogged ? (
+            <li>
+              <Link
+                href="/login"
+                className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              >
+                Iniciar Sesión
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link
+                href="/account"
+                className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              >
+                Cuenta
+              </Link>
+            </li>
+          )}
 
-                <div className="px-4 py-6">
-                  <ul className="space-y-2">
-                    {menuOptions.map((option, index) => (
-                      <>
-                        <li key={index} onClick={handleMenuToggle}>
-                          {option.onClick ? (
-                            <button
-                              className="text-[#6636E2]  w-screen text-lg flex items-center font-bold cursor-pointer gap-3 bg-green-500 "
-                              onClick={option.onClick}
-                            >
-                              {React.createElement(option.icon, {})}
-                              {option.label}
-                            </button>
-                          ) : (
-                            <Link
-                              href={option.href}
-                              className="text-[#6636E2] w-screen  text-lg flex items-center font-bold cursor-pointer gap-3 bg-red-"
-                              onClick={handleMenuToggle}
-                            >
-                              {React.createElement(option.icon, {})}
-                              {option.label}
-                            </Link>
-                          )}
-                        </li>
-                      </>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        <div className="flex flex-col items-center justify-center">
-          <MainContent>{children}</MainContent>
-        </div>
+          <li>
+            <Link
+              href="/"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/store"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Tienda
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/professionals"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Doctores
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/faq"
+              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            >
+              Soporte
+            </Link>
+          </li>
+        </ul>
       </div>
+      <Modal open={cartOpen} onClose={handleCartClose}>
+        <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96">
+          <Typography
+            variant="h6"
+            className="h-40 text-center flex items-center justify-center"
+          >
+            <span className="uppercase leading-tight tracking-tight font-black text-drcuotasPrimary-text text-2xl">
+              Carrito de Compras
+            </span>
+          </Typography>
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-4 mb-4 border-b pb-2"
+              >
+                <span>{item.title}</span>
+                <div>
+                  <Typography variant="body1">{item.name}</Typography>
+                  <Typography variant="body2" className="text-gray-600">
+                    ${item.price}
+                  </Typography>
+                </div>
+                <button
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="ml-auto text-red-500"
+                >
+                  <IoClose size={20} />
+                </button>
+              </div>
+            ))
+          ) : (
+            <Typography variant="body1" className="text-center">
+              <span className="leading-tight tracking-tight text-drcuotasSecondary-text">
+                No hay productos en el carrito.
+              </span>
+            </Typography>
+          )}
+          <button
+            onClick={handleCartClose}
+            className="mt-4 w-full bg-drcuotasPrimary text-white p-2 rounded-md"
+          >
+            Cerrar
+          </button>
+        </Box>
+      </Modal>
+      <Box>{children}</Box>
     </div>
   );
-}
+};
 
 export default PrincipalLayout;

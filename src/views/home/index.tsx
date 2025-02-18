@@ -2,11 +2,8 @@ import React, { useEffect } from 'react';
 
 import CarouselHome from '@/components/common/ViewElements/Corousel';
 import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
-import OurAdjudicated from '@/components/common/ViewElements/OurAdjudicated';
-import OurProfessionals from '@/components/common/ViewElements/OurProfessionals';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
-import SubscribeComponent from '@/components/common/ViewElements/Subscribe';
 import { useGetUserDataLazyQuery } from '@/types';
 
 export default function HomeView() {
@@ -30,15 +27,17 @@ export default function HomeView() {
 
   return (
     <>
-      <CarouselHome />
+      <>
+        <CarouselHome />
+      </>
+      <div className="w-full h-auto lg:bg-[#E5F9F7] lg:bg-opacity-50 border-t border-b border-white">
+        <OurSpecialties />
+        <KnowOurProfessionals />
+      </div>
       <OurServices />
-      <OurSpecialties />
-
-      <KnowOurProfessionals />
-      <OurAdjudicated />
-      <OurProfessionals />
-
-      <SubscribeComponent />
+      {/* <OurAdjudicated /> */}
+      {/* <OurProfessionals /> */}
+      {/* <SubscribeComponent /> */}
     </>
   );
 }
