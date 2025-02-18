@@ -3,7 +3,6 @@ import React from 'react';
 import { PiArrowRight } from 'react-icons/pi';
 
 import CardAdjudicated from './CardAdjudicated';
-import Image from 'next/image';
 
 function OurAdjudicated() {
   return (
@@ -15,12 +14,12 @@ function OurAdjudicated() {
             <div className="w-full h-full flex flex-col justify-center gap-4 ">
               <div className="bg-drcuotasPrimary w-24 h-2"></div>
               <h1 className="text-base sm:text-5xl lg:text-6xl font-extrabold text-drcuotasSecondary-text  text-center lg:text-start uppercase tracking-tight">
-              PARTICIPA EN NUESTRO SORTEO
+                PARTICIPA EN NUESTRO SORTEO
               </h1>
               <p className="text-xs  text-[#737373]  text-center lg:text-start hidden lg:block tracking-tight">
-                Conoce nuestro sorteo exclusivo al realizar la compra de uno o mas productos en nuestra Tienda.
-                ¡Tu compra te da la oportunidad de Ganar!
-                ¡Adjudicado no paga más!
+                Conoce nuestro sorteo exclusivo al realizar la compra de uno o
+                mas productos en nuestra Tienda. ¡Tu compra te da la oportunidad
+                de Ganar! ¡Adjudicado no paga más!
               </p>
               <p className="text-[10px]  text-[#737373]  text-center lg:text-start block lg:hidden tracking-tight">
                 Adjudicado no paga más!
@@ -32,7 +31,6 @@ function OurAdjudicated() {
                 Ver mas
                 <PiArrowRight className="hidden lg:block" />
               </Link>
-          
             </div>
 
             {/* Imagen y Calendario */}
