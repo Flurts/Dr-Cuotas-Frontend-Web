@@ -10,9 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export default function ProfessionalView() {
   return (
     <>
-        <OurProfessionals />
+      <OurProfessionals />
 
-        {/* <Tabs
+      {/* <Tabs
           defaultValue="Nuestros profesionales"
           className="w-full h-auto flex flex-col justify-center items-center"
         >
