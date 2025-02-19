@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import ActivateSurgeryCard from '@/components/common/Cards/ActivateSurgeryCard';
 import DoctorInfoCard from '@/components/common/Cards/DoctorInfoCard';
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
 import Earnings from '@/components/common/Tables/earnings';
@@ -11,152 +10,164 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import {
+  useGetAllSurgeriesWithValuesQuery,
+  useGetDoctorsByNameLazyQuery,
+} from '@/types';
+import { Status } from '@/utils/constants';
+
+import { DoctorByStatus } from './doctorbyStatus';
+import LotteryComponent from './Lottery';
+import { SurgeryByStatus } from './surgeryByStatus';
+
+interface DoctorList {
+  id: string;
+  profession: string;
+  user: {
+    first_name: string;
+    last_name: string;
+    profile_picture: string;
+    social_media: Array<{
+      link: string;
+      status: string;
+      type: string;
+    }>;
+  };
+}
+
+interface Surgery {
+  id: string;
+  name: string;
+  description?: string;
+  rating: number;
+  amount: number;
+  file_banner?: {
+    file_link: string;
+  };
+}
 
 export default function AdminView() {
-  const [ganador, setGanador] = useState('');
-  const [premio, setPremio] = useState('');
-  const [loading, setLoading] = useState(false);
-  const nombres = ['Juan', 'María', 'Pedro', 'Ana', 'Luis', 'Carla'];
+  const [selectedStatus, setSelectedStatus] = useState<Status>(Status.Active);
+  const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
 
-  const handleSortear = () => {
-    if (!premio.trim()) {
-      alert('Por favor, ingrese un premio antes de sortear.');
-      return;
+  const [getDoctorsByName, { data: doctorsData, error: doctorsError }] =
+    useGetDoctorsByNameLazyQuery();
+
+  const { data: surgeriesData, error: surgeriesError } =
+    useGetAllSurgeriesWithValuesQuery({
+      variables: { limit: 10, offset: 0 },
+    });
+
+  const [doctorsList, setDoctorsList] = useState<DoctorList[]>([]);
+
+  useEffect(() => {
+    void getDoctorsByName({ variables: { offset: 0, limit: 6, name: '' } });
+  }, [getDoctorsByName]);
+
+  useEffect(() => {
+    if (doctorsData && !doctorsError) {
+      setDoctorsList(doctorsData.getDoctorsByName as DoctorList[]);
+    } else if (doctorsError) {
+      console.error(doctorsError);
+      setDoctorsList([]);
     }
-    setLoading(true);
-    setTimeout(() => {
-      const nombreAleatorio =
-        nombres[Math.floor(Math.random() * nombres.length)];
-      setGanador(nombreAleatorio);
-      setLoading(false);
-    }, 2000);
-  };
+  }, [doctorsData, doctorsError]);
+
+  console.log(selectedStatus);
+
+  useEffect(() => {
+    if (surgeriesData?.getAllSurgeriesWithValues && !surgeriesError) {
+      setSurgeriesList(surgeriesData.getAllSurgeriesWithValues as Surgery[]);
+    } else if (surgeriesError) {
+      console.error(surgeriesError);
+      setSurgeriesList([]);
+    }
+  }, [surgeriesData, surgeriesError]);
 
   return (
     <>
       <Head title="Dr.Cuotas" />
+      <div
+        className=" flex flex-col h-96 w-full bg-no-repeat justify-end items-end bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/images/banners/BannerHome.svg')",
+          backgroundPosition: 'top',
+          backgroundSize: '70% auto',
+        }}
+      >
+        <div>
+          <select
+            // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+            onChange={(e) => setSelectedStatus(e.target.value as Status)}
+            value={selectedStatus}
+            className="border p-2 rounded-xl text-drcuotasSecondaryPrimaryColor w-[700px] m-5 border-gray-700 font-semibold bg-white"
+          >
+            <option value="" disabled>
+              Selecciona Status...
+            </option>
+            {Object.values(Status).map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>Activate Surgerys</AccordionTrigger>
           <AccordionContent>
-            <div className="flex gap-10 justify-center items-center">
-              <ActivateSurgeryCard />
-              <ActivateSurgeryCard />
-            </div>
-            <div className="flex gap-10 justify-center items-center">
-              <ActivateSurgeryCard />
-              <ActivateSurgeryCard />
-            </div>
-            <div className="flex gap-10 justify-center items-center">
-              <ActivateSurgeryCard />
-              <ActivateSurgeryCard />
-            </div>
+            <SurgeryByStatus status="Inactive" />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
           <AccordionTrigger>Activate Doctors</AccordionTrigger>
           <AccordionContent>
-            <div className="flex gap-10 justify-center items-center">
-              <ActivateSurgeryCard />
-              <ActivateSurgeryCard />
-            </div>
-            <div className="flex gap-10 justify-center items-center">
-              <ActivateSurgeryCard />
-              <ActivateSurgeryCard />
-            </div>
-            <div className="flex gap-10 justify-center items-center">
-              <ActivateSurgeryCard />
-              <ActivateSurgeryCard />
-            </div>
+            <DoctorByStatus status={selectedStatus} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">
           <AccordionTrigger>Surgery By Status</AccordionTrigger>
           <AccordionContent>
-            <div className="flex gap-10 justify-center items-center m-10">
-              <SpecialtyCard
-                title="hola"
-                description="Descripción no disponible"
-                rating={5}
-                price={2000}
-                imageUrl={'/images/surgerys/chest_body.svg'}
-              />
-              <SpecialtyCard
-                title="hola"
-                price={2000}
-                description="Descripción no disponible"
-                rating={5}
-                imageUrl={'/images/surgerys/chest_body.svg'}
-              />
-              <SpecialtyCard
-                title="hola"
-                price={2000}
-                description="Descripción no disponible"
-                rating={5}
-                imageUrl={'/images/surgerys/chest_body.svg'}
-              />
-              <SpecialtyCard
-                title="hola"
-                price={2000}
-                description="Descripción no disponible"
-                rating={5}
-                imageUrl={'/images/surgerys/chest_body.svg'}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-16 lg:p-20 justify-center">
+              {surgeriesList.length > 0 ? (
+                surgeriesList.map((surgery) => (
+                  <SpecialtyCard
+                    key={surgery.id}
+                    title={surgery.name}
+                    description={
+                      surgery.description ?? 'Descripción no disponible'
+                    }
+                    rating={surgery.rating}
+                    price={surgery.amount}
+                    imageUrl={
+                      surgery.file_banner?.file_link ??
+                      '/images/elements/specialty.svg'
+                    }
+                  />
+                ))
+              ) : (
+                <span className="text-[#737373] text-center w-full text-xs">
+                  No hay Cirugías
+                </span>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-4">
           <AccordionTrigger>Doctor By Status</AccordionTrigger>
           <AccordionContent>
-            <div className="flex gap-10 justify-center items-center m-10">
-              <DoctorInfoCard
-                doctor={{
-                  id: '1',
-                  profession: 'Doctor',
-                  user: {
-                    first_name: 'Brayan',
-                    last_name: 'Suarez',
-                    profile_picture: '/images/surgerys/chest_body.svg',
-                    social_media: [], // Array vacío para evitar errores
-                  },
-                }}
-              />
-              <DoctorInfoCard
-                doctor={{
-                  id: '1',
-                  profession: 'Doctor',
-                  user: {
-                    first_name: 'Brayan',
-                    last_name: 'Suarez',
-                    profile_picture: '/images/surgerys/chest_body.svg',
-                    social_media: [], // Array vacío para evitar errores
-                  },
-                }}
-              />
-              <DoctorInfoCard
-                doctor={{
-                  id: '1',
-                  profession: 'Doctor',
-                  user: {
-                    first_name: 'Brayan',
-                    last_name: 'Suarez',
-                    profile_picture: '/images/surgerys/chest_body.svg',
-                    social_media: [], // Array vacío para evitar errores
-                  },
-                }}
-              />
-              <DoctorInfoCard
-                doctor={{
-                  id: '1',
-                  profession: 'Doctor',
-                  user: {
-                    first_name: 'Brayan',
-                    last_name: 'Suarez',
-                    profile_picture: '/images/surgerys/chest_body.svg',
-                    social_media: [], // Array vacío para evitar errores
-                  },
-                }}
-              />
+            <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full p-20 lg:p-0">
+              {doctorsList?.length ? (
+                doctorsList?.map((doctor) => (
+                  <DoctorInfoCard key={doctor.id} doctor={doctor} />
+                ))
+              ) : (
+                <span className="text-[10px] sm:text-sm leading-tight tracking-wide text-[#737373]">
+                  No hay profesionales disponibles
+                </span>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -171,49 +182,7 @@ export default function AdminView() {
         <AccordionItem value="item-6">
           <AccordionTrigger>Sorteo</AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col items-center gap-5 p-5 bg-gray-100 rounded-lg">
-              <span className="text-lg font-semibold">
-                Sorteo entre adjudicados con más de 4 cuotas
-              </span>
-
-              <input
-                type="text"
-                placeholder="Ingrese el premio"
-                className="border p-2 rounded-lg"
-                value={premio}
-                // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-                onChange={(e) => setPremio(e.target.value)}
-              />
-
-              <button
-                onClick={handleSortear}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                disabled={loading}
-              >
-                {loading ? 'Sorteando...' : 'Sortear'}
-              </button>
-
-              {loading && <div className="mt-2 text-gray-500">Cargando...</div>}
-
-              {ganador && !loading && (
-                <div className="mt-5 bg-white p-4 rounded-lg shadow-md w-80">
-                  <table className="w-full text-center">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="p-2">Ganador</th>
-                        <th className="p-2">Premio</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="p-2 font-semibold">{ganador}</td>
-                        <td className="p-2 text-green-600">{premio}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+            <LotteryComponent />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

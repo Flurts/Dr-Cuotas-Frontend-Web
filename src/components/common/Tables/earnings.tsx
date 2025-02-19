@@ -11,13 +11,13 @@ const Earnings: React.FC = () => {
         id: 'basic-bar',
       },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+        categories: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago'],
       },
     },
     series: [
       {
         name: 'series-1',
-        data: [30, 40, 45, 50, 49, 60, 70, 91],
+        data: [5000, 10000, 20000, 30000, 40000, 5500, 23000, 70500],
       },
     ],
   });
