@@ -302,6 +302,7 @@ export interface Query {
   getDoctor: DoctorBasicData;
   getDoctorFilter: Doctor[];
   getDoctorsByName: Doctor[];
+  getDoctorByStatus: Doctor[];
   getMyAdjudicated: Adjudicated[];
   getMySurgeries: Surgery[];
   getSurgerieById: Surgery;
@@ -626,8 +627,37 @@ export type GetDoctorsByNameQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
+export type GetDoctorsByStatusQueryVariables = Exact<{
+  status: Status;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
 
 export interface GetDoctorsByNameQuery { __typename?: 'Query', getDoctorsByName: Array<{ __typename?: 'Doctor', profession?: string | null, id?: string | null, user?: { __typename?: 'User', first_name: string, last_name: string, profile_picture?: string | null, social_media?: Array<{ __typename?: 'Social_Media', link: string, status: Status, type: SocialMedia }> | null } | null }> }
+
+export interface GetDoctorsByStatusQuery {
+  __typename?: 'Query';
+  getDoctorByStatus: Array<{
+    __typename?: 'Doctor';
+    profession?: string | null;
+    id?: string | null;
+    user?: {
+      __typename?: 'User';
+      first_name: string;
+      last_name: string;
+      profile_picture?: string | null;
+      social_media?: Array<{
+        __typename?: 'Social_Media';
+        link: string;
+        status: Status;
+        type: SocialMedia;
+      }> | null;
+    } | null;
+  }>;
+}
+
 
 export type GetMyAdjudicatedQueryVariables = Exact<Record<string, never>>;
 
@@ -1395,6 +1425,27 @@ export const GetDoctorsByNameDocument = gql`
 }
     `;
 
+    export const GetDoctorsByStatusDocument = gql`
+  query GetDoctorsByStatus($status: Status!, $limit: Int, $offset: Int) {
+    getDoctorsByStatus(status: $status, limit: $limit, offset: $offset) {
+      profession
+      id
+      user {
+        first_name
+        last_name
+        profile_picture
+        social_media {
+          link
+          status
+          type
+        }
+      }
+    }
+  }
+`;
+
+
+
 /**
  * __useGetDoctorsByNameQuery__
  *
@@ -1421,6 +1472,27 @@ export function useGetDoctorsByNameLazyQuery(baseOptions?: Apollo.LazyQueryHookO
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetDoctorsByNameQuery, GetDoctorsByNameQueryVariables>(GetDoctorsByNameDocument, options);
         }
+
+        export function useGetDoctorsByStatusQuery(
+          baseOptions: Apollo.QueryHookOptions<GetDoctorsByStatusQuery, GetDoctorsByStatusQueryVariables>
+        ) {
+          const options = { ...defaultOptions, ...baseOptions };
+          return Apollo.useQuery<GetDoctorsByStatusQuery, GetDoctorsByStatusQueryVariables>(
+            GetDoctorsByStatusDocument,
+            options
+          );
+        }
+        
+        export function useGetDoctorsByStatusLazyQuery(
+          baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorsByStatusQuery, GetDoctorsByStatusQueryVariables>
+        ) {
+          const options = { ...defaultOptions, ...baseOptions };
+          return Apollo.useLazyQuery<GetDoctorsByStatusQuery, GetDoctorsByStatusQueryVariables>(
+            GetDoctorsByStatusDocument,
+            options
+          );
+        }
+        
 export type GetDoctorsByNameQueryHookResult = ReturnType<typeof useGetDoctorsByNameQuery>;
 export type GetDoctorsByNameLazyQueryHookResult = ReturnType<typeof useGetDoctorsByNameLazyQuery>;
 export type GetDoctorsByNameQueryResult = Apollo.QueryResult<GetDoctorsByNameQuery, GetDoctorsByNameQueryVariables>;

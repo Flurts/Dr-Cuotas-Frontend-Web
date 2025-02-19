@@ -7,3 +7,10 @@ export enum Payment_Status {
   Rejected = 'Rejected',
   Canceled = 'Canceled',
 }
+
+export enum Status {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Blocked = 'Blocked',
+  Deleted = 'Deleted',
+}
