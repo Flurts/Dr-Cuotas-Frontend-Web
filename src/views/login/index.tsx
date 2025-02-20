@@ -56,13 +56,21 @@ export default function LoginView() {
             'accessToken',
             response.data!.loginWithGoogleToken.token,
           );
+          localStorage.setItem(
+            'role',
+            response.data!.loginWithGoogleToken.user.role,
+          );
 
           toast({
             variant: 'success',
             title: 'Te has logueado correctamente',
             description: 'Bienvenido de vuelta',
           });
-          await router.push('/');
+          if (response.data!.loginWithGoogleToken.user.role === 'Admin') {
+            await router.push('/admin');
+          } else {
+            await router.push('/');
+          }
         } catch (error: any) {}
       }
     };

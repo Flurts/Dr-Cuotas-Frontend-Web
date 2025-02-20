@@ -73,8 +73,6 @@ export default function AdminView() {
     }
   }, [doctorsData, doctorsError]);
 
-  console.log(selectedStatus);
-
   useEffect(() => {
     if (surgeriesData?.getAllSurgeriesWithValues && !surgeriesError) {
       setSurgeriesList(surgeriesData.getAllSurgeriesWithValues as Surgery[]);

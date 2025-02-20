@@ -59,13 +59,18 @@ function SignIn() {
       );
 
       localStorage.setItem('accessToken', response.data!.login.token);
+      localStorage.setItem('role', response.data!.login.user.role);
 
       toast({
         variant: 'success',
         title: 'Te has logueado correctamente',
         description: 'Bienvenido de vuelta',
       });
-      await router.push('/');
+      if (response.data!.login.user.role === 'Admin') {
+        await router.push('/admin');
+      } else {
+        await router.push('/');
+      }
     } catch (error: any) {
       toast({
         variant: 'warning',
@@ -135,7 +140,9 @@ function SignIn() {
                     </label>
                   </div>
                   <Link href="/forgot-your-password">
-                    <span className="text-xs leading-tight tracking-tight">Recuperar contraseña ?</span>
+                    <span className="text-xs leading-tight tracking-tight">
+                      Recuperar contraseña ?
+                    </span>
                   </Link>
                 </div>
               </>
