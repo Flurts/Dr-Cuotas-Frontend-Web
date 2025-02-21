@@ -86,7 +86,7 @@ const CustomEditorImage: React.FC<any> = ({
           {file && (
             <div className="flex flex-col justify-center items-center gap-6">
               <div>
-                <span className="text-[#8565ff] font-semibold w-full">
+                <span className="text-[#8565ff] w-full uppercase font-black text-center leading-tight tracking-tight">
                   Zoom
                 </span>{' '}
                 {/* Texto para indicar el propósito del input range */}
@@ -103,7 +103,7 @@ const CustomEditorImage: React.FC<any> = ({
                 />
               </div>
               <button
-                className="bg-drcuotasPrimary-bg text-white font-semibold px-4 py-2 rounded-full hover:scale-110 transition"
+                className="bg-drcuotasPrimary-bg text-white font-semibold px-4 py-2 rounded-xl text-center leading-tight tracking-tight hover:scale-110 transition"
                 onClick={handleSave}
                 disabled={loading}
               >

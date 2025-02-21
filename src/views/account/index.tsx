@@ -158,7 +158,7 @@ export default function AccountView() {
 
   return (
     <>
-      <div className="w-full h-96 lg:h-96  flex flex-col justify-center items-center bg-[#E5F9F7] bg-opacity-80 p-20 border-t-8 border-b-8 border-white">
+      <div className="w-full h-96 lg:h-96  flex flex-col justify-center items-center p-20">
         <UserInfoImageEditable user={user} handleChange={handleChange} />
         <div className="flex flex-col w-full justify-center items-center gap-4 ">
           {adjudicatedLoading ? (
@@ -183,8 +183,6 @@ export default function AccountView() {
           )}
         </div>
       </div>
-      <div className="w-full h-80 bg-[#E5F9F7] bg-opacity-80 border-t-8 border-b-8 border-white "></div>
-
       {file ? (
         <CustomEditorImage
           toggleModal={toggleModal}

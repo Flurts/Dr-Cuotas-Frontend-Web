@@ -1,18 +1,9 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface HomeSpecialtieCardProps {
@@ -80,97 +71,190 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
       {/* Modal */}
       {isOpen && (
-        <div
-          onClick={() => {
-            setIsOpen(false);
-          }}
-          className="fixed inset-0 w-full h-full backdrop-blur-xl bg-drcuotasSecondary-bg bg-opacity-50 flex  justify-center items-center z-50"
-        >
+        <div className="fixed inset-0 w-full h-full backdrop-blur-sm bg-drcuotasSecondary-bg bg-opacity-60 flex  justify-center items-center z-50">
           <>
             <Tabs
               defaultValue="account"
               className="w-full h-full flex flex-col justify-center items-center p-20"
             >
-              <div>
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="account">
-                    <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
-                      Comprar
-                    </span>
-                  </TabsTrigger>
-                  <TabsTrigger value="password">
-                    <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
-                      Informacion
-                    </span>
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="cerrar"
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
-                      x
-                    </span>
-                  </TabsTrigger>
-                </TabsList>
+              <div className="w-full flex flex-row justify-center items-center gap-4">
+                <div>
+                  <TabsList className="grid w-96 grid-cols-2">
+                    <TabsTrigger value="account">
+                      <span className="text-drcuotasTertiary-text font-black uppercase leading-tight tracking-tight text-xs lg:text-sm">
+                        Comprar
+                      </span>
+                    </TabsTrigger>
+                    <TabsTrigger value="password">
+                      <span className="text-drcuotasTertiary-text font-black uppercase leading-tight tracking-tight text-xs lg:text-sm">
+                        Financiacion
+                      </span>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  <span className="text-white font-black uppercase leading-tight tracking-tight text-xs lg:text-base">
+                    x
+                  </span>
+                </button>
               </div>
-
               <>
                 <TabsContent value="account" className="h-full">
-                  <Card>
-                    <>
-                      <CardHeader>
-                        <CardTitle>Account</CardTitle>
-                        <CardDescription>
-                          Make changes to your account here. Click save when
-                          you're done.
-                        </CardDescription>
-                      </CardHeader>
-                    </>
-                    <>
-                      <CardContent className="space-y-2">
-                        <div className="space-y-1">
-                          <Label htmlFor="name">Name</Label>
-                          <Input id="name" defaultValue="Pedro Duarte" />
+                  <Card className="bg-white w-[80vw] lg:w-[40vw]  h-[35vw] p-10 flex flex-col gap-4 shadow-xl shadow-drcuotasPrimary-bg">
+                    <h2 className="text-2xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasTertiary-text w-full h-80">
+                      Completa tu Pago
+                    </h2>
+
+                    {/* Logos de Tarjetas */}
+                    <div className="flex justify-center gap-2 ">
+                      <Image
+                        src="/images/visa-3-svgrepo-com.svg"
+                        alt="Visa"
+                        width={40}
+                        height={20}
+                      />
+                      <Image
+                        src="/images/mastercard-svgrepo-com.svg"
+                        alt="MasterCard"
+                        width={40}
+                        height={20}
+                      />
+                      <Image
+                        src="/images/amex-svgrepo-com.svg"
+                        alt="Amex"
+                        width={40}
+                        height={20}
+                      />
+                    </div>
+
+                    {/* Formulario de Pago */}
+                    <form className="w-full h-full flex flex-col gap-2 lg:gap-4">
+                      {/* Número de Tarjeta */}
+                      <div>
+                        <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                          Número de Tarjeta
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="**** **** **** ****"
+                            maxLength={19}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                          />
                         </div>
-                        <div className="space-y-1">
-                          <Label htmlFor="username">Username</Label>
-                          <Input id="username" defaultValue="@peduarte" />
+                      </div>
+
+                      {/* Nombre del Titular */}
+                      <div>
+                        <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                          Nombre del Titular
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Ejemplo: Juan Pérez"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                      </div>
+
+                      {/* Expiración y CVV */}
+                      <div className="flex gap-4">
+                        <div className="w-1/2">
+                          <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                            Expiración
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="MM/YY"
+                            maxLength={5}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                          />
                         </div>
-                      </CardContent>
-                    </>
-                    <>
-                      <CardFooter>
-                        <Button>Save changes</Button>
-                      </CardFooter>
-                    </>
+                        <div className="w-1/2">
+                          <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                            CVV
+                          </label>
+                          <input
+                            type="password"
+                            placeholder="***"
+                            maxLength={3}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Botón de Pago */}
+                      <button
+                        type="submit"
+                        className="w-full h-16 uppercase bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight  truncate"
+                      >
+                        Pagar $2.000
+                      </button>
+                      <div className="w-full flex flex-row justify-center items-center gap-2 lg:gap-4">
+                        <Link
+                          href="/"
+                          className="text-center text-sm text-blacktext-center leading-tight tracking-tight text-drcuotasPrimary-text underline"
+                        >
+                          Terminos y Condiciones
+                        </Link>
+                        <Link
+                          href="/faq"
+                          className="text-center text-sm text-blacktext-center leading-tight tracking-tight text-drcuotasPrimary-text underline"
+                        >
+                          Preguntas Frecuentes
+                        </Link>
+                      </div>
+                    </form>
                   </Card>
                 </TabsContent>
               </>
               <>
                 <TabsContent value="password" className="h-full">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Password</CardTitle>
-                      <CardDescription>
-                        Change your password here. After saving, you'll be
-                        logged out.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="space-y-1">
-                        <Label htmlFor="current">Current password</Label>
-                        <Input id="current" type="password" />
+                  <Card className="bg-white w-[80vw] lg:w-[40vw] h-[35vw] p-10 shadow-xl shadow-drcuotasPrimary-bg">
+                    <>
+                      <div className="w-full h-full flex flex-col gap-2 items-center justify-center">
+                        <>
+                          <div className="w-full h-full  flex flex-col gap-8">
+                            <>
+                              <div className="w-full h-auto flex flex-col justify-center items-center ">
+                                <span className="w-auto h-auto  flex justify-center items-center uppercase font-black text-xl lg:text-2xl text-center leading-tight tracking-tight  text-drcuotasTertiary-text truncate">
+                                  Plan de Financiacion
+                                </span>
+                                <span className="w-auto h-auto  hidden lg:flex justify-center items-center text-xs lg:text-sm leading-tight tracking-tight  text-drcuotasTertiary-text truncate">
+                                  Puedes cubrir el costo de la Cirugia pagando a
+                                  Cuotas.
+                                </span>
+                                <span className="w-auto h-auto  flex lg:hidden justify-center items-center text-xs lg:text-sm leading-tight tracking-tight  text-drcuotasTertiary-text truncate">
+                                  Divide en Cuotas el Valor total de la Cirugia.
+                                </span>
+                              </div>
+                            </>
+                            <>
+                              <div className="w-full h-auto  flex flex-row justify-center items-center ">
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full"></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                                <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-30 "></div>
+                                <div className="w-4 h-4 bg-drcuotasTertiary-bg bg-opacity-30 rounded-full "></div>
+                              </div>
+                            </>
+                          </div>
+                        </>
                       </div>
-                      <div className="space-y-1">
-                        <Label htmlFor="new">New password</Label>
-                        <Input id="new" type="password" />
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button>Save password</Button>
-                    </CardFooter>
+                    </>
                   </Card>
                 </TabsContent>
               </>
