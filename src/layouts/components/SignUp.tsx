@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { ErrorMessage, Field, Form, FormikProvider, useFormik } from 'formik';
+import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ export default function RegisterModal() {
   const [anios, setAnios] = useState([]);
   const [registerUserMutation] = useRegisterUserMutation();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const diasOptions = [];
@@ -121,7 +123,6 @@ export default function RegisterModal() {
             values.date_birth.month - 1,
             values.date_birth.day,
           ).toISOString(),
-
           gender: values.gender,
         },
       });
@@ -131,6 +132,14 @@ export default function RegisterModal() {
           console.log(error.message);
         });
       } else {
+        const user = response.data!.registerUser.user;
+        const token = response.data!.registerUser.token;
+
+        // Guardar en localStorage
+        localStorage.setItem('accessToken', token);
+        localStorage.setItem('role', user.role);
+
+        // Guardar en Redux
         dispatch(
           chargeUser({
             // @ts-expect-error The user is not null here
@@ -144,6 +153,10 @@ export default function RegisterModal() {
           title: '¡Registro exitoso!',
           description: '¡Bienvenido a la comunidad!',
         });
+
+        // Redirigir según el rol
+        const destination = user.role === 'Admin' ? '/admin' : '/';
+        await router.push(destination);
       }
     } catch (error) {
       toast({
@@ -332,35 +345,35 @@ export default function RegisterModal() {
               {t('common:registerDescription')}
             </p>
 
-            <a
-              href='/'
+            <button
               type="submit"
-              className="bg-drcuotasPrimary-bg text-white  h-12 w-full rounded-lg flex justify-center text-center items-center leading-tight tracking-tight uppercase  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
+              className="bg-drcuotasPrimary-bg text-white h-12 w-full rounded-lg flex justify-center items-center leading-tight tracking-tight uppercase hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5] hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
+              disabled={formik.isSubmitting}
             >
               {formik.isSubmitting ? (
-                <ImSpinner9 className="animate-spin h-6 text-white w-full" />
+                <ImSpinner9 className="animate-spin h-6 text-white" />
               ) : (
                 t('Registrarse')
               )}
-            </a>
+            </button>
           </Form>
         </FormikProvider>
-          <div className="flex flex-col gap-6 w-full justify-center items-center">
-            <span className="text-drcuotasTertiary-text text-xs w-full text-center leading-tight tracking-tight">
-              o continuar con
-            </span>
-            <div className="flex flex-row items-center justify-center w-full gap-2">
-              <button
-                type="button"
-                className=""
-                onClick={async () => {
-                  await signIn('google');
-                }}
-              >
-                <FcGoogle className="w-7 h-7" />
-              </button>
-            </div>
+        <div className="flex flex-col gap-6 w-full justify-center items-center">
+          <span className="text-drcuotasTertiary-text text-xs w-full text-center leading-tight tracking-tight">
+            o continuar con
+          </span>
+          <div className="flex flex-row items-center justify-center w-full gap-2">
+            <button
+              type="button"
+              className=""
+              onClick={async () => {
+                await signIn('google');
+              }}
+            >
+              <FcGoogle className="w-7 h-7" />
+            </button>
           </div>
+        </div>
       </div>
     </>
   );

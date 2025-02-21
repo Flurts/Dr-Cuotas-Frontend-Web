@@ -2,7 +2,9 @@ import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 
 // Cargar el componente de forma dinámica solo en el cliente
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+const Chart = dynamic(async () => await import('react-apexcharts'), {
+  ssr: false,
+});
 
 const Earnings: React.FC = () => {
   const [chartData, setChartData] = useState({
@@ -30,7 +32,7 @@ const Earnings: React.FC = () => {
             options={chartData.options}
             series={chartData.series}
             type="line"
-            width="500"
+            width="1000"
           />
         </div>
       </div>
