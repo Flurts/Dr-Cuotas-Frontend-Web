@@ -166,7 +166,7 @@ export default function AdminView() {
             </div>
           </>
           <>
-            <div className="lg:w-full h-screen  flex flex-col  lg:gap-2 lg:p-20 bg-drcuotasPrimary bg-opacity-30">
+            <div className="lg:w-full h-screen lg:h-full  flex flex-col  lg:gap-2 lg:p-20 bg-drcuotasPrimary bg-opacity-30">
               <TitleElements
                 primaryText="Panel de Control DrCuotas"
                 secondaryText="Panel Administrativo"
