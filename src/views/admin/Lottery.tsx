@@ -46,42 +46,53 @@ const LotteryComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 p-5 bg-gray-100 rounded-lg h-[500px] justify-center items-center">
-      <span className="text-lg text-drcuotasPrimary-text font-semibold mb-10">
-        Sorteo entre adjudicados con más de 4 cuotas
-      </span>
+    <div className="flex flex-col gap-20  rounded-lg w-full h-full justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center">
+        <span className="uppercase font-black leading-tight tracking-tight truncate text-drcuotasPrimary-text text-8xl">
+          Comenzar Sorteo
+        </span>
+        <span className="uppercase font-bold leading-tight tracking-tight truncate text-drcuotasPrimary-text text-xl">
+          Solo entre Adjudicados con más de 4 cuotas
+        </span>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Ingrese el premio"
-        className="border p-2 rounded-lg"
-        value={premio}
-        onChange={(e) => {
-          setPremio(e.target.value);
-        }}
-      />
+      <div className="w-full flex flex-row gap-2 justify-center items-center px-20">
+        <input
+          type="text"
+          placeholder="Ingrese el premio"
+          className="border px-4 h-16 rounded-lg w-full border-drcuotasPrimary"
+          value={premio}
+          onChange={(e) => {
+            setPremio(e.target.value);
+          }}
+        />
 
-      <button
-        onClick={handleSortear}
-        className="bg-drcuotasSecondaryPrimaryColor text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-        disabled={loading}
-      >
-        {loading ? 'Sorteando...' : 'Sortear'}
-      </button>
+        <button
+          onClick={handleSortear}
+          className="bg-drcuotasSecondaryPrimaryColor text-white w-40 h-16 rounded-lg uppercase font-black leading-tight tracking-tight truncate"
+          disabled={loading}
+        >
+          {loading ? 'Sorteando...' : 'Sortear'}
+        </button>
+      </div>
+
       {loading && <div className="mt-2 text-gray-500">Cargando...</div>}
 
       {ganador && !loading && (
-        <div className="mt-5 bg-white p-4 rounded-lg shadow-md w-80">
-          <table className="w-full text-center">
-            <thead>
+        <div className="bg-white shadow-xl shadow-drcuotasPrimary border border-drcuotasPrimary rounded-xl  w-80 h-40 flex justify-center">
+          <table className="w-full flex flex-col justify-center items-center">
+            <thead className="w-full h-16 flex justify-center items-center">
               <tr className="border-b">
-                <th className="p-2">Ganador</th>
-                <th className="p-2">Premio</th>
+                <th className="uppercase font-black leading-tight tracking-tight truncate text-drcuotasPrimary-text text-2xl">
+                  Ganador
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="p-2 font-semibold">{ganador}</td>
+                <td className="p-2 uppercase font-bold text-drcuotasPrimary-text leading-tight tracking-tight truncate">
+                  {ganador}
+                </td>
                 <td className="p-2 text-drcuotasSecondaryPrimaryColor-text">
                   {premio}
                 </td>

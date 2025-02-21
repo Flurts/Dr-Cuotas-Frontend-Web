@@ -39,25 +39,27 @@ function SimpleLayout({ children, className }: Props) {
   return (
     <>
       <div className={`${className}`}>
-        <div>
-          {/* <TopNavbar /> */}
-          <div className="flex justify-center items-center w-full p-4 ">
-            <div className="flex flex-row justify-center   w-full max-w-screen-2xl mx-[10rem]">
-              <Link
-                href="/"
-                className="w-screen flex items-center justify-center mb-2 mt-2"
-              >
-                <Image
-                  src="/images/logo/logo-1.svg"
-                  alt="Logo"
-                  width={200}
-                  height={200}
-                  className="w-60  flex justify-center items-center"
-                />
-              </Link>
-            </div>
+        <>
+          <div className="w-full h-24 border flex justify-center  items-center p-2">
+            <>
+              <div className="flex w-full items-center justify-center xl:px-20">
+                <Link
+                  href="/"
+                  className="font-extrabold uppercase leading-tight tracking-wide text-xs w-auto"
+                >
+                  <Image
+                    src="/images/logo/logo-1.svg"
+                    alt="Logo"
+                    width={110}
+                    height={110}
+                    className="w-40 h-full"
+                  />
+                </Link>
+              </div>
+            </>
           </div>
-        </div>
+        </>
+
         <div className="flex flex-col items-center justify-center">
           <MainContent>{children}</MainContent>
         </div>

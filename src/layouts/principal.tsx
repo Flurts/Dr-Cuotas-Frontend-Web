@@ -79,7 +79,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
       <nav
         className={`${
           sticky ? 'sticky top-0' : 'relative'
-        } z-50 flex w-full items-center justify-center p-4  bg-white backdrop-blur-3xl transition-transform duration-500 ${
+        } z-50 flex w-full h-24  justify-center lg:justify-end items-center p-2  bg-white backdrop-blur-3xl transition-transform duration-500  ${
           hidden ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
