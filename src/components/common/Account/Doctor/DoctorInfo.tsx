@@ -118,9 +118,9 @@ export default function DoctorInfo({
 
   return (
     <>
-      <div className="flex flex-col h-full w-screen md:w-1/3 lg:justify-normal justify-center items-center">
+      <div className="w-auto h-auto flex flex-row justify-center items-center p-20">
         {/* User Info finished */}
-        <div className="flex flex-col gap-4 justify-center items-center pt-10 bg-[#7863f7] h-1/2 text-white w-80 xl:w-full px-20 py-10">
+        <div className="w-80  h-80 flex  flex-col gap-4 justify-center items-center">
           {/* User Edit Info Buttons */}
 
           <CustomImageUploader
@@ -131,7 +131,7 @@ export default function DoctorInfo({
             onChange={handleChange}
           />
           <button
-            className="border border-white flex items-center justify-between w-full h-[35px] px-4"
+            className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4"
             onClick={cvHandler}
           >
             <span className="text-center w-full  text-xs">{t('uploadCv')}</span>
@@ -139,7 +139,7 @@ export default function DoctorInfo({
           </button>
 
           <button
-            className="border border-white flex items-center justify-between w-full h-[35px] px-4"
+            className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4"
             onClick={editInfoHandler}
           >
             <span className="text-center w-full  text-xs">{t('editInfo')}</span>
@@ -147,7 +147,7 @@ export default function DoctorInfo({
           </button>
 
           <button
-            className="border border-white flex items-center justify-between w-full h-[35px] px-4"
+            className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4"
             onClick={imagesHandler}
           >
             <span className="text-center w-full  text-xs">
@@ -156,46 +156,12 @@ export default function DoctorInfo({
             <BsUpload className=" text-xl" />
           </button>
 
-          <button className="border border-white flex items-center justify-between w-full h-[35px] px-4">
+          <button className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4">
             <span className="text-center w-full text-xs">
               {t('uploadVideos')}
             </span>
             <BsUpload className=" text-xl" />
           </button>
-        </div>
-
-        <div className="w-80 xl:w-full h-1/2 md:h-[415px] xl:h-[380px] flex flex-col gap-4 justify-center items-center bg-[#6636E2] text-white px-20 py-10">
-          <div className="w-full">
-            <div className="hidden flex-col w-full gap-4 justify-center">
-              <span className="text-3xl font-normal">Cta. Corriente</span>
-              <span className="text-base font-light">Al día de la fecha</span>
-            </div>
-          </div>
-
-          <div className="w-full hidden">
-            <div className="flex flex-col w-full gap-2 justify-center mt-10">
-              <span className="px-2 font-light text-sm">13/03/2024</span>
-              <div className="w-full h-[1px] border border-b-0 border-white" />
-              <span className="px-4 font-bold text-3xl">
-                ${(200000).toLocaleString()}
-              </span>
-              <div className="w-full h-[1px] border border-b-0 border-white" />
-              <div className="flex w-full justify-end">
-                <span className="px-1 font-light text-sm">
-                  u$s {(200).toLocaleString()}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className=" hidden flex-row gap-4 w-full">
-            <button className="border border-white flex items-center justify-between w-[250px] h-[35px] px-4">
-              Transferir
-            </button>
-            <button className="border border-white flex items-center justify-between w-[250px] h-[35px] px-4">
-              Retirar
-            </button>
-          </div>
         </div>
       </div>
 

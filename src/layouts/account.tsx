@@ -160,11 +160,12 @@ function AccountLayout({ children, className }: Props) {
                   </span>
                   <FiUser className="text-2xl" />
                 </Link>
-                <button
+                <Link
+                href='/account/{slug}'
                   className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
                   <FiShoppingCart className="text-2xl" />
-                </button>
+                </Link>
               </>
             )}
             <button

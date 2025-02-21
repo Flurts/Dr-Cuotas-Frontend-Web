@@ -13,11 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import DoctorInfo from '@/components/common/Account/Doctor/DoctorInfo';
-import UserInfo from '@/components/common/Account/UserInfo';
-import CalendarView from '@/components/common/Calendar';
-import { AdjudicadosTable } from '@/components/common/Tables/AdjudicadosTable';
 import { SurgeryTable } from '@/components/common/Tables/SurgeryTable';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { chargeDoctor, getCurrentUser, getJwt } from '@/store';
 import {
@@ -529,63 +525,21 @@ export default function DoctorView() {
 
   return (
     <>
-      <div className="bg-[#f1f2f1] flex flex-col justify-center items-center">
-        <div className="max-w-screen-2xl w-full flex flex-col items-center justify-center py-10 lg:py-20">
-          {/* User Info */}
-          <div className="">
-            <UserInfo user={user} />
-          </div>
+      <div className="w-full h-full flex flex-col-reverse justify-center items-center p-10">
+        <DoctorInfo
+          user={user}
+          editInfoHandler={editInfoHandler}
+          cvHandler={cvHandler}
+          imagesHandler={imagesHandler}
+        />
 
-          <div className="flex flex-col md:flex-row h-full justify-center items-center md:items-start  w-screen lg:w-full lg:px-32">
-            <DoctorInfo
-              user={user}
-              editInfoHandler={editInfoHandler}
-              cvHandler={cvHandler}
-              imagesHandler={imagesHandler}
+        <div className="w-full">
+          <>
+            <SurgeryTable
+              editUpdateSurgeryHandler={editUpdateSurgeryHandler}
+              onSurgeryCreated={onSurgeryCreated}
             />
-
-            <div className="w-80  lg:w-2/3 bg-white">
-              <Tabs
-                defaultValue="surgeries"
-                className="w-full h-[844px] xl:h-[810px]"
-              >
-                <TabsList className="rounded-none grid w-full grid-cols-3 bg-[#7863f7] text-white">
-                  <TabsTrigger value="surgeries">{t('surgeries')}</TabsTrigger>
-                  <TabsTrigger value="adjudicateds">
-                    {t('adjudicated')}
-                  </TabsTrigger>
-                  <TabsTrigger value="calender">
-                    {t('calendar.calendar')}
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="surgeries">
-                  <>
-                    <div className="w-full h-full flex px-4 py-6">
-                      <SurgeryTable
-                        editUpdateSurgeryHandler={editUpdateSurgeryHandler}
-                        onSurgeryCreated={onSurgeryCreated}
-                      />
-                    </div>
-                  </>
-                </TabsContent>
-                <TabsContent value="adjudicateds">
-                  <>
-                    <div className="w-full h-full flex px-4 py-6">
-                      <AdjudicadosTable
-                        // editUpdateSurgeryHandler={editUpdateSurgeryHandler}
-                        onSurgeryCreated={onSurgeryCreated}
-                      />
-                    </div>
-                  </>
-                </TabsContent>
-                <TabsContent value="calender">
-                  <>
-                    <CalendarView />
-                  </>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </div>
+          </>
         </div>
       </div>
 
@@ -752,8 +706,8 @@ export default function DoctorView() {
 
           {/** Edit / Update Surgerie */}
           {editUpdateSurgery && (
-            <div className="relative flex flex-col gap-4 items-center mr-10 w-full h-full mt-8">
-              <span className="text-xl text-[#7863f7] font-semibold">
+            <div className="relative flex flex-col gap-4 items-center mr-10 w-full h-full p-20">
+              <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight text-4xl">
                 Crear Nueva Cirugía
               </span>
 
@@ -763,7 +717,7 @@ export default function DoctorView() {
                 <FormikProvider value={formikSurgery}>
                   <Form className="w-full flex flex-row justify-center items-center">
                     <div className="w-full flex flex-col items-center gap-3">
-                      <span className="text-[#7863f7] font-semibold">
+                      <span className="font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
                         Foto de la Cirugía
                       </span>
                       <FileUploader
