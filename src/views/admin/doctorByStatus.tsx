@@ -19,15 +19,15 @@ interface DoctorByStatusProps {
 }
 
 export function DoctorByStatus({ status }: DoctorByStatusProps) {
-  const [doctors, setDoctors] = useState<Doctor[]>([]); // Especificar el tipo
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
 
   useEffect(() => {
     const getDoctorByStatus = async () => {
       const query = `
         query GetDoctorByStatus($status: String!) {
           getDoctorByStatus(status: $status) {
+            id
             user {
-              id
               first_name
               last_name
               status
@@ -56,21 +56,70 @@ export function DoctorByStatus({ status }: DoctorByStatusProps) {
     };
 
     void getDoctorByStatus();
-  }, [status]); // Se ejecutará cuando `status` cambie
+  }, [status]);
+
+  const updateDoctorStatus = async (doctorId: string, newStatus: string) => {
+    const token = localStorage.getItem('accessToken');
+    console.log(doctorId, newStatus);
+    const mutation = `
+      mutation UpdateInfoDoctor($doctorId: String!, $status: String!) {
+        updateInfoDoctor(doctorId: $doctorId, status: $status) {
+          user {
+            first_name
+            last_name
+          }
+        }
+      }
+    `;
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({
+          query: mutation,
+          variables: { doctorId, status: newStatus },
+        }),
+      });
+
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+      const data = await response.json();
+      if (data.errors)
+        throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
+
+      // Actualizar la lista de doctores después de la mutación
+      setDoctors((prevDoctors) =>
+        prevDoctors.filter((doctor) => doctor.user.id !== doctorId),
+      );
+    } catch (error) {
+      console.error('Error al actualizar el estado del doctor:', error);
+    }
+  };
 
   return (
-    <div className="flex flex-wrap gap-10 justify-center items-center">
+    <div className="flex flex-wrap gap-10 justify-start items-start overflow-auto">
       {doctors.length > 0 ? (
-        doctors.map((doctor) =>
-          doctor.user ? (
+        doctors.map((doctor) => {
+          if (!doctor.user?.id) {
+            console.warn('⚠️ Doctor sin ID detectado:', doctor);
+            return null;
+          }
+
+          return (
             <ActivateSurgeryCard
               key={doctor.user.id}
+              id={doctor.user.id}
               firstName={doctor.user.first_name}
               lastName={doctor.user.last_name}
               status={doctor.user.status}
+              onUpdateStatus={updateDoctorStatus}
             />
-          ) : null,
-        )
+          );
+        })
       ) : (
         <p>No hay doctores disponibles</p>
       )}

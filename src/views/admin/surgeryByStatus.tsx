@@ -6,6 +6,7 @@ import settings from '@/settings';
 
 // Definir la estructura de los datos esperados
 interface Surgery {
+  id: string;
   name: string;
   description: string;
   amount: number;
@@ -22,11 +23,10 @@ export function SurgeryByStatus({ status }: SurgeryByStatusProps) {
 
   useEffect(() => {
     const getSurgeryByStatus = async () => {
-      console.log(`Fetching surgeries with status: ${status}`);
-
       const query = `
         query GetSurgeryStatus($status: String!) {
           getSurgeryStatus(status: $status) {
+            id
             name
             description
             amount
@@ -42,20 +42,13 @@ export function SurgeryByStatus({ status }: SurgeryByStatusProps) {
           body: JSON.stringify({ query, variables: { status } }),
         });
 
-        console.log('Response status:', response.status);
-
         if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
         const data = await response.json();
-        console.log('GraphQL response data:', data);
-
-        if (data.errors) {
-          console.error('GraphQL Errors:', JSON.stringify(data.errors));
+        if (data.errors)
           throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
-        }
 
         setSurgery(data.data.getSurgeryStatus || []);
-        console.log('Surgeries set to state:', data.data.getSurgeryStatus);
       } catch (error) {
         console.error('Error al obtener las cirugías:', error);
       }
@@ -64,15 +57,52 @@ export function SurgeryByStatus({ status }: SurgeryByStatusProps) {
     void getSurgeryByStatus();
   }, [status]);
 
+  const updateSurgeryStatus = async (surgeryId: string, newStatus: string) => {
+    const token = localStorage.getItem('accessToken');
+    const mutation = `
+      mutation UpdateSurgerie($status: String!, $surgeryId: String!) {
+        updateSurgerie(status: $status, surgeryId: $surgeryId)
+      }
+    `;
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({
+          query: mutation,
+          variables: { surgeryId, status: newStatus },
+        }),
+      });
+
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+      const data = await response.json();
+      if (data.errors)
+        throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
+
+      setSurgery((prevSurgeries) =>
+        prevSurgeries.filter((surg) => surg.id !== surgeryId),
+      );
+    } catch (error) {
+      console.error('Error al actualizar el estado de la cirugía:', error);
+    }
+  };
+
   return (
-    <div className="flex flex-wrap gap-10 justify-center items-center">
+    <div className="flex flex-wrap gap-10 justify-start items-start overflow-auto">
       {surgery.length > 0 ? (
-        surgery.map((surg, index) => (
+        surgery.map((surg) => (
           <ActivateSurgeryCard
-            key={index}
+            key={surg.id}
+            id={surg.id}
             firstName={surg.name}
             lastName={surg.description}
             status={surg.status}
+            onUpdateStatus={updateSurgeryStatus}
           />
         ))
       ) : (

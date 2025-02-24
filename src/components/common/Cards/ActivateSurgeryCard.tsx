@@ -1,15 +1,19 @@
 import React from 'react';
 
 interface ActivateSurgeryCardProps {
+  id: string; // Se añade el id
   firstName: string;
   lastName: string;
   status: string;
+  onUpdateStatus: (id: string, status: string) => void; // Función para actualizar
 }
 
 export default function ActivateSurgeryCard({
+  id,
   firstName,
   lastName,
   status,
+  onUpdateStatus,
 }: ActivateSurgeryCardProps) {
   return (
     <div className="flex bg-dr shadow-2xl w-[900px] tracking-tight leading-tight justify-center p-4 items-center gap-10 rounded-xl">
@@ -30,10 +34,20 @@ export default function ActivateSurgeryCard({
           {lastName}
         </div>
         <div className="flex justify-center gap-10 text-drcuotasPrimary">
-          <button className="border border-violet-500 p-2 tracking-tight w-32 leading-tight rounded-xl hover:scale-105 hover:bg-drcuotasPrimary hover:text-white transition-all duration-300">
+          <button
+            className="border border-violet-500 p-2 tracking-tight w-32 leading-tight rounded-xl hover:scale-105 hover:bg-drcuotasPrimary hover:text-white transition-all duration-300"
+            onClick={() => {
+              onUpdateStatus(id, 'Active');
+            }}
+          >
             Activar
           </button>
-          <button className="border border-violet-500 tracking-tight w-32 leading-tight rounded-xl hover:scale-105 hover:bg-red-500 hover:text-white transition-all duration-300">
+          <button
+            className="border border-violet-500 tracking-tight w-32 leading-tight rounded-xl hover:scale-105 hover:bg-red-500 hover:text-white transition-all duration-300"
+            onClick={() => {
+              onUpdateStatus(id, 'Blocked');
+            }}
+          >
             Rechazar
           </button>
         </div>
