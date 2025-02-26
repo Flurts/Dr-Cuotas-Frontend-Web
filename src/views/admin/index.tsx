@@ -7,6 +7,7 @@ import {
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
+import AdComponent from '@/components/common/AdComponent';
 import DoctorInfoCard from '@/components/common/Cards/DoctorInfoCard';
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
 import TitleElements from '@/components/common/ViewElements/TitleElements';
@@ -382,6 +383,24 @@ export default function AdminView() {
                     </AccordionTrigger>
                     <AccordionContent className="w-full h-screen flex flex-col items-center  gap-10">
                       <LotteryComponent />
+                    </AccordionContent>
+                  </AccordionItem>
+                </>
+                <>
+                  <AccordionItem
+                    value="item-7"
+                    className="bg-white rounded-xl border px-4 "
+                  >
+                    <AccordionTrigger>
+                      <div className="w-full flex flex-row gap-4 items-center">
+                        <LucideFolder className="text-drcuotasPrimary" />
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                          Ad
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="w-full h-screen flex flex-col items-center  gap-10">
+                      <AdComponent />
                     </AccordionContent>
                   </AccordionItem>
                 </>
