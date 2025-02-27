@@ -66,6 +66,38 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
     }
   };
 
+  const deleteAd = async (adId: string) => {
+    console.log('🔍 ID recibido para eliminar:', adId);
+
+    try {
+      const requestBody = {
+        query: `mutation DeleteAdMutation($deleteAdMutationId: String!) {
+          deleteAdMutation(id: $deleteAdMutationId)
+        }`,
+        variables: { deleteAdMutationId: adId },
+      };
+
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+
+      const result = await response.json();
+      console.log('📩 Respuesta del servidor:', result);
+
+      if (result.errors) {
+        console.error('❌ Error en la mutación de eliminación:', result.errors);
+        return;
+      }
+
+      await fetchAds();
+      console.log('✅ Anuncio eliminado correctamente.');
+    } catch (error) {
+      console.error('❌ Error al eliminar anuncio:', error);
+    }
+  };
+
   return (
     <div className="relative w-full h-80 flex justify-center items-center p-10">
       {/* Imagen con blur si está en edición */}
@@ -82,6 +114,14 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
           setNewLink(link);
         }}
       />
+
+      {/* Botón de eliminar encima del blur */}
+      <button
+        onClick={() => deleteAd(id)}
+        className="absolute top-12 right-12 bg-red-600 text-white h-8 w-8 rounded-full text-sm z-20"
+      >
+        ✕
+      </button>
 
       {/* Formulario sobre la imagen */}
       {isEditing && (

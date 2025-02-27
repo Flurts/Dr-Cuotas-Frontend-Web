@@ -5,11 +5,11 @@ import settings from '@/settings';
 
 // Definir la estructura de los datos esperados
 interface Doctor {
+  id: string;
+  status: string;
   user: {
-    id: string;
     first_name: string;
     last_name: string;
-    status: string;
   };
 }
 
@@ -24,17 +24,17 @@ export function DoctorByStatus({ status }: DoctorByStatusProps) {
   useEffect(() => {
     const getDoctorByStatus = async () => {
       const query = `
-        query GetDoctorByStatus($status: String!) {
-          getDoctorByStatus(status: $status) {
-            id
-            user {
-              first_name
-              last_name
-              status
-            }
-          }
-        }
-      `;
+  query GetDoctorByStatus($status: String!) {
+  getDoctorByStatus(status: $status) {
+    description
+    user {
+      first_name
+      last_name
+    }
+    id
+  }
+}
+`;
 
       try {
         const response = await fetch(`${settings.API_URL}/graphql`, {
@@ -93,7 +93,7 @@ export function DoctorByStatus({ status }: DoctorByStatusProps) {
 
       // Actualizar la lista de doctores después de la mutación
       setDoctors((prevDoctors) =>
-        prevDoctors.filter((doctor) => doctor.user.id !== doctorId),
+        prevDoctors.filter((doctor) => doctor.id !== doctorId),
       );
     } catch (error) {
       console.error('Error al actualizar el estado del doctor:', error);
@@ -104,21 +104,17 @@ export function DoctorByStatus({ status }: DoctorByStatusProps) {
     <div className="flex flex-wrap gap-10 justify-start items-start overflow-auto">
       {doctors.length > 0 ? (
         doctors.map((doctor) => {
-          if (!doctor.user?.id) {
-            console.warn('⚠️ Doctor sin ID detectado:', doctor);
-            return null;
-          }
-
-          return (
+          console.log('Doctor:', doctor);
+          return doctor.id ? (
             <ActivateSurgeryCard
-              key={doctor.user.id}
-              id={doctor.user.id}
+              key={doctor.id}
+              id={doctor.id}
               firstName={doctor.user.first_name}
               lastName={doctor.user.last_name}
-              status={doctor.user.status}
+              status={doctor.status} // <-- Verifica que doctor.status existe
               onUpdateStatus={updateDoctorStatus}
             />
-          );
+          ) : null;
         })
       ) : (
         <p>No hay doctores disponibles</p>

@@ -18,10 +18,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import {
-  useGetAllSurgeriesWithValuesQuery,
-  useGetDoctorsByNameLazyQuery,
-} from '@/types';
 import { Status } from '@/utils/constants';
 
 import { DoctorByStatus } from './doctorbyStatus';
@@ -29,69 +25,8 @@ import LotteryComponent from './Lottery';
 import RevenueChart from './revenuechart';
 import { SurgeryByStatus } from './surgeryByStatus';
 
-interface DoctorList {
-  id: string;
-  profession: string;
-  user: {
-    first_name: string;
-    last_name: string;
-    profile_picture: string;
-    social_media: Array<{
-      link: string;
-      status: string;
-      type: string;
-    }>;
-  };
-}
-
-interface Surgery {
-  id: string;
-  name: string;
-  description?: string;
-  rating: number;
-  amount: number;
-  file_banner?: {
-    file_link: string;
-  };
-}
-
 export default function AdminView() {
   const [selectedStatus, setSelectedStatus] = useState<Status>(Status.Active);
-  const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
-
-  const [getDoctorsByName, { data: doctorsData, error: doctorsError }] =
-    useGetDoctorsByNameLazyQuery();
-
-  const { data: surgeriesData, error: surgeriesError } =
-    useGetAllSurgeriesWithValuesQuery({
-      variables: { limit: 10, offset: 0 },
-    });
-
-  const [doctorsList, setDoctorsList] = useState<DoctorList[]>([]);
-
-  useEffect(() => {
-    void getDoctorsByName({ variables: { offset: 0, limit: 6, name: '' } });
-  }, [getDoctorsByName]);
-
-  useEffect(() => {
-    if (doctorsData && !doctorsError) {
-      setDoctorsList(doctorsData.getDoctorsByName as DoctorList[]);
-    } else if (doctorsError) {
-      console.error(doctorsError);
-      setDoctorsList([]);
-    }
-  }, [doctorsData, doctorsError]);
-
-  console.log(selectedStatus);
-
-  useEffect(() => {
-    if (surgeriesData?.getAllSurgeriesWithValues && !surgeriesError) {
-      setSurgeriesList(surgeriesData.getAllSurgeriesWithValues as Surgery[]);
-    } else if (surgeriesError) {
-      console.error(surgeriesError);
-      setSurgeriesList([]);
-    }
-  }, [surgeriesData, surgeriesError]);
 
   return (
     <>
@@ -251,31 +186,9 @@ export default function AdminView() {
                             ))}
                           </select>
                         </div>
+                        <SurgeryByStatus status={selectedStatus} />
                       </>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-center gap-4">
-                        {surgeriesList.length > 0 ? (
-                          surgeriesList.map((surgery) => (
-                            <SpecialtyCard
-                              key={surgery.id}
-                              title={surgery.name}
-                              description={
-                                surgery.description ??
-                                'Descripción no disponible'
-                              }
-                              rating={surgery.rating}
-                              price={surgery.amount}
-                              imageUrl={
-                                surgery.file_banner?.file_link ??
-                                '/images/elements/specialty.svg'
-                              }
-                            />
-                          ))
-                        ) : (
-                          <span className="text-[#737373] text-center w-full text-xs">
-                            No hay Cirugías
-                          </span>
-                        )}
-                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center items-center gap-4"></div>
                     </AccordionContent>
                   </AccordionItem>
                 </>
@@ -314,7 +227,7 @@ export default function AdminView() {
                           </select>
                         </div>
                       </>
-                      <DoctorByStatus status={selectedStatus} />
+                      <DoctorByStatus status="Inactive" />
                     </AccordionContent>
                   </AccordionItem>
                 </>
@@ -353,18 +266,9 @@ export default function AdminView() {
                             ))}
                           </select>
                         </div>
+                        <DoctorByStatus status={selectedStatus} />
                       </>
-                      <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full p-20 lg:p-0">
-                        {doctorsList?.length ? (
-                          doctorsList?.map((doctor) => (
-                            <DoctorInfoCard key={doctor.id} doctor={doctor} />
-                          ))
-                        ) : (
-                          <span className="text-[10px] sm:text-sm leading-tight tracking-wide text-[#737373]">
-                            No hay profesionales disponibles
-                          </span>
-                        )}
-                      </div>
+                      <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full p-20 lg:p-0"></div>
                     </AccordionContent>
                   </AccordionItem>
                 </>
