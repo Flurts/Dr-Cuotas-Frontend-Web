@@ -1,3 +1,4 @@
+import { LucideLaugh } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
@@ -5,8 +6,6 @@ import { IoIosArrowDown, IoMdArrowDropdown } from 'react-icons/io';
 
 import { Adjudicated, Adjudicated_Status } from '@/types';
 import { Payment_Status } from '@/utils/constants';
-
-import Cuotes from './Cuotes';
 
 function createCuotas(
   totalQuotas: number,
@@ -81,7 +80,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
   );
 
   return (
-    <div className="w-full justify-center items-center flex flex-row gap-2 relative">
+    <div className="w-full justify-center items-center flex flex-row  relative">
       <div
         className={`flex flex-col bg-white w-full items-center gap-2 ${expanded ? '' : 'border border-[#9665FF]'}`}
       >
@@ -146,7 +145,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
 
                 {adjudicated.adjudicated_status ===
                   Adjudicated_Status.Validating && (
-                  <div className="flex flex-col w-full items-center justify-center gap-2 p-16">
+                  <div className="flex flex-col w-full items-center justify-center gap-2 p-16 ">
                     <span className="text-[#6636E2] text-2xl font-normal">
                       {t(
                         `constants:adjudicatedStatus.${adjudicated.adjudicated_status}`,
@@ -222,7 +221,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                     )}
 
                     {/* Number of cuotas and date of pay */}
-                    <div className="flex flex-col w-full justify-center items-center relative py-3">
+                    <div className="flex flex-col w-full justify-center items-center relative p-4">
                       {/* Cuotas */}
                       <div className="flex flex-row w-full justify-between items-center md:px-3">
                         <span className="text-xs md:text-base text-[#6636E2]">
@@ -234,55 +233,180 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                       </div>
 
                       <div className="p-5">
-                        <Cuotes cuotas={cuotas} />
+                        {/* <Cuotes cuotas={cuotas} /> */}
+                        {/* <Cuotas /> */}
+                        <>
+                          <div className="w-full p-4 flex flex-row justify-center items-center ">
+                            <>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                            </>
+                            <>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                              <>
+                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                                </div>
+                              </>
+                            </>
+                          </div>
+                        </>
                       </div>
                     </div>
                   </>
                 )}
-                <div className="w-full border flex flex-col md:flex-row border-[#9665FF] justify-between items-center relative">
-                  <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                    <span className="text-base text-[#6636E2]">
-                      {t('constants:indications')}
-                    </span>
-                    <p className="text-xs text-justify">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                      sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                      magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                      quis nostrud exerci tation ullamcorper suscipit lobortis
-                      nisl ut aliquip ex ea commodo consequat. Duis autem vel
-                      eum iriure dolor in hendrerit in vulputate
-                    </p>
-                  </div>
+                <>
+                  <>
+                    <div className="w-full border-t border-r border-l flex flex-col md:flex-row border-[#9665FF] justify-between items-center relative">
+                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
+                        <span className="text-base text-[#6636E2]">
+                          {/* {t('constants:indications')} */}
+                          Como adelantar Pagos
+                        </span>
+                        <p className="text-xs text-justify">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit, sed diam nonummy nibh euismod tincidunt ut
+                          laoreet dolore magna aliquam erat volutpat. Ut wisi
+                          enim ad minim veniam, quis nostrud exerci tation
+                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
+                          commodo consequat. Duis autem vel eum iriure dolor in
+                          hendrerit in vulputate
+                        </p>
+                      </div>
 
-                  {/* Border */}
-                  <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[33%] border-[#9665FF]" />
+                      {/* Border */}
+                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[33%] border-[#9665FF]" />
 
-                  <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                    <span className="text-base text-[#6636E2]">
-                      {t('constants:WhatNotDo')}
-                    </span>
-                    <p className="text-xs text-justify">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                      sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                      magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                      quis nostrud exerci tation ullamcorper suscipit lobortis
-                      nisl ut aliquip ex ea commodo consequat. Duis autem vel
-                      eum iriure dolor in hendrerit in vulputate
-                    </p>
-                  </div>
-                  <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[67%] border-[#9665FF]" />
-                  <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                    <span className="text-base text-[#6636E2]">Tips</span>
-                    <p className="text-xs text-justify bg-white">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                      sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                      magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                      quis nostrud exerci tation ullamcorper suscipit lobortis
-                      nisl ut aliquip ex ea commodo consequat. Duis autem vel
-                      eum iriure dolor in hendrerit in vulputate
-                    </p>
-                  </div>
-                </div>
+                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
+                        <span className="text-base text-[#6636E2]">
+                          {t('constants:WhatNotDo')}
+                        </span>
+                        <p className="text-xs text-justify">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit, sed diam nonummy nibh euismod tincidunt ut
+                          laoreet dolore magna aliquam erat volutpat. Ut wisi
+                          enim ad minim veniam, quis nostrud exerci tation
+                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
+                          commodo consequat. Duis autem vel eum iriure dolor in
+                          hendrerit in vulputate
+                        </p>
+                      </div>
+                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[67%] border-[#9665FF]" />
+                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
+                        <span className="text-base text-[#6636E2]">Tips</span>
+                        <p className="text-xs text-justify bg-white">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit, sed diam nonummy nibh euismod tincidunt ut
+                          laoreet dolore magna aliquam erat volutpat. Ut wisi
+                          enim ad minim veniam, quis nostrud exerci tation
+                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
+                          commodo consequat. Duis autem vel eum iriure dolor in
+                          hendrerit in vulputate
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                  <>
+                    <div className="w-full border flex flex-col md:flex-row border-[#9665FF] justify-between items-center relative">
+                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
+                        <span className="text-base text-[#6636E2]">
+                          {t('constants:indications')}
+                        </span>
+                        <p className="text-xs text-justify">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit, sed diam nonummy nibh euismod tincidunt ut
+                          laoreet dolore magna aliquam erat volutpat. Ut wisi
+                          enim ad minim veniam, quis nostrud exerci tation
+                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
+                          commodo consequat. Duis autem vel eum iriure dolor in
+                          hendrerit in vulputate
+                        </p>
+                      </div>
+
+                      {/* Border */}
+                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[33%] border-[#9665FF]" />
+
+                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
+                        <span className="text-base text-[#6636E2]">
+                          {t('constants:WhatNotDo')}
+                        </span>
+                        <p className="text-xs text-justify">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit, sed diam nonummy nibh euismod tincidunt ut
+                          laoreet dolore magna aliquam erat volutpat. Ut wisi
+                          enim ad minim veniam, quis nostrud exerci tation
+                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
+                          commodo consequat. Duis autem vel eum iriure dolor in
+                          hendrerit in vulputate
+                        </p>
+                      </div>
+                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[67%] border-[#9665FF]" />
+                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
+                        <span className="text-base text-[#6636E2]">Tips</span>
+                        <p className="text-xs text-justify bg-white">
+                          Lorem ipsum dolor sit amet, consectetuer adipiscing
+                          elit, sed diam nonummy nibh euismod tincidunt ut
+                          laoreet dolore magna aliquam erat volutpat. Ut wisi
+                          enim ad minim veniam, quis nostrud exerci tation
+                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
+                          commodo consequat. Duis autem vel eum iriure dolor in
+                          hendrerit in vulputate
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                </>
               </div>
             </>
           )}

@@ -1,5 +1,4 @@
 import { useFormik } from 'formik';
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +6,8 @@ import * as Yup from 'yup';
 
 import UserInfoImageEditable from '@/components/common/Account/UserInfoImageEditable';
 import CardCirugia from '@/components/common/Cards/CardCirugia';
-import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
+import Cuotas from '@/components/common/cuotas';
+import OurServices from '@/components/common/ViewElements/OurServices';
 import { toast } from '@/components/ui/use-toast';
 import { getCurrentUser, updateProfileImage } from '@/store';
 import {
@@ -158,9 +158,10 @@ export default function AccountView() {
 
   return (
     <>
-      <div className="w-full h-96 lg:h-96  flex flex-col justify-center items-center p-20">
+      <div className="w-full h-auto flex flex-col justify-center items-center gap-4 p-20">
         <UserInfoImageEditable user={user} handleChange={handleChange} />
-        <div className="flex flex-col w-full justify-center items-center gap-4 ">
+        <Cuotas />
+        <div className="flex flex-col w-full h-full items-center">
           {adjudicatedLoading ? (
             <div>Loading...</div>
           ) : adjudicatedData &&
@@ -172,25 +173,20 @@ export default function AccountView() {
               </React.Fragment>
             ))
           ) : (
-            <div className="hidden flex-col gap-10 justify-center items-center w-full">
-              <Link
-                href="/store"
-                className="w-80 lg:w-96 h-12 bg-drcuotasPrimary rounded-xl  hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center  hover:shadow-drcuotasPrimary hover:shadow-2xl hover:bg-white hover:border hover:text-drcuotasPrimary-text hover:border-drcuotasPrimary"
-              >
-                {t('startSurgery')}
-              </Link>
+            <div className="w-full h-auto  p-10 flex flex-col items-center justify-end gap-4">
+              <OurServices />
             </div>
           )}
         </div>
       </div>
-      {file ? (
+      {/* {file ? (
         <CustomEditorImage
           toggleModal={toggleModal}
           modalHandler={modalHandler}
           handleChange={EditImageAndUpload}
           file={file}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 }

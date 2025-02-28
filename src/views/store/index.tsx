@@ -54,35 +54,6 @@ export default function StoreView() {
           No hay cirugías disponibles.
         </span>
       )}
-      <div className="w-full h-80 flex flex-row justify-center items-center gap-2 p-20">
-        <Link href="/" className="w-full h-40 relative ">
-          <Image
-            src="/images/publicidad/Publicidad.jpg" // Cambia por la ruta correcta
-            
-            alt="Anuncio"
-           fill
-            className="object-cover"
-          />
-        </Link>
-
-        <Link href="/" className="w-full h-40 relative ">
-          <Image
-            src="/images/publicidad/RedBull.jpg"
-            alt="Anuncio"
-            fill
-            className="object-cover"
-          />
-        </Link>
-
-        <Link href="/" className="w-full h-40 relative ">
-          <Image
-            src="/images/publicidad/Ropa.jpg"
-            alt="Anuncio"
-            fill
-            className="object-cover"
-          />
-        </Link>
-      </div>
     </div>
   );
 }

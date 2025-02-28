@@ -37,9 +37,9 @@ const OurSpecialties = () => {
   return (
     <div className="w-full flex flex-col justify-center items-center lg:p-20">
       <TitleElements
-        primaryText="Nuestros Servicios"
-        secondaryText="Cirugías Disponibles"
-        descriptionText="Realza tu belleza con nuestras cirugías estéticas. ¡Agenda hoy!"
+        primaryText="Puedes pagar en Pequeñas Cuotas"
+        secondaryText="Cirugias disponibles"
+        descriptionText="Consigue tu cirugia con nuestros planes de Financiamiento."
       />
 
       <div className="relative w-full  flex justify-center items-center">

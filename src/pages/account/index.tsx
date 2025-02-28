@@ -9,10 +9,16 @@ export default function Account() {
   return (
     <>
       <Head title="Account" />
-      <div className="w-full h-96 border  ">
-        <AccountView />
+      <div
+        className="w-full h-auto bg-[#E5F9F7]  relative bg-cover bg-center "
+        style={{ backgroundImage: "url('/images/fondo/DrCuotasFondo.svg')" }}
+      >
+        <div className="absolute inset-0 bg-[#E5F9F7] bg-opacity-0"></div>
+        <div className="relative">
+          <AccountView />
+        </div>
       </div>
-      <DoctorView />
+      {/* <DoctorView /> */}
     </>
   );
 }
