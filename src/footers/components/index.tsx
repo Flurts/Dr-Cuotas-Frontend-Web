@@ -1,5 +1,7 @@
 'use client';
+import { log } from 'console';
 import Link from 'next/link';
+import { useRouter } from 'next/router'; // Añadido useRouter
 import React, { useEffect, useState } from 'react';
 import {
   FiCalendar,
@@ -15,6 +17,18 @@ import {
 // @ts-expect-error
 const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
   const [visible, setVisible] = useState(false);
+  const router = useRouter(); // Inicializa el router
+
+  const HandleLogOut = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('nextauth.message');
+    console.log('LogOut');
+    // Redirigir a la página principal y luego recargar
+    void router.push('/').then(() => {
+      window.location.reload();
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,12 +80,12 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
             </Link>
           </>
           <>
-            <Link
-              href="/"
+            <button
+              onClick={HandleLogOut}
               className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
             >
               <FiLogOut />
-            </Link>
+            </button>
           </>
         </div>
 
@@ -149,12 +163,12 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
                 </Link>
               </>
               <>
-                <Link
-                  href="/"
+                <button
+                  onClick={HandleLogOut}
                   className="w-auto h-auto flex items-center justify-center  text-[#737373] leading-tight tracking-wide  text-2xl"
                 >
                   <FiLogOut />
-                </Link>
+                </button>
               </>
             </div>
 
