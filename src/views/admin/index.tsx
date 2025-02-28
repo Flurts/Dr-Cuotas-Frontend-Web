@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/accordion';
 import { Status } from '@/utils/constants';
 
-import { DoctorByStatus } from './doctorbyStatus';
+import { DoctorByStatus } from './doctorByStatus';
 import LotteryComponent from './Lottery';
 import RevenueChart from './revenuechart';
 import { SurgeryByStatus } from './surgeryByStatus';
