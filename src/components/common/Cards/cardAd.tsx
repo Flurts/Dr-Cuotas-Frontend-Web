@@ -91,6 +91,8 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
         return;
       }
 
+      // 💡 Elimina el anuncio del estado manualmente antes de recargar
+      setSelectedAd(null);
       await fetchAds();
       console.log('✅ Anuncio eliminado correctamente.');
     } catch (error) {
@@ -117,8 +119,10 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
 
       {/* Botón de eliminar encima del blur */}
       <button
-        onClick={() => deleteAd(id)}
-        className="absolute top-12 right-12 bg-red-600 text-white h-8 w-8 rounded-full text-sm z-20"
+        onClick={async () => {
+          await deleteAd(id);
+        }}
+        className="absolute top-12 right-12 bg-red-600 text-white h-5 w-5 rounded-full text-sm z-20"
       >
         ✕
       </button>

@@ -5,11 +5,9 @@ import {
   LucideUsers,
 } from 'lucide-react';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import AdComponent from '@/components/common/AdComponent';
-import DoctorInfoCard from '@/components/common/Cards/DoctorInfoCard';
-import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
 import TitleElements from '@/components/common/ViewElements/TitleElements';
 import { Head } from '@/components/constants';
 import {

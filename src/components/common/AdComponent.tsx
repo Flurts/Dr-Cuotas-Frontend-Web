@@ -11,34 +11,34 @@ interface Ad {
   link: string;
 }
 
+// Función para obtener anuncios
+export const fetchAds = async (setAds: (ads: Ad[]) => void): Promise<void> => {
+  try {
+    console.log('🔄 Cargando anuncios...');
+    const response = await fetch(`${settings.API_URL}/graphql`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `query GetAdsQuery { getAdsQuery { image link id } }`,
+      }),
+    });
+
+    const result = await response.json();
+    console.log('✅ Anuncios recibidos:', result.data.getAdsQuery);
+    setAds(result.data.getAdsQuery);
+  } catch (error) {
+    console.error('❌ Error al obtener anuncios:', error);
+  }
+};
+
 const AdComponent = () => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [newImage, setNewImage] = useState<string>('');
   const [newLink, setNewLink] = useState<string>('');
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
-  // Función reutilizable para obtener los anuncios
-  const fetchAds = async (): Promise<void> => {
-    try {
-      console.log('🔄 Cargando anuncios...');
-      const response = await fetch(`${settings.API_URL}/graphql`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `query GetAdsQuery { getAdsQuery { image link id } }`,
-        }),
-      });
-
-      const result = await response.json();
-      console.log('✅ Anuncios recibidos:', result.data.getAdsQuery);
-      setAds(result.data.getAdsQuery);
-    } catch (error) {
-      console.error('❌ Error al obtener anuncios:', error);
-    }
-  };
-
   useEffect(() => {
-    void fetchAds();
+    void fetchAds(setAds);
   }, []);
 
   const createAd = async () => {
@@ -49,15 +49,11 @@ const AdComponent = () => {
 
     try {
       console.log('📡 Creando anuncio...');
-
       const requestBody = {
         query: `mutation CreateAdMutation($link: String!, $image: String!) {
           createAdMutation(link: $link, image: $image)
         }`,
-        variables: {
-          link: newLink,
-          image: newImage,
-        },
+        variables: { link: newLink, image: newImage },
       };
 
       const response = await fetch(`${settings.API_URL}/graphql`, {
@@ -75,7 +71,7 @@ const AdComponent = () => {
       }
 
       // Recargar anuncios después de la creación
-      await fetchAds();
+      await fetchAds(setAds);
 
       // Resetear inputs
       setNewImage('');
@@ -104,7 +100,7 @@ const AdComponent = () => {
         {/* Formulario de creación, del mismo tamaño que los anuncios */}
         <div className="relative w-[750px] ml-10 h-60 flex justify-center mt-10 items-center border-2 border-dashed border-drcuotasPrimary rounded-lg">
           {isCreating ? (
-            <div className="bg-white  rounded-lg flex flex-col gap-4 w-full h-[300px] justify-center items-center">
+            <div className="bg-white rounded-lg flex flex-col gap-4 w-full h-[300px] justify-center items-center">
               <input
                 type="text"
                 placeholder="Nuevo Link"
@@ -121,7 +117,7 @@ const AdComponent = () => {
                 onChange={(e) => {
                   setNewImage(e.target.value);
                 }}
-                className="border px-4 h-12 rounded-lg w-full  border-drcuotasPrimary"
+                className="border px-4 h-12 rounded-lg w-full border-drcuotasPrimary"
               />
               <div className="flex gap-4">
                 <button
