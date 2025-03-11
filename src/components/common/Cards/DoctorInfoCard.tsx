@@ -1,4 +1,6 @@
+import { LucideGlobe } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 import { SocialMedia } from '@/types';
 import { socialMediaIcons } from '@/utils/social-media-icos';
@@ -10,7 +12,7 @@ interface DoctorProps {
     user: {
       first_name: string;
       last_name: string;
-      profile_picture: string;
+      profile_picture?: string | null; // Asegurar que puede ser nulo o indefinido
       social_media: Array<{
         link: string;
         status: string;
@@ -21,48 +23,65 @@ interface DoctorProps {
 }
 
 const DoctorInfoCard: React.FC<DoctorProps> = ({ doctor }) => {
+  // Verificar que la imagen no sea null o undefined
+  const defaultImage = '/images/elements/doctor.svg';
+  const initialImage =
+    doctor.user.profile_picture && doctor.user.profile_picture.trim() !== ''
+      ? doctor.user.profile_picture
+      : defaultImage;
+
+  const [imageSrc, setImageSrc] = useState(initialImage);
+
   return (
-    <div className="flex flex-col lg:w-80 lg:h-96 rounded-xl items-center shadow-lg bg-white hover:shadow-md hover:shadow-drcuotasSecondaryPrimaryColor hover:scale-105 transition-all duration-300">
-    {/* Contenedor de la imagen con tamaño fijo */}
-    <div className="w-full h-[224px] min-h-[224px] flex justify-center items-center bg-gray-100 rounded-t-xl">
+    <a
+      href={`/view-account/doctor/${doctor.id}`}
+      className="w-60 lg:w-80 h-full rounded-xl border shadow-xl cursor-pointer flex flex-col justify-center items-center gap-4"
+    >
+      {/* Contenedor de la imagen con tamaño fijo */}
       <Image
-        src={doctor.user.profile_picture ?? '/images/elements/doctor.svg'}
-        alt={doctor.user.first_name}
-        className="rounded-t-xl object-cover w-full h-full"
+        src={imageSrc}
+        alt={doctor.user.first_name || 'Doctor'}
+        className="w-full object-cover rounded-t-xl"
         width={238}
         height={224}
+        onError={() => {
+          setImageSrc(defaultImage);
+        }}
       />
-    </div>
-  
-    {/* Información del doctor */}
-    <div className="flex flex-col justify-center items-center p-4">
-      <span className="text-sm font-bold text-drcuotasSecondary-text capitalize text-center leading-tight tracking-tight w-40">
-        {doctor.user.first_name.concat(' ', doctor.user.last_name)}
-      </span>
-      <span className="text-drcuotasTertiary-text text-md capitalize">
-        {doctor.profession ?? 'Doctor'}
-      </span>
-    </div>
-  
-    {/* Redes sociales */}
-    <div className="flex justify-center items-center gap-4 mt-4 text-drcuotasPrimary-text">
-      {doctor.user.social_media.length ? (
-        doctor.user.social_media.slice(0, 3).map((social) => {
-          const Icon = socialMediaIcons[social.type as SocialMedia];
-          return (
-            <a href={social.link} target="_blank" key={social.type} className="h-full">
-              <Icon className="h-full" size={30} />
-            </a>
-          );
-        })
-      ) : (
-        <span className="text-xs font-bold text-drcuotasTertiary-text hidden">
-          No hay redes sociales
+
+      {/* Información del doctor */}
+      <div className="flex flex-col justify-center items-center">
+        <span className="text-lg font-bold text-drcuotasTertiary-text capitalize text-center leading-tight tracking-tight w-64">
+          {doctor.user.first_name.concat(' ', doctor.user.last_name)}
         </span>
-      )}
-    </div>
-  </div>
-  
+        <span className="text-drcuotasTertiary-text text-md capitalize">
+          {doctor.profession ?? 'Doctor'}
+        </span>
+      </div>
+
+      {/* Redes sociales */}
+      <div className="w-full h-full flex justify-center items-center gap-4 text-drcuotasPrimary-text">
+        {doctor.user.social_media.length ? (
+          doctor.user.social_media.slice(0, 3).map((social) => {
+            const Icon = socialMediaIcons[social.type as SocialMedia];
+            return (
+              <a
+                href={social.link}
+                target="_blank"
+                key={social.type}
+                className="h-full"
+              >
+                <Icon className="h-full" size={30} />
+              </a>
+            );
+          })
+        ) : (
+          <span className="w-full h-10 flex justify-center items-center font-bold text-drcuotasTertiary-text">
+            <LucideGlobe className="w-4 h-4" />
+          </span>
+        )}
+      </div>
+    </a>
   );
 };
 

@@ -12,6 +12,9 @@ const footersMap: Record<string, React.FC<{ children: JSX.Element }>> = {
   '/account': NothingFooter,
   '/faq': NothingFooter,
   '/admin': PrincipalFooter,
+  '/professionals': NothingFooter,
+  '/store': NothingFooter,
+  
 };
 
 export default footersMap;

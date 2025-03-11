@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import { ImSpinner9 } from 'react-icons/im';
-import { IoCloseCircleSharp } from 'react-icons/io5';
+import { IoCloseCircleSharp, IoSettings, IoSettingsOutline } from 'react-icons/io5';
 import { MdError } from 'react-icons/md';
 import { RiUploadLine } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,6 +34,9 @@ import {
   useUpdateSurgerieMutation,
 } from '@/types';
 import { base64ToFile, createS3Url } from '@/utils/refFileImage';
+import { LucideCalendar, LucideHardDriveDownload, LucideMap, LucideMapPinned, LucideMessagesSquare, LucideShare, LucideShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import CustomImageUploader from '@/components/common/Editable/UserImage';
 
 export default function DoctorView() {
   const { t } = useTranslation(['common', 'surgeries']);
@@ -525,28 +528,91 @@ export default function DoctorView() {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col-reverse justify-center items-center p-10">
-        <DoctorInfo
-          user={user}
-          editInfoHandler={editInfoHandler}
-          cvHandler={cvHandler}
-          imagesHandler={imagesHandler}
-        />
+      <div className="w-full min-h-screen">
+        {/* Banner con degradado */}
+        <div className="h-72 bg-gradient-to-b from-white to-drcuotasPrimary-bg" />
 
-        <div className="w-full">
+        {/* Contenedor Principal */}
+        <div className="px-6 pb-6 flex flex-col justify-center gap-4">
+          {/* Profile header */}
+          <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
+            {/* Imagen del Doctor */}
+            <div className="h-32 w-32 border-4 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
+              {/* <Image
+                src={profilePicture}
+                alt={`Foto de ${doctorName}`}
+                width={128}
+                height={128}
+                className="object-cover w-full h-full"
+                onError={() => {
+                  setProfilePicture(defaultImage);
+                }}
+              /> */}
+                <CustomImageUploader
+            width={120}
+            height={120}
+            imageUrl={user.profile_picture ?? undefined}
+            // onChange={handleChange}
+          />
+            </div>
+
+            {/* Información del Doctor */}
+            <div className="w-full flex-1 text-center md:text-left">
+            <h1 className="text-4xl font-black uppercase leading-tight tracking-tight text-white -mt-4 flex flex-row gap-2 items-center">  
+              {user.first_name + ' ' + user.last_name} <LucideShieldCheck className='w-6 h-6'/>
+              </h1>
+              <p className="text-base uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
+              Doctor Registrado 
+              </p>
+            </div>
+
+            {/* Botones */}
+            <div className="flex gap-2">
+              <Link href='/account/settings' className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl">
+                <IoSettings className="text-2xl" />
+                Perfil
+              </Link>
+              <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
+              <IoSettingsOutline className="text-2xl" />
+                Doctor
+              </button>
+              <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
+              <LucideShare  className="text-2xl" />
+                
+                CV
+              </button>
+             
+            </div>
+          </div>
           <>
+          <div className='w-full h-full p-4'>
             <SurgeryTable
               editUpdateSurgeryHandler={editUpdateSurgeryHandler}
               onSurgeryCreated={onSurgeryCreated}
             />
+          </div>
+
           </>
+        
         </div>
+      </div>
+
+      <div className="w-full h-full  flex-col gap-4 justify-center items-center p-10  bg-white">
+     
+        {/* <>
+          <DoctorInfo
+            user={user}
+            editInfoHandler={editInfoHandler}
+            cvHandler={cvHandler}
+            imagesHandler={imagesHandler}
+          />
+        </> */}
       </div>
 
       {/* Modal */}
       <div
         onClick={modalHandler}
-        className={`z-50 fixed flex inset-0 bg-black bg-opacity-45 justify-center items-center transition-opacity duration-100 ${
+        className={`z-50 fixed flex inset-0 backdrop-blur-sm bg-drcuotasSecondary-bg bg-opacity-60 justify-center  items-center transition-opacity duration-100 ${
           toggleModal ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ visibility: toggleModal ? 'visible' : 'hidden' }}
@@ -555,8 +621,8 @@ export default function DoctorView() {
           onClick={(e) => {
             e.stopPropagation();
           }}
-          className={`relative bg-white ${cvUpload ? 'w-[300px] h-auto' : ''} rounded-lg flex flex-col gap-5 transition-all duration-100 p-10 justify-center items-center ${
-            toggleModal ? 'scale-75' : 'scale-90'
+          className={`relative bg-white ${cvUpload ? 'w-[300px] h-80' : ''} rounded-lg flex flex-col gap-5  transition-all duration-100 shadow-2xl shadow-drcuotasPrimary-bg justify-center items-center ${
+            toggleModal ? 'scale-100' : 'scale-0'
           }`}
         >
           <button className="absolute right-1 top-1">
@@ -565,7 +631,6 @@ export default function DoctorView() {
               className="text-2xl m-3 text-gray-500"
             />
           </button>
-          <div className="absolute w-[95%] border top-12" />
 
           {/** Edit Info */}
           {editInfo && (
@@ -704,35 +769,29 @@ export default function DoctorView() {
             </div>
           )}
 
-          {/** Edit / Update Surgerie */}
           {editUpdateSurgery && (
-            <div className="relative flex flex-col gap-4 items-center mr-10 w-full h-full p-20">
-              <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight text-4xl">
+            <div className="w-full flex flex-col gap-4 items-center p-10">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-drcuotasPrimary-text">
                 Crear Nueva Cirugía
-              </span>
+              </h2>
 
               {doctorLoading ? (
                 <ImSpinner9 className="animate-spin h-6 text-[#7863f7]" />
               ) : (
                 <FormikProvider value={formikSurgery}>
-                  <Form className="w-full flex flex-row justify-center items-center">
-                    <div className="w-full flex flex-col items-center gap-3">
-                      <span className="font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
-                        Foto de la Cirugía
-                      </span>
+                  <Form className="w-full flex flex-col lg:flex-row gap-8">
+                    {/* Sección de imagen */}
+                    <div className="flex flex-col items-center gap-4">
                       <FileUploader
                         handleChange={async (file: File) => {
                           const reader = new FileReader();
-
                           reader.onload = () => {
                             setSurgerieImage(reader.result as string);
-
                             void formikSurgery.setFieldValue(
                               'surgeryImage',
                               reader.result as string,
                             );
                           };
-
                           reader.readAsDataURL(file);
                           setSurgeryImageUpload(true);
                           await Promise.resolve();
@@ -740,60 +799,53 @@ export default function DoctorView() {
                         name="file"
                         types={['JPG', 'PNG', 'GIF']}
                       >
-                        <div className="flex justify-center items-center w-[250px] h-[400px] border border-gray-500 rounded-md cursor-pointer">
+                        <div className="flex justify-center items-center w-[250px] h-[400px] border border-gray-300 rounded-md cursor-pointer hover:shadow-lg transition-shadow">
                           {!formikSurgery.values.surgeryImage ? (
-                            <RiUploadLine className="h-14 w-14" />
+                            <RiUploadLine className="h-14 w-14 text-gray-500" />
                           ) : (
-                            <>
-                              <Image
-                                src={
-                                  formikSurgery.values.surgeryImage ??
-                                  surgerieImage
-                                }
-                                alt="surgery"
-                                className="w-full h-full object-cover rounded-md"
-                                width={249}
-                                height={349}
-                              />
-                            </>
+                            <Image
+                              src={formikSurgery.values.surgeryImage ?? surgerieImage}
+                              alt="surgery"
+                              className="w-full h-full object-cover rounded-md"
+                              width={250}
+                              height={400}
+                            />
                           )}
                         </div>
                       </FileUploader>
                     </div>
-                    <div className="w-full flex flex-col items-center gap-3">
-                      <div className="flex flex-row gap-3 w-full">
-                        <div className="w-full">
-                          <span className="text-[#7863f7] font-semibold">
+                    {/* Sección de campos */}
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <span className="block text-sm font-semibold text-drcuotasPrimary-text  uppercase leading-tight tracking-tight">
                             Nombre
                           </span>
                           <Field
                             name="name"
                             type="text"
                             placeholder="Nombre de la Cirugía"
-                            className="p-2 focus:outline-none focus:ring-2 w-full focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
+                            className="w-full p-2 border rounded-md text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition"
                           />
                           <ErrorMessage
                             name="name"
                             component="div"
                             render={(msg) => (
-                              <div className="flex items-center text-red-500">
+                              <div className="flex items-center text-red-500 text-sm mt-1">
                                 <MdError className="mr-1" />
-                                <div className="text-sm lg:text-base">
-                                  {msg}
-                                </div>
+                                {msg}
                               </div>
                             )}
                           />
                         </div>
                         <div>
-                          <span className="text-[#7863f7] font-semibold">
+                          <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
                             Estado
                           </span>
                           <Field
                             name="status"
                             as="select"
-                            placeholder="Estado"
-                            className="p-2 focus:outline-none w-full focus:ring-2 focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
+                            className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
                           >
                             {Object.values(Status).map((status) => (
                               <option key={status} value={status}>
@@ -805,121 +857,116 @@ export default function DoctorView() {
                             name="status"
                             component="div"
                             render={(msg) => (
-                              <div className="flex items-center text-red-500">
+                              <div className="flex items-center text-red-500 text-sm mt-1">
                                 <MdError className="mr-1" />
-                                <div className="text-sm lg:text-base">
-                                  {msg}
-                                </div>
+                                {msg}
                               </div>
                             )}
                           />
                         </div>
                       </div>
-                      <div className="w-full flex-col">
-                        <span className="text-[#7863f7] font-semibold">
+                      <div>
+                        <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
                           Monto
                         </span>
                         <Field
                           name="amount"
                           type="number"
                           placeholder="Monto"
-                          className="p-2 focus:outline-none focus:ring-2 w-full focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
+                          className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
                         />
                         <ErrorMessage
                           name="amount"
                           component="div"
                           render={(msg) => (
-                            <div className="flex items-center text-red-500">
+                            <div className="flex items-center text-red-500 text-sm mt-1">
                               <MdError className="mr-1" />
-                              <div className="text-sm lg:text-base">{msg}</div>
+                              {msg}
                             </div>
                           )}
                         />
                       </div>
-                      <div className="relative w-full flex-col">
-                        <span className="text-[#7863f7] font-semibold">
+                      <div>
+                        <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
                           Descripción
                         </span>
                         <Field
                           name="description"
-                          type="text"
-                          placeholder="Descripción"
                           as="textarea"
-                          className="w-full h-[100px] min-h-[100px] max-h-[500px] p-2 rounded-md border  focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                          placeholder="Descripción"
+                          className="w-full h-[100px] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
                         />
                       </div>
-                      <div className="w-full flex-col">
-                        <span className="text-[#7863f7] font-semibold">
-                          Tipo de Cirugía
-                        </span>
-                        <Field
-                          name="surgeryType"
-                          as="select"
-                          placeholder="Estado"
-                          className="p-2 focus:outline-none w-full focus:ring-2 focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
-                        >
-                          {Object.values(SurgeryTypes).map((status) => (
-                            <option key={status} value={status}>
-                              {t(`surgeries:${status}`)}
-                            </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name="surgeryType"
-                          component="div"
-                          render={(msg) => (
-                            <div className="flex items-center text-red-500">
-                              <MdError className="mr-1" />
-                              <div className="text-sm lg:text-base">{msg}</div>
-                            </div>
-                          )}
-                        />
-                      </div>
-                      <div className="w-full flex-col">
-                        <span className="text-[#7863f7] font-semibold">
-                          Categoria de la Cirugía
-                        </span>
-                        <Field
-                          name="surgeryCategory"
-                          as="select"
-                          placeholder="Estado"
-                          className="p-2 focus:outline-none w-full focus:ring-2 focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
-                        >
-                          {Object.values(SurgeryCategories).map((status) => (
-                            <option key={status} value={status}>
-                              {t(`surgeries:${status}`)}
-                            </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name="surgeryCategory"
-                          component="div"
-                          render={(msg) => (
-                            <div className="flex items-center text-red-500">
-                              <MdError className="mr-1" />
-                              <div className="text-sm lg:text-base">{msg}</div>
-                            </div>
-                          )}
-                        />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                            Tipo de Cirugía
+                          </span>
+                          <Field
+                            name="surgeryType"
+                            as="select"
+                            className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
+                          >
+                            {Object.values(SurgeryTypes).map((status) => (
+                              <option key={status} value={status}>
+                                {t(`surgeries:${status}`)}
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="surgeryType"
+                            component="div"
+                            render={(msg) => (
+                              <div className="flex items-center text-red-500 text-sm mt-1">
+                                <MdError className="mr-1" />
+                                {msg}
+                              </div>
+                            )}
+                          />
+                        </div>
+                        <div>
+                          <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                            Categoría de la Cirugía
+                          </span>
+                          <Field
+                            name="surgeryCategory"
+                            as="select"
+                            className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2]  leading-tight tracking-tight"
+                          >
+                            {Object.values(SurgeryCategories).map((status) => (
+                              <option key={status} value={status}>
+                                {t(`surgeries:${status}`)}
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="surgeryCategory"
+                            component="div"
+                            render={(msg) => (
+                              <div className="flex items-center text-red-500 text-sm mt-1">
+                                <MdError className="mr-1" />
+                                {msg}
+                              </div>
+                            )}
+                          />
+                        </div>
                       </div>
                     </div>
                   </Form>
                 </FormikProvider>
               )}
 
-              <div className="flex flex-row gap-3">
-                <div className="flex flex-col gap-2 justify-center items-center mt-4">
-                  <button
-                    className="rounded-full bg-[#7863f7] text-white p-2 px-5 w-[160px]"
-                    onClick={formikSurgery.submitForm}
-                  >
-                    {isLoading ? (
-                      <ImSpinner9 className="animate-spin h-6 text-white w-full" />
-                    ) : (
-                      'Guardar cambios'
-                    )}
-                  </button>
-                </div>
+              <div className="w-full h-auto flex flex-row justify-center gap-4">
+                <button
+                  className="rounded-xl bg-[#7863f7] w-full h-16 text-white font-bold  uppercase leading-tight tracking-tight text-xl"
+                  onClick={formikSurgery.submitForm}
+                >
+                  {isLoading ? (
+                    <ImSpinner9 className="animate-spin h-6 w-full text-white" />
+                  ) : (
+                    'Crear Cirugia'
+                  )}
+                </button>
               </div>
             </div>
           )}

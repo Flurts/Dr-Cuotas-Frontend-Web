@@ -32,9 +32,7 @@ function createCuotas(
     if (i < quotasPaid) {
       status = Payment_Status.Paid;
     } else {
-      const cuotaPaymentDate = new Date(
-        startDate.getTime() + i * cuotaDuration,
-      );
+      const cuotaPaymentDate = new Date(startDate.getTime() + i * cuotaDuration);
 
       if (cuotaPaymentDate <= currentDate) {
         status = Payment_Status.Pending;
@@ -64,8 +62,17 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
   const { t } = useTranslation(['common', 'constants']);
   const [expanded, setExpanded] = useState(false);
 
+  // Verificar si hay información adicional para expandir
+  const hasDetails =
+    adjudicated.surgery ||
+    adjudicated.doctor ||
+    adjudicated.adjudicated_status ||
+    adjudicated.date_surgery;
+
   const toggleAccordion = () => {
-    setExpanded(!expanded);
+    if (hasDetails) {
+      setExpanded(!expanded);
+    }
   };
 
   const cuotas: Array<{
@@ -80,345 +87,186 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
   );
 
   return (
-    <div className="w-full justify-center items-center flex flex-row  relative">
+    <div className="w-full justify-center items-center flex flex-row relative">
       <div
-        className={`flex flex-col bg-white w-full items-center gap-2 ${expanded ? '' : 'border border-[#9665FF]'}`}
+        className={`flex flex-col bg-white w-full items-center gap-2 border rounded-xl border-drcuotasPrimary-bg`}
       >
         <div
-          className="flex flex-col w-full items-center justify-center p-4 relative"
-          onClick={!expanded ? toggleAccordion : () => {}}
+          className="flex flex-col w-full items-center justify-center p-4 relative cursor-pointer"
+          onClick={toggleAccordion}
         >
-          <IoMdArrowDropdown className="text-[#9665FF] text-5xl absolute -top-[18px] left-2 md:left-10" />
+          <IoMdArrowDropdown className="text-drcuotasPrimary-text text-5xl absolute -top-[18px] left-2 md:left-10" />
 
-          {/* Card tipo de cirugia y doctor */}
+          {/* Card tipo de cirugía y doctor */}
           <div
-            className={` flex flex-col md:flex-row w-full justify-center relative gap-4 md:gap-10 ${expanded ? 'mb-5' : ''} `}
+            className={`flex flex-col md:flex-row w-full justify-center relative gap-4 md:gap-10 ${
+              expanded ? 'mb-5' : ''
+            }`}
           >
             <div className="flex w-full md:w-1/2 justify-between items-center">
-              <span className="text-lg md:text-xl lg:text-2xl text-[#6636E2] mx-2 md:mx-4">
+              <span className="text-lg md:text-xl lg:text-2xl text-drcuotasPrimary-text leading-tight tracking-tight uppercase font-black p-4">
                 {t('constants:surgery')}
               </span>
               <div className="flex justify-center items-center w-3/5 md:w-full border p-2">
-                <span className="text-sm md:text-base lg:text-lg text-gray-500">
+                <span className="text-sm md:text-base lg:text-lg text-drcuotasTertiary-text leading-tight tracking-tight">
                   {adjudicated.surgery?.name}
                 </span>
               </div>
             </div>
 
-            <div className="absolute hidden md:flex h-[50px] border-r-[1px] -top-1 border-[#9665FF]" />
+            <div className="absolute hidden md:flex h-[50px] border-r-[1px] -top-1 border-drcuotasPrimary-bg" />
 
             <div className="flex w-full md:w-1/2 justify-between items-center">
-              <span className="text-lg md:text-xl lg:text-2xl text-[#6636E2] mx-2 md:mx-4">
+              <span className="text-lg md:text-xl lg:text-2xl text-drcuotasPrimary-text p-4 font-black uppercase leading-tight tracking-tight">
                 {t('constants:surgeon')}
               </span>
               <div className="flex justify-center items-center w-3/5 md:w-full border p-2">
-                <span className="text-base md:text-lg text-gray-500">
-                  Dra. {adjudicated?.doctor?.user!.first_name}
+                <span className="text-base md:text-lg text-drcuotasTertiary-text leading-tight tracking-tight">
+                  {'Dr. ' + adjudicated?.doctor?.user!.first_name}
                 </span>
               </div>
             </div>
           </div>
           {expanded && (
-            <>
-              <div
-                className={`flex flex-col w-full items-center justify-center overflow-hidden transition-max-h ease-out duration-300 ${expanded ? 'max-h-[1000px]' : 'max-h-0'}`}
-              >
-                {/* Buttons info del procedimiento y info del profesional */}
-                <div className="flex flex-row w-full justify-center gap-2 md:gap-10">
+            <div
+              className={`flex flex-col w-full items-center justify-center overflow-hidden transition-max-h ease-out duration-300 ${
+                expanded ? 'max-h-[1000px]' : 'max-h-0'
+              }`}
+            >
+              {/* Buttons info del procedimiento e info del profesional */}
+              <div className="flex flex-row w-full justify-center gap-2 md:gap-10">
+                <Link
+                  href={`/store/${adjudicated.surgery?.id}`}
+                  className="flex w-1/2 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
+                >
+                  <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
+                    Adelantar Pago
+                  </span>
+                </Link>
+                <Link
+                  href={`/view-account/doctor/${adjudicated.doctor?.id}`}
+                  className="flex w-1/2 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
+                >
+                  <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
+                    Información del Profesional
+                  </span>
+                </Link>
+              </div>
+
+              {adjudicated.adjudicated_status === Adjudicated_Status.Validating && (
+                <div className="flex flex-col w-full items-center justify-center gap-2 p-16">
+                  <span className="text-drcuotasPrimary-text text-2xl font-normal">
+                    {t(
+                      `constants:adjudicatedStatus.${adjudicated.adjudicated_status}`,
+                    )}
+                  </span>
+                  <span className="text-drcuotasPrimary-text text-lg font-light">
+                    {t(
+                      `constants:adjudicatedStatusDescription.${adjudicated.adjudicated_status}`,
+                    )}
+                  </span>
+                </div>
+              )}
+
+              {adjudicated.adjudicated_status === Adjudicated_Status.Verified && (
+                <div className="flex flex-col w-full items-center justify-center gap-5 p-16">
+                  <span className="text-drcuotasPrimary-text text-5xl font-bold">
+                    {t(
+                      `constants:adjudicatedStatus.${adjudicated.adjudicated_status}`,
+                    )}
+                  </span>
+                  <span className="text-drcuotasPrimary-text text-lg font-light">
+                    {t(
+                      `constants:adjudicatedStatusDescription.${adjudicated.adjudicated_status}`,
+                    )}
+                  </span>
                   <Link
-                    href={`/store/${adjudicated.surgery?.id}`}
-                    className="flex w-1/2 justify-center items-center p-1 md:p-2 bg-[#6636E2]"
+                    href={`/store/payments/update/${adjudicated.id}`}
+                    className="bg-drcuotasPrimary-bg rounded-md w-[400px] h-[40px] px-2 hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center gap-2"
                   >
-                    <span className="text-white text-xs md:text-base mt-5 md:mt-0">
-                      {t('constants:procedureInformation')}
-                    </span>
-                  </Link>
-                  <Link
-                    href={`/view-account/doctor/${adjudicated.doctor?.id}`}
-                    className="flex w-1/2 justify-center items-center p-1 md:p-2 bg-[#6636E2]"
-                  >
-                    <span className="text-white text-xs md:text-base mt-5 md:mt-0">
-                      {t('constants:professionalInformation')}
-                    </span>
+                    Comienza tu transformación!
                   </Link>
                 </div>
+              )}
 
-                {adjudicated.adjudicated_status ===
-                  Adjudicated_Status.Validating && (
-                  <div className="flex flex-col w-full items-center justify-center gap-2 p-16 ">
-                    <span className="text-[#6636E2] text-2xl font-normal">
-                      {t(
-                        `constants:adjudicatedStatus.${adjudicated.adjudicated_status}`,
-                      )}
-                    </span>
-                    <span className="text-[#6636E2] text-lg font-light">
-                      {t(
-                        `constants:adjudicatedStatusDescription.${adjudicated.adjudicated_status}`,
-                      )}
-                    </span>
-                  </div>
-                )}
-
-                {adjudicated.adjudicated_status ===
-                  Adjudicated_Status.Verified && (
-                  <div className="flex flex-col w-full items-center justify-center gap-5 p-16">
-                    <span className="text-[#6636E2] text-5xl font-bold">
-                      {t(
-                        `constants:adjudicatedStatus.${adjudicated.adjudicated_status}`,
-                      )}
-                    </span>
-
-                    <span className="text-[#6636E2] text-lg font-light">
-                      {t(
-                        `constants:adjudicatedStatusDescription.${adjudicated.adjudicated_status}`,
-                      )}
-                    </span>
-
-                    <Link
-                      href={`/store/payments/update/${adjudicated.id}`}
-                      className="bg-[#6636E2] rounded-md w-[400px] h-[40px] px-2 hover:scale-105 transition-all duration-300 text-white text-xl font-bold flex justify-center items-center gap-2"
-                    >
-                      Comienza tu transformación!
-                    </Link>
-                  </div>
-                )}
-
-                {adjudicated.adjudicated_status ===
-                  Adjudicated_Status.Active && (
-                  <>
-                    <div className="border-dashed border-[1px] border-[#9665FF] w-full mt-5" />
-                    {adjudicated.date_surgery && (
-                      <>
-                        {/* Border-dashed */}
-
-                        {/* Date cirugia */}
-                        <div className="flex flex-col md:flex-row w-full justify-center py-2 md:py-5 relative gap-5 md:gap-10">
-                          <div className="flex w-full md:w-1/2 justify-between items-center">
-                            <span className="text-base lg:text-xl xl:text-2xl text-center w-full text-[#6636E2]">
-                              {t('constants:ApproxDateSurgery')}
+              {adjudicated.adjudicated_status === Adjudicated_Status.Active && (
+                <>
+                  <div className="border-dashed border-[1px] border-drcuotasPrimary-bg w-full mt-5" />
+                  {adjudicated.date_surgery && (
+                    <>
+                      <div className="flex flex-col md:flex-row w-full justify-center py-2 md:py-5 relative gap-5 md:gap-10">
+                        <div className="flex w-full md:w-1/2 justify-between items-center">
+                          <span className="text-base lg:text-xl xl:text-2xl text-center w-full text-[#6636E2]">
+                            {t('constants:ApproxDateSurgery')}
+                          </span>
+                          <div className="flex justify-center items-center w-6/12 border p-2">
+                            <span className="text-sm md:text-base lg:text-lg text-gray-500">
+                              {adjudicated.date_surgery}
                             </span>
-                            <div className="flex justify-center items-center w-6/12 border p-2">
-                              <span className="text-sm md:text-base lg:text-lg text-gray-500">
-                                {adjudicated.date_surgery}
-                              </span>
-                            </div>
                           </div>
-
-                          {/* Border */}
-                          <div className="absolute hidden md:flex h-[50px] border-r-[1px] top-5 border-[#9665FF]" />
-
-                          {/* Button Re-programar cirugia */}
-                          <button className="flex w-full md:w-1/2 justify-center items-center p-2 bg-[#9665FF]">
-                            <span className="text-white font-semibold text-base md:text-lg lg:text-xl">
-                              {t('constants:ReScheduleSurgery')}
-                            </span>
-                          </button>
                         </div>
 
-                        {/* Border-dashed */}
-                        <div className="border-dashed border-[1px] border-[#9665FF] w-full" />
-                      </>
-                    )}
+                        <div className="absolute hidden md:flex h-[50px] border-r-[1px] top-5 border-[#9665FF]" />
 
-                    {/* Number of cuotas and date of pay */}
-                    <div className="flex flex-col w-full justify-center items-center relative p-4">
-                      {/* Cuotas */}
-                      <div className="flex flex-row w-full justify-between items-center md:px-3">
-                        <span className="text-xs md:text-base text-[#6636E2]">
-                          {t('constants:quotas', { current: 3, total: 10 })}
-                        </span>
-                        <span className="text-xs md:text-base text-[#6636E2]">
-                          {t('constants:nextPayment', { date: '14/07/2024' })}
-                        </span>
+                        <button className="flex w-full md:w-1/2 justify-center items-center p-2 bg-[#9665FF]">
+                          <span className="text-white font-semibold text-base md:text-lg lg:text-xl">
+                            {t('constants:ReScheduleSurgery')}
+                          </span>
+                        </button>
                       </div>
-
-                      <div className="p-5">
-                        {/* <Cuotes cuotas={cuotas} /> */}
-                        {/* <Cuotas /> */}
-                        <>
-                          <div className="w-full p-4 flex flex-row justify-center items-center ">
-                            <>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                            </>
-                            <>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                              <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                              <>
-                                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                                  <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                                </div>
-                              </>
-                            </>
-                          </div>
-                        </>
+                      <div className="border-dashed border-[1px] border-[#9665FF] w-full" />
+                    </>
+                  )}
+                  <div className="flex flex-col w-full justify-center items-center relative p-4">
+                    <div className="flex flex-row w-full justify-between items-center md:px-3">
+                      <span className="text-xs md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
+                        {t('constants:quotas', { current: 3, total: 10 })}
+                      </span>
+                      <span className="text-xs md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
+                        {t('constants:nextPayment', { date: '02/25/2025' })}
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      <div className="w-full p-4 flex flex-row justify-center items-center">
+                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                        </div>
+                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                        </div>
+                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                        </div>
+                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                        </div>
+                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                        </div>
+                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
+                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
+                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                        </div>
                       </div>
                     </div>
-                  </>
-                )}
-                <>
-                  <>
-                    <div className="w-full border-t border-r border-l flex flex-col md:flex-row border-[#9665FF] justify-between items-center relative">
-                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                        <span className="text-base text-[#6636E2]">
-                          {/* {t('constants:indications')} */}
-                          Como adelantar Pagos
-                        </span>
-                        <p className="text-xs text-justify">
-                          Lorem ipsum dolor sit amet, consectetuer adipiscing
-                          elit, sed diam nonummy nibh euismod tincidunt ut
-                          laoreet dolore magna aliquam erat volutpat. Ut wisi
-                          enim ad minim veniam, quis nostrud exerci tation
-                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
-                          commodo consequat. Duis autem vel eum iriure dolor in
-                          hendrerit in vulputate
-                        </p>
-                      </div>
-
-                      {/* Border */}
-                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[33%] border-[#9665FF]" />
-
-                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                        <span className="text-base text-[#6636E2]">
-                          {t('constants:WhatNotDo')}
-                        </span>
-                        <p className="text-xs text-justify">
-                          Lorem ipsum dolor sit amet, consectetuer adipiscing
-                          elit, sed diam nonummy nibh euismod tincidunt ut
-                          laoreet dolore magna aliquam erat volutpat. Ut wisi
-                          enim ad minim veniam, quis nostrud exerci tation
-                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
-                          commodo consequat. Duis autem vel eum iriure dolor in
-                          hendrerit in vulputate
-                        </p>
-                      </div>
-                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[67%] border-[#9665FF]" />
-                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                        <span className="text-base text-[#6636E2]">Tips</span>
-                        <p className="text-xs text-justify bg-white">
-                          Lorem ipsum dolor sit amet, consectetuer adipiscing
-                          elit, sed diam nonummy nibh euismod tincidunt ut
-                          laoreet dolore magna aliquam erat volutpat. Ut wisi
-                          enim ad minim veniam, quis nostrud exerci tation
-                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
-                          commodo consequat. Duis autem vel eum iriure dolor in
-                          hendrerit in vulputate
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                  <>
-                    <div className="w-full border flex flex-col md:flex-row border-[#9665FF] justify-between items-center relative">
-                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                        <span className="text-base text-[#6636E2]">
-                          {t('constants:indications')}
-                        </span>
-                        <p className="text-xs text-justify">
-                          Lorem ipsum dolor sit amet, consectetuer adipiscing
-                          elit, sed diam nonummy nibh euismod tincidunt ut
-                          laoreet dolore magna aliquam erat volutpat. Ut wisi
-                          enim ad minim veniam, quis nostrud exerci tation
-                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
-                          commodo consequat. Duis autem vel eum iriure dolor in
-                          hendrerit in vulputate
-                        </p>
-                      </div>
-
-                      {/* Border */}
-                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[33%] border-[#9665FF]" />
-
-                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                        <span className="text-base text-[#6636E2]">
-                          {t('constants:WhatNotDo')}
-                        </span>
-                        <p className="text-xs text-justify">
-                          Lorem ipsum dolor sit amet, consectetuer adipiscing
-                          elit, sed diam nonummy nibh euismod tincidunt ut
-                          laoreet dolore magna aliquam erat volutpat. Ut wisi
-                          enim ad minim veniam, quis nostrud exerci tation
-                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
-                          commodo consequat. Duis autem vel eum iriure dolor in
-                          hendrerit in vulputate
-                        </p>
-                      </div>
-                      <div className="absolute hidden md:flex h-[75%] border-r-[1px] right-[67%] border-[#9665FF]" />
-                      <div className="flex flex-col justify-center items-center p-3 md:p-5 lg:p-10 gap-4">
-                        <span className="text-base text-[#6636E2]">Tips</span>
-                        <p className="text-xs text-justify bg-white">
-                          Lorem ipsum dolor sit amet, consectetuer adipiscing
-                          elit, sed diam nonummy nibh euismod tincidunt ut
-                          laoreet dolore magna aliquam erat volutpat. Ut wisi
-                          enim ad minim veniam, quis nostrud exerci tation
-                          ullamcorper suscipit lobortis nisl ut aliquip ex ea
-                          commodo consequat. Duis autem vel eum iriure dolor in
-                          hendrerit in vulputate
-                        </p>
-                      </div>
-                    </div>
-                  </>
+                  </div>
                 </>
-              </div>
-            </>
+              )}
+            </div>
           )}
         </div>
       </div>
-      {expanded && (
+      {expanded && hasDetails && (
         <div className="absolute -top-10 -right-4 hover:scale-110 transition">
           <button
-            className="rounded-full border border-[#9665FF] mt-6 mb-auto bg-white"
+            className="rounded-full border border-drcuotasPrimary-bg mt-6 mb-auto bg-white"
             onClick={toggleAccordion}
           >
-            <IoIosArrowDown className="text-[#9665FF] text-3xl md:text-4xl lg:text-5xl" />
+            <IoIosArrowDown className="text-drcuotasPrimary-text text-3xl md:text-4xl lg:text-5xl" />
           </button>
         </div>
       )}

@@ -4,12 +4,12 @@ import TitleElements from '@/components/common/ViewElements/TitleElements';
 
 export default function FinancingView() {
   return (
-    <div className="w-full h-60 lg:h-screen flex justify-center items-center">
-      <TitleElements
+    <div className="w-full h-60 lg:h-screen flex justify-center ">
+      {/* <TitleElements
         primaryText="Financiamiento"
         secondaryText="Financiamiento"
-        descriptionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      />
+        descriptionText="Puedes pagar tu cirugía en cuotas accesibles y sin estrés."
+      /> */}
     </div>
   );
 }

@@ -1,369 +1,202 @@
-import { Rating } from '@mui/material';
+import {
+  LucideCalendar,
+  LucideDownload,
+  LucideMap,
+  LucideMapPinned,
+  LucideMessagesSquare,
+  LucideShieldCheck,
+} from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useRef, useState } from 'react';
-import { FaPlay } from 'react-icons/fa';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { MdKeyboardArrowLeft } from 'react-icons/md';
+import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-import { Doctor, File_Db } from '@/types';
-import { socialMediaIcons } from '@/utils/social-media-icos';
+import AdComponents from '@/components/common/ViewElements/AdComponents';
+import OurServices from '@/components/common/ViewElements/OurServices';
 
-export const DoctorView = ({
-  doctor,
-  curriculum,
-}: {
-  doctor: Doctor;
-  curriculum: File_Db;
-}) => {
+export const DoctorView = ({ doctor }) => {
   const { t } = useTranslation('common');
 
-  const cvGetterHandler = async () => {
-    if (curriculum.file_link) {
-      try {
-        const link = document.createElement('a');
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        link.href = curriculum.file_link;
-        link.target = '_blank';
-        link.click();
+  if (!doctor) return null; // Evitar errores si no hay datos del doctor
 
-        toast({
-          variant: 'success',
-          title: 'Descargado',
-          description: 'Archivo descargado con éxito',
-        });
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Error al descargar el archivo',
-        });
-      }
-    }
-  };
+  const defaultImage = '/images/elements/doctor.svg';
+  const [profilePicture, setProfilePicture] = useState(
+    doctor?.user?.profile_picture && doctor.user.profile_picture !== ''
+      ? doctor.user.profile_picture
+      : defaultImage,
+  );
 
-  const surgeryCategory = [
-    'Rinoplastia',
-    'Liposucción',
-    'Blefaroplastia',
-    'Mamoplastia',
-    'Abdominoplastia',
-    'Otoplastia',
-  ];
-
-  const surgeriesTestimonials = [
-    {
-      testimonio:
-        'Me realicé una rinoplastia con el Dr Axel Hemmingsen. Salió excelente. Con su equipo fueron muy amables en todo momento Super profesional, siempre resolvió mis dudas y dejó un resultado increíble. Quedé encantada, superó mis expectativas',
-      autor: 'Renata Neira',
-    },
-    {
-      testimonio:
-        'Me realicé una rinoplastia con el Dr Axel Hemmingsen. Salió excelente. Con su equipo fueron muy amables en todo momento Super profesional, siempre resolvió mis dudas y dejó un resultado increíble. Quedé encantada, superó mis expectativas',
-      autor: 'Evelyn Gonzales',
-    },
-  ];
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const carouselRef = useRef(null);
-
-  const slidesDesktop = [
-    '/images/surgeriesBackAfter/surgeryExample.svg',
-    '/images/surgeriesBackAfter/surgeryExample2.svg',
-  ];
-
-  const slidesMobile = [
-    '/images/surgeriesBackAfter/surgeryExample.svg',
-    '/images/surgeriesBackAfter/surgeryExample2.svg',
-  ];
-
-  const slidesToShow = isMobile ? slidesMobile : slidesDesktop;
-
-  const prevSlide = (): void => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? slidesToShow.length - 1 : prevIndex - 1,
-    );
-    resetInterval();
-  };
-
-  const nextSlide = (): void => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === slidesToShow.length - 1 ? 0 : prevIndex + 1,
-    );
-    resetInterval();
-  };
-
-  const resetInterval = (): void => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(nextSlide, 4000);
-  };
-
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    intervalRef.current = setInterval(nextSlide, 4000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 425);
-    };
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const doctorName = doctor?.user?.first_name + ' ' + doctor?.user?.last_name || 'Desconocido';
+  const specialty = doctor?.specialty || 'Especialidad no especificada';
 
   return (
     <>
-      <div className="mb-16  flex flex-col items-center justify-center">
-        <div className="flex flex-col w-screen lg:w-full h-96">
-          <div className="bg-[#6636E2] w-screen lg:w-full h-32 flex justify-center items-center">
-            <h1 className="text-center font-extrabold text-white text-4xl lg:text-7xl">
-              {t('ourProfessional')}
-            </h1>
-          </div>
+      <div className="w-full h-screen overflow-hidden">
+        {/* Banner con degradado gris */}
+        <div className="h-72  bg-gradient-to-b from-white to-drcuotasPrimary-bg" />
 
-          <div className="bg-[#B398F5] w-screen lg:w-full h-20 flex justify-center items-center">
-            <div className="flex flex-row justify-center gap-32 lg:gap-96">
-              <div className="flex flex-col text-[#6636E2] gap-y-2">
-                <p className="font-bold text-xs lg:text-base">
-                  Dr. {doctor.user?.first_name}
-                </p>
-                <div className="flex flex-row gap-1 lg:gap-2 text-xs lg:text-xl  text-[#6636E2]">
-                  {doctor.user?.social_media?.slice(0, 3).map((social) => {
-                    const Icon = socialMediaIcons[social.type];
-                    return (
-                      <a href={social.link} target="_blank" key={social.type}>
-                        <Icon className="md:text-base text-xs text-white -mt-4 my-4 md:mt-0 md:my-0" />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
+        {/* Contenedor Principal */}
 
-              <Link
-                href={'/'}
-                className="text-[#6636E2] text-xs lg:text-2xl font-bold flex flex-row justify-center lg:items-center"
-              >
-                <MdKeyboardArrowLeft className="text-lg lg:text-2xl text-[#6636E2]" />
-                {t('surgeriesProducts.backToList')}
-              </Link>
+        <div className="px-6 pb-6 flex flex-col  justify-center gap-4">
+          {/* Profile header */}
+          <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
+            {/* Imagen del Doctor */}
+            <div className="h-32 w-32 border-4 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
+              <Image
+                src={profilePicture}
+                alt={`Foto de ${doctorName}`}
+                width={128}
+                height={128}
+                className="object-cover w-full h-full"
+                onError={() => {
+                  setProfilePicture(defaultImage);
+                }} // Maneja error de imagen
+              />
             </div>
-          </div>
 
-          <div className="w-screen lg:w-full h-32 flex justify-center items-center -mt-4">
-            <div className="flex flex-col lg:flex-row justify-center  items-center lg:gap-20">
-              <span className="w-40 h-20 hidden text-[#B398F5] text-lg text-left lg:flex items-center justify-center">
-                Cirujano plástico en Formosa
-              </span>
-
-              <div className="bg-white border-2 border-[#6636E2] w-48 h-48 rounded-full flex justify-center items-center mt-12 lg:-mt-10">
-                <Image
-                  src={
-                    doctor.user?.profile_picture &&
-                    doctor.user.profile_picture !== ''
-                      ? doctor.user.profile_picture
-                      : '/images/surgerys/mamas.svg'
-                  }
-                  alt="Logo"
-                  width={150}
-                  height={150}
-                  className="rounded-full border-8 border-white w-full h-full"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 justify-center items-center">
-                {curriculum?.file_link && (
-                  <Button
-                    onClick={cvGetterHandler}
-                    className="bg-[#6636E2] rounded-2xl w-40 h-10 mt-2 lg:mt-0 hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 text-white text-center flex items-center justify-center"
-                  >
-                    {t('ourProfessionalPage.myCurriculum')}
-                  </Button>
-                )}
-
-                <div className="flex flex-col justify-center items-center">
-                  <span className="text-xs lg:text-base text-[#6636E2]">
-                    {t('ourProfessionalPage.rating')}
-                  </span>
-                  <Rating
-                    className="hover:shadow-2xl hover:shadow-[#B398F5] md:text-base text-sm"
-                    value={4}
-                    readOnly
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <>
-          {/* Tags Surgerys */}
-          <div className="flex flex-wrap  justify-center items-center h-auto w-screen mt-20 lg:mt-0 lg:w-[800px] mb-10 ">
-            {surgeryCategory.map((category, index) => (
-              <div key={index} className="w-1/3 p-2 flex justify-center">
-                <Link
-                  href={'/store'}
-                  className="rounded-xl bg-white hover:bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 hover:text-white text-[#6636E2] text-xs flex items-center justify-center lg:text-base border-2 border-[#6636E2] w-full h-8 text-center"
-                >
-                  {category}
-                </Link>
-              </div>
-            ))}
-
-            <div className="w-screen lg:w-[800px] h-auto mt-8 lg:mt-10 m-4 lg:m-0">
-              <p className="text-xs lg:text-sm text-justify">
-                {doctor.description}
+            {/* Información del Doctor */}
+            <div className="w-full flex-1 text-center md:text-left">
+              <h1 className="text-4xl font-black uppercase leading-tight tracking-tight text-white -mt-4 flex flex-row gap-2 items-center">  
+              {doctorName} <LucideShieldCheck className='w-6 h-6'/>
+              </h1>
+              <p className="text-base uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
+                {/* {specialty} */}
+                Doctor Registrado
               </p>
             </div>
+
+            {/* Botones */}
+            <div className="flex gap-2">
+              <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl">
+                <LucideDownload className="text-2xl" />
+                Perfil
+              </button>
+              <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
+                <LucideMessagesSquare className="text-2xl" />
+                Mensaje
+              </button>
+            </div>
           </div>
 
-          {/* Imagenes y Video */}
-          <div className="w-full h-auto flex flex-col justify-center items-center ">
-            <h1 className="flex justify-start w-screen lg:w-[800px] text-xl font-bold p-4 text-[#6636E2]">
-              {t('ourProfessionalPage.beforeandAfter')}
-            </h1>
+          <>
+            <div className="w-full h-80 flex flex-row justify-center items-center gap-4 p-4">
+              {/* Información extra (Opcional) */}
+              <>
+                <div className="w-full h-full flex flex-col justify-start gap-4 ">
+                  {/* Sección de sobre mi */}
+                  <>
+                    <div className="w-full h-80 border rounded-xl p-10 border-drcuotasPrimary-bg text-center md:text-left flex flex-col justify-between items-start">
+                      <>
+                        <div>
+                          <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                            Sobre mi
+                          </p>
+                          {/* etiquetas de tipos de cirugias  */}
+                          <>
+                            <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
+                              {' '}
+                              Lorem ipsum dolor sit amet consectetur,
+                              adipisicing elit. Ea architecto autem ut
+                              reiciendis aliquam rem? Accusamus voluptates
+                              similique nostrum nam sunt pariatur corrupti? Enim
+                              vitae debitis itaque alias dicta obcaecati?
+                            </span>
+                          </>
+                        </div>
+                      </>
+                      <>
+                        <div>
+                          <div className='w-full flex flex-row items-center gap-8 p-4'>
+                            <>
+                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
+                                <LucideMap className="w-4 h-4 text-drcuotasTertiary-text" />
+                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
+                                  Argentina
+                                </span>
+                              </button>
+                            </>
+                            <>
+                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
+                                <LucideMapPinned className="w-4 h-4 text-drcuotasTertiary-text" />
+                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
+                                  Corrientes - Goya
+                                </span>
+                              </button>
+                            </>
+                            <>
+                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
+                                <LucideCalendar  className="w-4 h-4 text-drcuotasTertiary-text" />
+                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
+                                Se unió en Marzo 2022
+                                </span>
+                              </button>
+                            </>
+              
+                          </div>
 
-            {/* Imagenes Carousel */}
-            <div className="flex justify-center items-center w-screen lg:w-[800px] h-auto border-2 border-white border-b-[#B398F5] border-t-[#B398F5]">
-              <div className="relative w-full overflow-hidden max-w-screen-2xl mx-auto">
-                <div className="flex items-center justify-center transition-transform duration-500 ease-in-out w-full">
-                  <div
-                    ref={carouselRef}
-                    className="flex"
-                    style={{
-                      transform: `translateX(-${currentIndex * 100}%)`,
-                      width: `${slidesToShow.length * 200}%`,
-                    }}
-                  >
-                    {slidesToShow.map((slide, index) => (
-                      <div
-                        key={index}
-                        className="flex-shrink-0 w-full flex justify-center items-center max-w-screen-2xl mx-auto max-h-[490px] my-auto h-72 lg:h-screen"
-                        style={{ minWidth: '100%' }}
-                      >
-                        <Image
-                          src={slide}
-                          alt={`Slide ${index + 1}`}
-                          width={1536}
-                          height={490}
-                          className="w-full h-full p-10"
-                        />
-                      </div>
-                    ))}
-                  </div>
+                          {/* etiquetas de tipos de cirugias  */}
+                          <>
+                            <div className="w-full h-8 flex flex-row  items-center gap-2">
+                              <>
+                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
+                                  Cirugía General
+                                </button>
+                              </>
+                              <>
+                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
+                                  Plastica / Estetica
+                                </button>
+                              </>
+                              <>
+                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
+                                  Ortopedica
+                                </button>
+                              </>
+                            </div>
+                          </>
+                        </div>
+                      </>
+                    </div>
+                  </>
                 </div>
+              </>
 
-                <button
-                  className="absolute top-1/2 -left-6 lg:left-0 transform -translate-y-1/2 px-4 py-2 text-[#8565ff] rounded-l-md"
-                  onClick={prevSlide}
-                >
-                  <FiChevronLeft size={54} />
-                </button>
-                <button
-                  className="absolute top-1/2  -right-6 lg:right-0 transform -translate-y-1/2 px-4 py-2 text-[#8565ff] rounded-r-md "
-                  onClick={nextSlide}
-                >
-                  <FiChevronRight size={54} />
-                </button>
-              </div>
-            </div>
-
-            <h1 className="flex justify-start w-screen lg:w-[800px] text-xl font-bold p-4 text-[#6636E2]">
-              {t('ourProfessionalPage.myVideos')}
-            </h1>
-
-            {/* Videos */}
-            <div className="flex flex-col justify-center w-screen lg:w-[800px] h-auto border-2 gap-2 p-4 border-white border-b-[#B398F5]">
-              <div className="w-full h-auto flex flex-row gap-2">
-                <button className="bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 flex justify-center items-center w-full h-32">
-                  <p className="w-12 h-12 flex justify-center items-center border-2 rounded-full border-white">
-                    <FaPlay className="w-4 h-4 text-center text-white" />
-                  </p>
-                </button>
-                <button className="bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 flex justify-center items-center w-full h-32">
-                  <p className="w-12 h-12 flex justify-center items-center border-2 rounded-full border-white">
-                    <FaPlay className="w-4 h-4 text-center text-white" />
-                  </p>
-                </button>
-                <button className="bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 flex justify-center items-center w-full h-32">
-                  <p className="w-12 h-12 flex justify-center items-center border-2 rounded-full border-white">
-                    <FaPlay className="w-4 h-4 text-center text-white" />
-                  </p>
-                </button>
-              </div>
-              <div className="w-full h-auto flex flex-row gap-2">
-                <button className="bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 flex justify-center items-center w-full h-32">
-                  <p className="w-12 h-12 flex justify-center items-center border-2 rounded-full border-white">
-                    <FaPlay className="w-4 h-4 text-center text-white" />
-                  </p>
-                </button>
-                <button className="bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 flex justify-center items-center w-full h-32">
-                  <p className="w-12 h-12 flex justify-center items-center border-2 rounded-full border-white">
-                    <FaPlay className="w-4 h-4 text-center text-white" />
-                  </p>
-                </button>
-                <button className="bg-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 flex justify-center items-center w-full h-32">
-                  <p className="w-12 h-12 flex justify-center items-center border-2 rounded-full border-white">
-                    <FaPlay className="w-4 h-4 text-center text-white" />
-                  </p>
-                </button>
-              </div>
-            </div>
-
-            <>
-              <h1 className="flex justify-start w-screen lg:w-[800px] text-xl font-bold p-4 text-[#6636E2]">
-                {t('ourProfessionalPage.testimonials')}
-              </h1>
-
-              <div className="flex justify-center items-center w-screen lg:w-[800px] h-auto">
-                <div className="w-full h-auto flex flex-row justify-center gap-1 lg:gap-2 p-4">
-                  {surgeriesTestimonials.map((testimonial, index) => (
-                    <button
-                      key={index}
-                      className="flex flex-col justify-center items-center w-72 lg:w-full h-64 bg-[#B398F5] bg-opacity-50 text-[#6636E2] hover:shadow-2xl hover:shadow-[#B398F5]"
-                    >
-                      <p className="text-justify text-[10px] lg:text-sm px-8 mb-2 lg:mb-0">
-                        {testimonial.testimonio}
+              {/* Información extra (Opcional) */}
+              <>
+                <div className="w-[40vw] h-full flex flex-col justify-start gap-4 ">
+                  {/* Sección de conexiones */}
+                  <>
+                    <div className="w-full border rounded-xl p-10 border-drcuotasPrimary-bg text-center md:text-left">
+                      <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                        Conexiones
                       </p>
-                      <p className="flex justify-end w-full text-[9px]  lg:text-lg px-8 font-bold">
-                        {testimonial.autor}
+                      <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
+                        245 Cirugias Creadas • 182 Completadas
                       </p>
-                    </button>
-                  ))}
+                    </div>
+                  </>
+
+                  {/* Actividad reciente */}
+                  <>
+                    <div className="w-full border rounded-xl p-10 border-drcuotasPrimary-bg">
+                      <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                        Actividad reciente
+                      </p>
+                      <ul className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
+                        <li>🔹 Publicó un nuevo proyecto - 2 semanas atrás</li>
+                        <li>
+                          🔹 Principios de diseño inclusivo - 2 días atrás
+                        </li>
+                      </ul>
+                    </div>
+                  </>
                 </div>
-
-                {/* Botones Carousel  */}
-                <button className="absolute left-0 lg:left-80 transform -translate-y-2/2 px-4 py-2 text-[#8565ff] rounded-l-md">
-                  <FiChevronLeft size={32} />
-                </button>
-
-                <button className="absolute right-0 lg:right-80 transform -translate-y-2/2 px-4 py-2 text-[#8565ff] rounded-r-md">
-                  <FiChevronRight size={32} />
-                </button>
-              </div>
-            </>
-          </div>
-
-          <Link
-            href={'/store'}
-            className="bg-[#6636E2] flex justify-center items-center hover:shadow-2xl hover:shadow-[#B398F5] hover:z-50 text-white font-bold rounded-3xl w-80 h-12 mt-24"
-          >
-            {t('ourProfessionalPage.startMyTransformation')}
-          </Link>
-        </>
+              </>
+            </div>
+          </>
+        </div>
       </div>
+
+      <OurServices />
     </>
   );
 };

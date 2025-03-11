@@ -284,27 +284,26 @@ export function SurgeryTable({
   const selectedRows = table.getFilteredSelectedRowModel().rows;
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4 ">
+    <div className="w-full h-full flex flex-col gap-4">
+      <div className="w-full h-full gap-4 flex items-center">
         <Input
           placeholder="Filter names..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('name')?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm tracking-tight leading-tight text-drcuotasTertiary-text"
         />
 
         <Button
           variant="outline"
           size="icon"
-          className="mx-3"
           onClick={() => {
             // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
             editUpdateSurgeryHandler({} as Surgery, true);
           }}
         >
-          <IoAdd className="h-5 w-5" />
+          <IoAdd className="h-5 w-5 " />
         </Button>
 
         <Button
@@ -321,7 +320,6 @@ export function SurgeryTable({
         <Button
           variant="destructive"
           size="icon"
-          className="mx-3"
           disabled={selectedRows.length === 0}
           onClick={() => {
             void deleteSurgeryHandler(
@@ -334,8 +332,8 @@ export function SurgeryTable({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              {t('constants:columns')} <ChevronDown className="ml-2 h-4 w-4" />
+            <Button variant="outline" className="ml-auto tracking-tight leading-tight text-drcuotasTertiary-text">
+              {t('constants:columns')} <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -361,10 +359,10 @@ export function SurgeryTable({
       </div>
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-foreground"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2  border-primary-foreground"></div>
         </div>
       ) : (
-        <div className="rounded-md border">
+        <div className="h-full rounded-xl border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

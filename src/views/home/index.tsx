@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 
-import Anuncios from '@/components/common/Anuncios/anuncios';
 import Cuotas from '@/components/common/cuotas';
+import AdComponents from '@/components/common/ViewElements/AdComponents';
 import CarouselHome from '@/components/common/ViewElements/Corousel';
 import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import { useGetUserDataLazyQuery } from '@/types';
+import OurProfessionals from '@/components/common/ViewElements/OurProfessionals';
 
 export default function HomeView() {
   const [getUserData] = useGetUserDataLazyQuery();
@@ -33,20 +34,21 @@ export default function HomeView() {
         <CarouselHome />
       </>
       <div
-        className="w-full h-auto bg-[#E5F9F7]  relative bg-cover bg-center "
+        className="w-full h-auto bg-[#E5F9F7] bg-opacity-80 relative bg-cover bg-center "
         style={{ backgroundImage: "url('/images/fondo/DrCuotasFondo.svg')" }}
       >
         <div className="absolute inset-0 bg-[#E5F9F7] bg-opacity-0"></div>
         <div className="relative">
           <Cuotas />
+
           <OurSpecialties />
           <KnowOurProfessionals />
-          <div className="w-full h-full flex justify-center items-center bg-white">
+          <div className="w-full h-full flex flex-col justify-center items-center bg-white">
             <OurServices />
-          </div>
-          <div className="w-full h-full flex justify-center items-center ">
+      <OurProfessionals />
+            {/* <AdComponents /> */}
             {/* Marcas asociadas */}
-            <Anuncios />
+            {/* <Anuncios /> */}
           </div>
         </div>
       </div>

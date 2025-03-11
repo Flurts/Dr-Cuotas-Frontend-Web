@@ -38,7 +38,7 @@ const AdsCarousel: React.FC = () => {
                   className="snap-center w-full min-w-[calc(100%/3)] h-40"
                 >
                   <Link href={ad.link}>
-                    <div className="relative w-full h-full overflow-hidden rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+                    <div className="relative w-full h-full overflow-hidden rounded-xl shadow-lg transition-transform duration-300">
                       <img
                         src={ad.image}
                         alt="Anuncio"

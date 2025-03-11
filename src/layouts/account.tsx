@@ -1,9 +1,10 @@
 'use client';
 import { Box } from '@mui/material';
+import { LucideMessagesSquare } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { FiLogIn, FiMenu, FiShoppingCart, FiUser } from 'react-icons/fi';
+import { FiLogIn, FiMenu, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
@@ -87,7 +88,7 @@ function AccountLayout({ children, className }: Props) {
       <nav
         className={`${
           sticky ? 'sticky top-0' : 'relative'
-        } z-50 flex w-full items-center justify-center p-4  bg-white backdrop-blur-3xl transition-transform duration-500 ${
+        } z-50 flex w-full h-24  justify-center lg:justify-end items-center p-2  bg-white  backdrop-blur-3xl shadow-2xl shadow-white   transition-transform duration-500  ${
           hidden ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -123,6 +124,12 @@ function AccountLayout({ children, className }: Props) {
                 Tienda
               </Link>
               <Link
+                href="/financing"
+                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+              >
+                Cuotas
+              </Link>
+              <Link
                 href="/professionals"
                 className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
               >
@@ -140,34 +147,45 @@ function AccountLayout({ children, className }: Props) {
         <>
           <div className="flex w-20 lg:w-full items-center justify-center gap-2">
             {!isLogged ? (
-             <>
-              <Link
+              <>
+                <Link
                   href="/login"
-                  className="text-[#737373] hover:text-drcuotasPrimary font-black uppercase border-2 border-[#737373] w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  className="text-[#737373] hover:text-white hover:bg-drcuotasPrimary-bg hover:border-drcuotasPrimary-bg font-black uppercase border-2 border-[#737373] w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
                   <span className="text-sm">Login</span>
                   <FiLogIn className="uppercase leading-tight tracking-tight font-black text-xl" />
+                </Link>
+                <Link
+                  href="/login"
+                  className="bg-[#737373] hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-[#737373] hover:border-drcuotasPrimary w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                >
+                  <span className="text-sm">Register</span>
                 </Link>
               </>
             ) : (
               <>
                 <Link
-                  href="/"
-                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  href="/account"
+                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  <span className="uppercase leading-tight tracking-tight text-sm">
-                    salir
-                  </span>
+                  {/* <span className="uppercase leading-tight tracking-tight text-sm">
+                    Cuenta
+                  </span> */}
                   <FiUser className="text-2xl" />
                 </Link>
                 <Link
-                href='/account/{slug}'
-                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  href="/"
+                  className="  text-drcuotasPrimary hover:text-white hover:bg-green-500 font-black uppercase border-2 border-drcuotasPrimary hover:border-green-500 w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  <FiShoppingCart className="text-2xl" />
+                  {/* <span className="uppercase leading-tight tracking-tight text-sm">
+                    Cuenta
+                  </span> */}
+                  {/* <FiUser className="text-2xl" /> */}
+                  <LucideMessagesSquare className="text-2xl" />
                 </Link>
               </>
             )}
+
             <button
               className="text-drcuotasPrimary lg:hidden flex items-center justify-center rounded-xl w-10 h-10"
               onClick={handleMenuToggle}

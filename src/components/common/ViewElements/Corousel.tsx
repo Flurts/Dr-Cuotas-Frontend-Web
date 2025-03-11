@@ -1,10 +1,12 @@
+import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { TypeAnimation } from 'react-type-animation';
 
 const CarouselHome = () => {
   return (
     <div
-      className="w-full h-[80vh] sm:h-screen flex flex-col justify-center items-center  border-drcuotasPrimary"
+      className="w-full h-[80vh] sm:h-screen flex flex-col justify-center items-center border-b"
       style={{
         backgroundImage: 'url(/images/banners/BannerBody.svg)',
         backgroundSize: 'cover',

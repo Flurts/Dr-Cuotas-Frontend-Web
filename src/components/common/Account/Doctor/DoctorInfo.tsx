@@ -4,7 +4,6 @@ import { BsUpload } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { useDispatch } from 'react-redux';
 
-import CustomImageUploader from '@/components/common/Editable/UserImage';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
 import { toast } from '@/components/ui/use-toast';
 import { updateProfileImage } from '@/store';
@@ -14,6 +13,8 @@ import {
   useSaveImageUserS3Mutation,
 } from '@/types';
 import { createS3Url, refFileImage } from '@/utils/refFileImage';
+
+import CustomImageUploader from '../../Editable/UserImage';
 
 export default function DoctorInfo({
   user,
@@ -118,51 +119,60 @@ export default function DoctorInfo({
 
   return (
     <>
-      <div className="w-auto h-auto flex flex-row justify-center items-center p-20">
+      <div className="w-full h-full flex flex-col justify-center items-center border gap-4 p-20 rounded-xl">
         {/* User Info finished */}
-        <div className="w-80  h-80 flex  flex-col gap-4 justify-center items-center">
-          {/* User Edit Info Buttons */}
+        <CustomImageUploader
+          width={150}
+          height={150}
+          style="white"
+          imageUrl={user.profile_picture ?? undefined}
+          onChange={handleChange}
+        />
 
-          <CustomImageUploader
-            width={150}
-            height={150}
-            style="white"
-            imageUrl={user.profile_picture ?? undefined}
-            onChange={handleChange}
-          />
-          <button
-            className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4"
-            onClick={cvHandler}
-          >
-            <span className="text-center w-full  text-xs">{t('uploadCv')}</span>
-            <BsUpload className=" text-xl" />
-          </button>
+        <>
+          <div className="w-full h-auto flex flex-row gap-4 justify-center items-center ">
+            <button
+              className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20"
+              onClick={cvHandler}
+            >
+              <span className="tracking-tight leading-tight">
+                {/* {t('uploadCv')} */}
+                CV
+              </span>
+              <BsUpload className="text-xl" />
+            </button>
 
-          <button
-            className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4"
-            onClick={editInfoHandler}
-          >
-            <span className="text-center w-full  text-xs">{t('editInfo')}</span>
-            <HiOutlinePencilAlt className=" text-xl" />
-          </button>
+            <button
+              className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20"
+              onClick={editInfoHandler}
+            >
+              <span className="tracking-tight leading-tight ">
+                {/* {t('editInfo')} */}
+                Informacion
+              </span>
+              <HiOutlinePencilAlt className="text-xl" />
+            </button>
 
-          <button
-            className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4"
-            onClick={imagesHandler}
-          >
-            <span className="text-center w-full  text-xs">
-              {t('uploadPhotos')}
-            </span>
-            <BsUpload className=" text-xl" />
-          </button>
+            <button
+              className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20"
+              onClick={imagesHandler}
+            >
+              <span className="tracking-tight leading-tight">
+                {/* {t('uploadPhotos')} */}
+                Fotos
+              </span>
+              <BsUpload className="text-xl" />
+            </button>
 
-          <button className="border border-drcuotasPrimary rounded-xl flex items-center justify-between w-full h-40 p-4">
-            <span className="text-center w-full text-xs">
-              {t('uploadVideos')}
-            </span>
-            <BsUpload className=" text-xl" />
-          </button>
-        </div>
+            <button className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20">
+              <span className="tracking-tight leading-tight ">
+                {/* {t('uploadVideos')} */}
+                Videos
+              </span>
+              <BsUpload className="text-xl" />
+            </button>
+          </div>
+        </>
       </div>
 
       {/* MODAL */}

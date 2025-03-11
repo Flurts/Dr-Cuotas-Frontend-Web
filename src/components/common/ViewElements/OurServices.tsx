@@ -30,15 +30,13 @@ function OurServices() {
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center  lg:p-20">
-      <div className="w-full h-full flex flex-col justify-center items-center ">
         <TitleElements
           primaryText="Nuestra Categorias"
           secondaryText="nuestras especialidades"
           descriptionText="Descubre nuestras especialidades en cirugía estética."
         />
-      </div>
 
-      <Carousel className="w-full h-60 lg:h-full max-w-screen-2xl flex items-center justify-center ">
+      <Carousel className="w-full h-60 lg:h-auto max-w-screen-2xl flex items-center justify-center ">
         <CarouselContent className="w-96 sm:w-full h-full flex gap-4 lg:gap-6 p-20 ">
           {services.length > 0 ? (
             services.map((service, index) => (
