@@ -61,6 +61,7 @@ const OurSpecialties = () => {
             surgeriesList.map((surgery) => (
               <div key={surgery.id} className="w-[300px] flex-shrink-0">
                 <SpecialtyCard
+                  id={surgery.id}
                   title={surgery.name}
                   description={
                     surgery.description ?? 'Descripción no disponible'
