@@ -63,9 +63,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
         },
         body: JSON.stringify({
           query: `
-            mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $quotaPrice: Float!, $totalPrice: Float!, $quotasNumber: Int!, $documentIdentification: String!, $lastName: String!, $firstName: String!) {
-  subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, quotaPrice: $quotaPrice, totalPrice: $totalPrice, quotasNumber: $quotasNumber, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName) {
+    mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $quotaPrice: Float!, $totalPrice: Float!, $quotasNumber: Int!, $documentIdentification: String!, $lastName: String!, $firstName: String!, $doctorId: String) {
+  subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, quotaPrice: $quotaPrice, totalPrice: $totalPrice, quotasNumber: $quotasNumber, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName, doctorId: $doctorId) {
     adjudicated_status
+    id
   }
 }
           `,
@@ -105,6 +106,8 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       }
 
       const adjudicadosId = result.data.subscribeSurgerie.id;
+      console.log('✅ ID :', result.data);
+      console.log('✅ ID :', result.data.subscribeSurgerie.id);
 
       console.log('✅ ID adjudicado:', adjudicadosId);
 
@@ -135,11 +138,11 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
     const variables = {
       data: {
-        description: 'Pago de cirugia',
-        first_due_date: new Date().toISOString(),
-        first_total: price / quotes,
-        second_due_date: new Date().toISOString(),
-        second_total: price / quotes,
+        description: 'Pago de servicio',
+        first_due_date: '2025-04-01',
+        first_total: 1500,
+        second_due_date: null,
+        second_total: null,
         back_url_success: 'http://localhost:3000/account',
         back_url_pending: 'http://localhost:3000/',
         back_url_rejected: 'http://localhost:3000/',
