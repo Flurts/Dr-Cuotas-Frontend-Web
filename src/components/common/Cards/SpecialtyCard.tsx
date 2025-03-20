@@ -25,6 +25,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   id,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const quotes = 10;
 
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
@@ -49,6 +50,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
 
     console.log('ID enviado:', id); // <- Verifica que se está enviando el ID correcto
+    console.log('Precio total:', price); // <- Verifica que se está enviando el precio correcto
+    console.log('Número de cuotas:', quotes); // <- Verifica que se está enviando el número de cuotas correcto
+    console.log('Precio por cuota:', price / quotes); // <- Verifica que se está calculando el precio por cuota correctamente
 
     try {
       const response = await fetch(`${settings.API_URL}/graphql`, {
@@ -59,9 +63,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
         },
         body: JSON.stringify({
           query: `
-            mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $documentIdentification: String!, $lastName: String!, $firstName: String!) {
-  subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName) {
-    id
+            mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $quotaPrice: Float!, $totalPrice: Float!, $quotasNumber: Int!, $documentIdentification: String!, $lastName: String!, $firstName: String!) {
+  subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, quotaPrice: $quotaPrice, totalPrice: $totalPrice, quotasNumber: $quotasNumber, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName) {
+    adjudicated_status
   }
 }
           `,
@@ -72,6 +76,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
             documentIdentification: 'A123456789',
             lastName: 'Doe',
             firstName: 'John',
+            quotaPrice: price / quotes,
+            totalPrice: price,
+            quotasNumber: quotes,
           },
         }),
       });
@@ -128,11 +135,11 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
     const variables = {
       data: {
-        description: 'Pago de servicio',
-        first_due_date: '2025-04-01',
-        first_total: 1500,
-        second_due_date: null,
-        second_total: null,
+        description: 'Pago de cirugia',
+        first_due_date: new Date().toISOString(),
+        first_total: price / quotes,
+        second_due_date: new Date().toISOString(),
+        second_total: price / quotes,
         back_url_success: 'http://localhost:3000/account',
         back_url_pending: 'http://localhost:3000/',
         back_url_rejected: 'http://localhost:3000/',
