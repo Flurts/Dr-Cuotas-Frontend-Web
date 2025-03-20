@@ -1,10 +1,14 @@
+import { gql, GraphQLClient } from 'graphql-request';
 import { LucideMessagesSquare, LucideZoomIn } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
+import settings from '@/settings';
+
 interface HomeSpecialtieCardProps {
+  id: string;
   imageUrl: string;
   rating: number;
   title: string;
@@ -18,6 +22,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   title,
   description,
   price,
+  id,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,6 +34,134 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
   const [selectedCuotas, setSelectedCuotas] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('');
+
+  const CREATE_PAYMENT_MUTATION = gql`
+    mutation CreatePaymentRequest($data: PaymentInput!) {
+      createPaymentRequest(data: $data)
+    }
+  `;
+
+  async function subscribeSurgerie() {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      console.error('No access token found');
+      return;
+    }
+
+    console.log('ID enviado:', id); // <- Verifica que se está enviando el ID correcto
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $documentIdentification: String!, $lastName: String!, $firstName: String!) {
+  subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName) {
+    id
+  }
+}
+          `,
+          variables: {
+            surgerieId: id,
+            phone: '5551234567',
+            email: 'example@email.com',
+            documentIdentification: 'A123456789',
+            lastName: 'Doe',
+            firstName: 'John',
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      console.log('📌 Respuesta completa de la API:', result); // <-- Log completo
+
+      if (!response.ok) {
+        console.error('GraphQL Error:', result.errors);
+        throw new Error(result.errors?.[0]?.message || 'Error en la API');
+      }
+
+      if (result.errors) {
+        console.error('❌ GraphQL Errors:', result.errors);
+        throw new Error(
+          result.errors[0]?.message || 'Error desconocido en GraphQL',
+        );
+      }
+
+      if (!result.data?.subscribeSurgerie) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de subscribeSurgerie');
+      }
+
+      const adjudicadosId = result.data.subscribeSurgerie.id;
+
+      console.log('✅ ID adjudicado:', adjudicadosId);
+
+      void handlePayment(adjudicadosId);
+      return adjudicadosId;
+    } catch (error) {
+      console.error('🚨 Error en subscribeSurgerie:', error);
+    }
+  }
+
+  const handlePayment = async (adjudicadosId: string) => {
+    if (!adjudicadosId) {
+      alert('El ID de adjudicación es inválido.');
+      return;
+    }
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('No se encontró el token de autenticación.');
+      return;
+    }
+
+    const client = new GraphQLClient(`${settings.API_URL}/graphql`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+
+    const variables = {
+      data: {
+        description: 'Pago de servicio',
+        first_due_date: '2025-04-01',
+        first_total: 1500,
+        second_due_date: null,
+        second_total: null,
+        back_url_success: 'http://localhost:3000/account',
+        back_url_pending: 'http://localhost:3000/',
+        back_url_rejected: 'http://localhost:3000/',
+        adjudicadosId: String(adjudicadosId), // Convertir a string
+      },
+    };
+
+    try {
+      const response = await client.request(CREATE_PAYMENT_MUTATION, variables);
+
+      if (response?.createPaymentRequest) {
+        const checkoutUrl = response.createPaymentRequest;
+        console.log('✅ URL de pago:', checkoutUrl);
+
+        if (checkoutUrl.startsWith('http')) {
+          window.location.href = checkoutUrl;
+        } else {
+          alert('La URL de pago recibida no es válida.');
+        }
+      } else {
+        alert('No se encontró la URL de pago.');
+      }
+    } catch (error) {
+      console.error('❌ Error al crear el pago:', error);
+      alert(
+        'Hubo un error al procesar el pago. Revisa la consola para más detalles.',
+      );
+    }
+  };
 
   const cuotasOptions = [4, 8, 12, 16]; // Opciones de cuotas
   const planOptions = ['Miguel Angel', 'Brayan Suarosky', 'Johan Jimenez']; // Opciones de planes/nombres
@@ -128,7 +261,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                   height={20}
                 />
               </div>
-
 
               {/* Formulario de Pago */}
               <form className="w-full h-full flex flex-col justify-center gap-2">
@@ -230,7 +362,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
               </form>
 
               <div className="w-full h-full flex flex-col justify-end items-center gap-2">
-                
                 <>
                   <div className="w-full h-auto flex justify-center items-center">
                     <span className="text-sm text-drcuotasTertiary-text text-center">
@@ -244,12 +375,12 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                 <>
                   <div className="w-full h-20 flex flex-col justify-center items-center gap-4">
                     <button
+                      onClick={subscribeSurgerie}
                       type="submit"
                       className="w-full h-16 uppercase bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight  truncate"
                     >
                       Pagar ahora
                     </button>
-             
                   </div>
                 </>
               </div>
@@ -276,7 +407,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                                   Cuenta
                                 </span> */}
                   {/* <FiUser className="text-2xl" /> */}
-                  <LucideZoomIn  className="text-2xl" />
+                  <LucideZoomIn className="text-2xl" />
                 </Link>
               </>
             </div>

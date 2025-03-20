@@ -62,6 +62,7 @@ const OurSpecialties = () => {
               <div key={surgery.id} className="w-[300px] flex-shrink-0">
                 <SpecialtyCard
                   title={surgery.name}
+                  id={surgery.id}
                   description={
                     surgery.description ?? 'Descripción no disponible'
                   }
