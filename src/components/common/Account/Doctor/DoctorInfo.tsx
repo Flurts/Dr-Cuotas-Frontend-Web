@@ -15,6 +15,9 @@ import {
 import { createS3Url, refFileImage } from '@/utils/refFileImage';
 
 import CustomImageUploader from '../../Editable/UserImage';
+import { IoSettings } from 'react-icons/io5';
+import Link from 'next/link';
+import { LucideFile, LucideFilePen, LucideFilePlus2 } from 'lucide-react';
 
 export default function DoctorInfo({
   user,
@@ -119,42 +122,53 @@ export default function DoctorInfo({
 
   return (
     <>
-      <div className="w-full h-full flex flex-col justify-center items-center border gap-4 p-20 rounded-xl">
+      <div className="w-full h-full flex flex-col justify-center items-center gap-4 rounded-xl">
         {/* User Info finished */}
-        <CustomImageUploader
+        {/* <CustomImageUploader
           width={150}
           height={150}
           style="white"
           imageUrl={user.profile_picture ?? undefined}
           onChange={handleChange}
-        />
+        /> */}
 
         <>
-          <div className="w-full h-auto flex flex-row gap-4 justify-center items-center ">
+          <div className="w-full h-auto flex flex-row gap-2 justify-center items-center ">
+            <Link
+              href="/account/settings"
+              className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+            >
+              <IoSettings className="text-2xl" />
+              <span className="leading-tight tracking-tight">
+                {/* {t('uploadCv')} */}
+                Perfil
+              </span>
+            </Link>
+            
             <button
-              className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20"
+              className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={cvHandler}
             >
-              <span className="tracking-tight leading-tight">
+              <LucideFile  className="text-2xl" />
+              <span className="leading-tight tracking-tight">
                 {/* {t('uploadCv')} */}
-                CV
+                Doctor
               </span>
-              <BsUpload className="text-xl" />
             </button>
 
             <button
-              className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20"
+              className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={editInfoHandler}
             >
-              <span className="tracking-tight leading-tight ">
+              <LucideFilePen className='text-2xl' />
+              <span className="leading-tight tracking-tight">
                 {/* {t('editInfo')} */}
-                Informacion
+                Doctor
               </span>
-              <HiOutlinePencilAlt className="text-xl" />
             </button>
 
             <button
-              className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20"
+              className="w-40 h-14 hidden flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={imagesHandler}
             >
               <span className="tracking-tight leading-tight">
@@ -164,7 +178,7 @@ export default function DoctorInfo({
               <BsUpload className="text-xl" />
             </button>
 
-            <button className="border border-drcuotasTertiary-bg text-drcuotasTertiary-text rounded-xl flex items-center justify-center gap-4 w-40 h-20">
+            <button className="w-40 h-14 hidden flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl">
               <span className="tracking-tight leading-tight ">
                 {/* {t('uploadVideos')} */}
                 Videos

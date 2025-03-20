@@ -14,6 +14,8 @@ const footersMap: Record<string, React.FC<{ children: JSX.Element }>> = {
   '/admin': PrincipalFooter,
   '/professionals': NothingFooter,
   '/store': NothingFooter,
+  '/account/settings': NothingFooter,
+  '/account/settings/account': NothingFooter,
   
 };
 

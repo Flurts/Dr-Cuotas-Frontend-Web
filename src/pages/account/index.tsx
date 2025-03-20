@@ -6,7 +6,6 @@ import getServerSideSharedProps from '@/lib/next';
 import AccountView from '@/views/account';
 import DoctorView from '@/views/account/doctor/DoctorView';
 
-
 export default function Account() {
   const [role, setRole] = useState<string | null>(null);
 
@@ -26,7 +25,8 @@ export default function Account() {
         <div className="relative">
           {role === 'Doctor' ? <DoctorView /> : <AccountView />}
         </div>
-      </div>``
+      </div>
+      ``
     </>
   );
 }

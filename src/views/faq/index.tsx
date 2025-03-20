@@ -70,7 +70,7 @@ export default function FaqView() {
 
   return (
     <>
-      <div className="w-full h-80 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 lg:p-20">
+      <div className="w-full h-80 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 ">
         <div className="w-full h-full flex flex-col justify-start">
           <Accordion
             type="single"
@@ -79,10 +79,10 @@ export default function FaqView() {
           >
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index + 1}`}>
-                <AccordionTrigger className="text-drcuotasSecondary-text font-bold text-xs lg:text-sm ">
+                <AccordionTrigger className="text-drcuotasTertiary-text font-bold text-xs lg:text-base    uppercase leading-tight tracking-tight">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-drcuotasSecondary-text text-[10px] lg:text-xs  z-40 p-4">
+                <AccordionContent className="text-drcuotasTertiary-text text-[10px] lg:text-xs  z-40 p-4">
                   {Array.isArray(faq.answer) ? (
                     <ul className="list-disc list-inside">
                       {faq.answer.map((answer, idx) => (

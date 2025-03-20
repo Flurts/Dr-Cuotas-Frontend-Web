@@ -22,31 +22,38 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
       title: 'account',
       href: '/account/settings/account',
     },
+    {
+      title: 'Doctor',
+      href: '/account/settings/doctor',
+    },
   ];
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-full">
-        <div className="hidden space-y-6 p-10 md:block w-full max-w-screen-xl">
-          <Link href="/account">
-            <IoChevronBack className="text-3xl text-[#6636E2] " />
-          </Link>
-          <div className="space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">
-              {t('constants:settings')}
-            </h2>
-            <p className="text-muted-foreground">
-              {t('constants:settingsDescription')}
-            </p>
+      <div className="w-full h-full flex flex-col p-20">
+        <>
+          <div className="hidden md:block w-full h-full">
+            <>
+              <div className="w-full flex flex-col">
+                <h2 className="text-2xl text-drcuotasTertiary-text font-bold uppercase leading-tight tracking-tight">
+                  {t('constants:settings')}
+                </h2>
+                <p className="text-base text-drcuotasTertiary-text leading-tight tracking-tight">
+                  {t('constants:settingsDescription')}
+                </p>
+              </div>
+            </>
+            <Separator className="my-2" />
+            <>
+              <div className="flex flex-col">
+                <aside className="w-full h-20 ">
+                  <SidebarNav items={sidebarNavItems} />
+                </aside>
+                <div className="flex-1 w-full">{children}</div>
+              </div>
+            </>
           </div>
-          <Separator className="my-6" />
-          <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-            <aside className="lg:w-1/5">
-              <SidebarNav items={sidebarNavItems} />
-            </aside>
-            <div className="flex-1 lg:max-w-2xl">{children}</div>
-          </div>
-        </div>
+        </>
       </div>
     </>
   );

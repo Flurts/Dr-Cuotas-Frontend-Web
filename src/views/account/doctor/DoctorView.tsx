@@ -1,18 +1,25 @@
 'use client';
 import { ErrorMessage, Field, Form, FormikProvider, useFormik } from 'formik';
+import { LucideShare, LucideShieldCheck } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import { ImSpinner9 } from 'react-icons/im';
-import { IoCloseCircleSharp, IoSettings, IoSettingsOutline } from 'react-icons/io5';
+import {
+  IoCloseCircleSharp,
+  IoSettings,
+  IoSettingsOutline,
+} from 'react-icons/io5';
 import { MdError } from 'react-icons/md';
 import { RiUploadLine } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import DoctorInfo from '@/components/common/Account/Doctor/DoctorInfo';
+import CustomImageUploader from '@/components/common/Editable/UserImage';
 import { SurgeryTable } from '@/components/common/Tables/SurgeryTable';
 import { useToast } from '@/components/ui/use-toast';
 import { chargeDoctor, getCurrentUser, getJwt } from '@/store';
@@ -34,9 +41,6 @@ import {
   useUpdateSurgerieMutation,
 } from '@/types';
 import { base64ToFile, createS3Url } from '@/utils/refFileImage';
-import { LucideCalendar, LucideHardDriveDownload, LucideMap, LucideMapPinned, LucideMessagesSquare, LucideShare, LucideShieldCheck } from 'lucide-react';
-import Link from 'next/link';
-import CustomImageUploader from '@/components/common/Editable/UserImage';
 
 export default function DoctorView() {
   const { t } = useTranslation(['common', 'surgeries']);
@@ -548,57 +552,49 @@ export default function DoctorView() {
                   setProfilePicture(defaultImage);
                 }}
               /> */}
-                <CustomImageUploader
-            width={120}
-            height={120}
-            imageUrl={user.profile_picture ?? undefined}
-            // onChange={handleChange}
-          />
+              <CustomImageUploader
+                width={120}
+                height={120}
+                imageUrl={user.profile_picture ?? undefined}
+                // onChange={handleChange}
+              />
             </div>
 
             {/* Información del Doctor */}
             <div className="w-full flex-1 text-center md:text-left">
-            <h1 className="text-4xl font-black uppercase leading-tight tracking-tight text-white -mt-4 flex flex-row gap-2 items-center">  
-              {user.first_name + ' ' + user.last_name} <LucideShieldCheck className='w-6 h-6'/>
+              <h1 className="text-4xl font-black uppercase leading-tight tracking-tight text-white -mt-4 flex flex-row gap-2 items-center">
+                {user.first_name + ' ' + user.last_name}{' '}
+                <LucideShieldCheck className="w-6 h-6" />
               </h1>
               <p className="text-base uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
-              Doctor Registrado 
+                Doctor Registrado
               </p>
             </div>
 
             {/* Botones */}
             <div className="flex gap-2">
-              <Link href='/account/settings' className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl">
-                <IoSettings className="text-2xl" />
-                Perfil
-              </Link>
-              <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
-              <IoSettingsOutline className="text-2xl" />
-                Doctor
-              </button>
-              <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
-              <LucideShare  className="text-2xl" />
-                
-                CV
-              </button>
-             
+              <>
+              <DoctorInfo
+                user={user}
+                editInfoHandler={editInfoHandler}
+                cvHandler={cvHandler}
+                imagesHandler={imagesHandler}
+              />
+            </>
             </div>
           </div>
           <>
-          <div className='w-full h-full p-4'>
-            <SurgeryTable
-              editUpdateSurgeryHandler={editUpdateSurgeryHandler}
-              onSurgeryCreated={onSurgeryCreated}
-            />
-          </div>
-
+            <div className="w-full h-full p-4">
+              <SurgeryTable
+                editUpdateSurgeryHandler={editUpdateSurgeryHandler}
+                onSurgeryCreated={onSurgeryCreated}
+              />
+            </div>
           </>
-        
         </div>
       </div>
 
       <div className="w-full h-full  flex-col gap-4 justify-center items-center p-10  bg-white">
-     
         {/* <>
           <DoctorInfo
             user={user}
@@ -804,7 +800,10 @@ export default function DoctorView() {
                             <RiUploadLine className="h-14 w-14 text-gray-500" />
                           ) : (
                             <Image
-                              src={formikSurgery.values.surgeryImage ?? surgerieImage}
+                              src={
+                                formikSurgery.values.surgeryImage ??
+                                surgerieImage
+                              }
                               alt="surgery"
                               className="w-full h-full object-cover rounded-md"
                               width={250}

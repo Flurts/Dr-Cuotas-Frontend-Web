@@ -108,7 +108,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                 {t('constants:surgery')}
               </span>
               <div className="flex justify-center items-center w-3/5 md:w-full border p-2">
-                <span className="text-sm md:text-base lg:text-lg text-drcuotasTertiary-text leading-tight tracking-tight">
+                <span className="text-xs md:text-base lg:text-lg text-drcuotasTertiary-text leading-tight tracking-tight">
                   {adjudicated.surgery?.name}
                 </span>
               </div>
@@ -116,12 +116,12 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
 
             <div className="absolute hidden md:flex h-[50px] border-r-[1px] -top-1 border-drcuotasPrimary-bg" />
 
-            <div className="flex w-full md:w-1/2 justify-between items-center">
+            <div className="hidden sm:flex w-full md:w-1/2 justify-between items-center">
               <span className="text-lg md:text-xl lg:text-2xl text-drcuotasPrimary-text p-4 font-black uppercase leading-tight tracking-tight">
                 {t('constants:surgeon')}
               </span>
               <div className="flex justify-center items-center w-3/5 md:w-full border p-2">
-                <span className="text-base md:text-lg text-drcuotasTertiary-text leading-tight tracking-tight">
+                <span className="text-xs md:text-lg text-drcuotasTertiary-text leading-tight tracking-tight">
                   {'Dr. ' + adjudicated?.doctor?.user!.first_name}
                 </span>
               </div>
@@ -134,10 +134,10 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
               }`}
             >
               {/* Buttons info del procedimiento e info del profesional */}
-              <div className="flex flex-row w-full justify-center gap-2 md:gap-10">
+              <div className="w-full flex flex-col sm:flex-row  justify-center gap-2 md:gap-10">
                 <Link
                   href={`/store/${adjudicated.surgery?.id}`}
-                  className="flex w-1/2 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
+                  className="flex w-full lg:w-1/2 h-10 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
                 >
                   <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
                     Adelantar Pago
@@ -145,10 +145,10 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                 </Link>
                 <Link
                   href={`/view-account/doctor/${adjudicated.doctor?.id}`}
-                  className="flex w-1/2 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
+                  className="flex w-full lg:w-1/2 h-10 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
                 >
                   <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
-                    Información del Profesional
+                    Doctor
                   </span>
                 </Link>
               </div>
@@ -218,7 +218,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                     </>
                   )}
                   <div className="flex flex-col w-full justify-center items-center relative p-4">
-                    <div className="flex flex-row w-full justify-between items-center md:px-3">
+                    <div className="flex flex-col sm:flex-row w-full justify-start sm:justify-between items-start sm:items-center md:px-3">
                       <span className="text-xs md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
                         {t('constants:quotas', { current: 3, total: 10 })}
                       </span>
@@ -226,7 +226,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                         {t('constants:nextPayment', { date: '02/25/2025' })}
                       </span>
                     </div>
-                    <div className="p-5">
+                    <div className="lg:p-5">
                       <div className="w-full p-4 flex flex-row justify-center items-center">
                         <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
                           <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />

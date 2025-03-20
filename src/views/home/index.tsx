@@ -7,7 +7,6 @@ import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfes
 import OurServices from '@/components/common/ViewElements/OurServices';
 import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import { useGetUserDataLazyQuery } from '@/types';
-import OurProfessionals from '@/components/common/ViewElements/OurProfessionals';
 
 export default function HomeView() {
   const [getUserData] = useGetUserDataLazyQuery();
@@ -43,12 +42,9 @@ export default function HomeView() {
 
           <OurSpecialties />
           <KnowOurProfessionals />
-          <div className="w-full h-full flex flex-col justify-center items-center bg-white">
+          <div className="w-full h-full flex flex-col justify-center items-center bg-white p-20">
             <OurServices />
-      <OurProfessionals />
-            {/* <AdComponents /> */}
-            {/* Marcas asociadas */}
-            {/* <Anuncios /> */}
+            <AdComponents />
           </div>
         </div>
       </div>

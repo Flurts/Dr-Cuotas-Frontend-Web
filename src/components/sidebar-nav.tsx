@@ -22,7 +22,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   return (
     <nav
       className={cn(
-        'flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1',
+        'flex flex-row justify-center items-center gap-2',
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
             pathname === item.href
               ? 'bg-muted hover:bg-muted'
               : 'hover:bg-transparent hover:underline',
-            'justify-start text-base font-medium text-muted-foreground w-full text-left rounded-lg px-4 py-2 transition-colors duration-200 ease-in-out',
+            'flex  items-center border text-base  uppercase text-drcuotasTertiary-text leading-tight tracking-tight  w-full h-14 text-left rounded-xl p-2 transition-colors duration-200 ease-in-out',
           )}
         >
           {t(`common:${item.title}`)}

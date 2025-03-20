@@ -23,10 +23,13 @@ export const DatePickerField = ({ field, form }: any) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor="dob" className="text-base font-semibold text-slate-800">
+    <div className="w-full h-full flex flex-col">
+      <label htmlFor="dob" className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
         {t('form:dateOfBirth')}
       </label>
+      <span className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-4">
+        {t('form:dateOfBirthDescription')}
+      </span>
       <Popover open={showCalendar}>
         <PopoverTrigger asChild>
           <Button
@@ -35,7 +38,7 @@ export const DatePickerField = ({ field, form }: any) => {
               setShowCalendar(!showCalendar);
             }}
             className={cn(
-              'w-[240px] pl-3 text-left font-normal bg-white border border-[#6636E2] rounded-md text-slate-800 h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300',
+              'w-full text-left  bg-white border border-drcuotasPrimary-bg rounded-xl  text-drcuotasTertiary-text leading-tight tracking-tight h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300',
               !field.value && 'text-muted-foreground',
             )}
           >
@@ -59,9 +62,6 @@ export const DatePickerField = ({ field, form }: any) => {
           />
         </PopoverContent>
       </Popover>
-      <span className="text-sm font-light text-slate-500">
-        {t('form:dateOfBirthDescription')}
-      </span>
       <ErrorMessage
         name={field.name}
         component="div"

@@ -6,6 +6,7 @@ import {
   FormikProvider,
   useFormik,
 } from 'formik';
+import { LucideUserRoundPlus } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { ImSpinner9 } from 'react-icons/im';
@@ -84,197 +85,216 @@ export default function SettingsProfileView() {
 
   return (
     <>
-      <div className="flex flex-col justify-center w-full">
-        <div className="hidden space-y-6 p-10 pb-16 md:block w-full max-w-screen-2xl">
-          <div className="space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">
-              {t('common:profile')}
-            </h2>
-            <p className="text-muted-foreground">
-              {t('common:profileDescription')}
-            </p>
-          </div>
-          <Separator className="my-6" />
+      <div className="w-full h-full">
+        <>
+          <Separator className="my-4" />
           <FormikProvider value={formik}>
-            <Form className="flex flex-col gap-6">
-              <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <div className="flex flex-col w-full gap-7 lg:max-w-2xl">
-                  <div className="flex flex-col gap-2 w-full">
-                    <span className="text-base font-semibold text-slate-800">
-                      {t('form:documentField')}
-                    </span>
-                    <Field
-                      name="identification_document"
-                      placeholder={t('form:documentPlaceholder')}
-                      className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                    />
-                    <ErrorMessage
-                      name="identification_document"
-                      component="div"
-                      render={(msg) => (
-                        <div className="flex items-center text-red-500">
-                          <MdError className="mr-1" />
-                          <div className="text-sm lg:text-base">{msg}</div>
+            <Form className="flex flex-col gap-2">
+              <>
+                <div className="w-full border rounded-xl p-10">
+                  <>
+                    <div className="w-full h-full justify-center items-center flex flex-col gap-10">
+                      {/* Documento de Identidad  */}
+                      <>
+                        <div className="flex flex-col  w-full h-full">
+                          <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                            {t('form:documentField')}
+                          </span>
+                          <span className="text-sm font-light text-drcuotasTertiary-text leading-tight tracking-tight mb-4">
+                            {t('form:documentFieldDescription')}
+                          </span>
+                          <Field
+                            name="identification_document"
+                            placeholder={t('form:documentPlaceholder')}
+                            className="bg-white border border-drcuotasPrimary-bg rounded-xl text-base text-drcuotasTertiary-text w-full h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                          />
+                          <ErrorMessage
+                            name="identification_document"
+                            component="div"
+                            render={(msg) => (
+                              <div className="flex items-center text-red-500">
+                                <MdError className="mr-1" />
+                                <div className="text-sm lg:text-base">
+                                  {msg}
+                                </div>
+                              </div>
+                            )}
+                          />
                         </div>
-                      )}
-                    />
-                    <span className="text-sm font-light text-slate-500">
-                      {t('form:documentFieldDescription')}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-2 w-full">
-                    <span className="text-base font-semibold text-slate-800">
-                      {t('form:genderField')}
-                    </span>
-                    <Field
-                      as="select"
-                      name="gender"
-                      className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                    >
-                      {Object.values(Gender).map((gender) => (
-                        <option
-                          key={gender}
-                          value={gender}
-                          label={t(`form:genderFields.${gender}`)}
-                        />
-                      ))}
-                    </Field>
-                    <ErrorMessage
-                      name="gender"
-                      component="div"
-                      render={(msg) => (
-                        <div className="flex items-center text-red-500">
-                          <MdError className="mr-1" />
-                          <div className="text-sm lg:text-base">{msg}</div>
+                      </>
+                      {/* Genero  */}
+                      <>
+                        <div className="flex flex-col  w-full h-full">
+                          <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                            {t('form:genderField')}
+                          </span>
+                          <span className="text-sm font-light text-drcuotasTertiary-text leading-tight tracking-tight mb-4">
+                            {t('form:genderFieldDescription')}
+                          </span>
+                          <Field
+                            as="select"
+                            name="gender"
+                            className="bg-white border border-drcuotasPrimary-bg rounded-xl text-drcuotasTertiary-text w-full h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                          >
+                            {Object.values(Gender).map((gender) => (
+                              <option
+                                key={gender}
+                                value={gender}
+                                label={t(`form:genderFields.${gender}`)}
+                              />
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="gender"
+                            component="div"
+                            render={(msg) => (
+                              <div className="flex items-center text-red-500">
+                                <MdError className="mr-1" />
+                                <div className="text-sm lg:text-base">
+                                  {msg}
+                                </div>
+                              </div>
+                            )}
+                          />
                         </div>
-                      )}
-                    />
-                    <span className="text-sm font-light text-slate-500">
-                      {t('form:genderFieldDescription')}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-2 w-full">
-                    <span className="text-base font-semibold text-slate-800">
-                      {t('form:socialMediaField')}
-                    </span>
-                    <span className="text-sm font-light text-slate-500">
-                      {t('form:socialMediaFieldDescription')}
-                    </span>
-                    <FieldArray name="socialMedia">
-                      {({ insert, remove, push }) => {
-                        // Obtiene los tipos de redes sociales ya seleccionados
-                        const selectedSocialMedia =
-                          formik.values.socialMedia.map(
-                            (social) => social.type,
-                          );
-
-                        return (
-                          <>
-                            {formik.values.socialMedia.length > 0 &&
-                              formik.values.socialMedia.map((social, index) => {
-                                const Icon =
-                                  socialMediaIcons[social.type as SocialMedia];
-
-                                return (
-                                  <div
-                                    className="flex flex-col gap-2 w-full"
-                                    key={index}
-                                  >
-                                    <div className="flex flex-row gap-2 w-full items-center">
-                                      {Icon && (
-                                        <Icon className="text-3xl text-[#6636E2]" />
-                                      )}{' '}
-                                      {/* Muestra el icono */}
-                                      <Field
-                                        as="select"
-                                        name={`socialMedia.${index}.type`}
-                                        className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-1/3 h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                                      >
-                                        {Object.values(SocialMedia).map(
-                                          (media) =>
-                                            !selectedSocialMedia.includes(
-                                              media,
-                                            ) || media === social.type ? (
-                                              <option
-                                                key={media}
-                                                value={media}
-                                                label={media}
-                                              />
-                                            ) : null,
-                                        )}
-                                      </Field>
-                                      <Field
-                                        name={`socialMedia.${index}.link`}
-                                        placeholder={t(
-                                          'form:socialMediaLinkPlaceholder',
-                                        )}
-                                        className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-1/2 h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                                      />
-                                      <Button
-                                        type="button"
-                                        onClick={() => remove(index)}
-                                      >
-                                        {t('form:remove')}
-                                      </Button>
-                                    </div>
-                                    <ErrorMessage
-                                      name={`socialMedia.${index}.type`}
-                                      component="div"
-                                      className="text-red-500"
-                                    />
-                                    <ErrorMessage
-                                      name={`socialMedia.${index}.link`}
-                                      component="div"
-                                      className="text-red-500"
-                                    />
-                                  </div>
+                      </>
+                      {/* Redes Sociales  */}
+                      <>
+                        <div className="flex flex-col justify-center w-full h-auto">
+                          <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                            {t('form:socialMediaField')}
+                          </span>
+                          <span className="text-sm font-light text-drcuotasTertiary-text leading-tight tracking-tight mb-4">
+                            {t('form:socialMediaFieldDescription')}
+                          </span>
+                          <FieldArray name="socialMedia">
+                            {({ insert, remove, push }) => {
+                              // Obtiene los tipos de redes sociales ya seleccionados
+                              const selectedSocialMedia =
+                                formik.values.socialMedia.map(
+                                  (social) => social.type,
                                 );
-                              })}
-                            <div className="flex flex-col gap-2 w-full justify-center items-center">
-                              <Button
-                                type="button"
-                                onClick={() => {
-                                  push({
-                                    type:
-                                      selectedSocialMedia.length > 0
-                                        ? Object.values(SocialMedia).find(
-                                            (media) =>
-                                              !selectedSocialMedia.includes(
-                                                media,
-                                              ),
-                                          )
-                                        : Object.values(SocialMedia)[0],
-                                    link: '',
-                                  });
-                                }}
-                                className="bg-[#6636E2] text-white py-1 px-3 rounded-md w-8/12"
-                              >
-                                {t('form:addSocialMedia')}
-                              </Button>
-                            </div>
-                          </>
-                        );
-                      }}
-                    </FieldArray>
-                  </div>
+
+                              return (
+                                <>
+                                  {formik.values.socialMedia.length > 0 &&
+                                    formik.values.socialMedia.map(
+                                      (social, index) => {
+                                        const Icon =
+                                          socialMediaIcons[
+                                            social.type as SocialMedia
+                                          ];
+
+                                        return (
+                                          <div
+                                            className="w-full h-full flex flex-col justify-center items-center gap-4 p-10 mb-4"
+                                            key={index}
+                                          >
+                                            <div className="w-full h-full flex flex-col gap-2 justify-center items-center">
+                                              {Icon && (
+                                                <Icon className="hidden text-3xl text-drcuotasPrimary-text" />
+                                              )}{' '}
+                                              {/* Muestra el icono */}
+                                              <Field
+                                                as="select"
+                                                name={`socialMedia.${index}.type`}
+                                                className="bg-white border border-drcuotasPrimary-bg rounded-xl text-drcuotasPrimary-text leading-tight tracking-tight w-full h-8 xl:h-[40px] p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                                              >
+                                                {Object.values(SocialMedia).map(
+                                                  (media) =>
+                                                    !selectedSocialMedia.includes(
+                                                      media,
+                                                    ) ||
+                                                    media === social.type ? (
+                                                      <option
+                                                        key={media}
+                                                        value={media}
+                                                        label={media}
+                                                      />
+                                                    ) : null,
+                                                )}
+                                              </Field>
+                                              <Field
+                                                name={`socialMedia.${index}.link`}
+                                                placeholder={t(
+                                                  'form:socialMediaLinkPlaceholder',
+                                                )}
+                                                className="bg-white border border-drcuotasPrimary-bg rounded-xl text-drcuotasPrimary-text w-full h-8 xl:h-[40px] p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                                              />
+                                              <Button
+                                                type="button"
+                                                onClick={() => remove(index)}
+                                                className="w-full rounded-xl h-8 xl:h-[40px] bg-drcuotasTertiary"
+                                              >
+                                                {t('form:remove')}
+                                              </Button>
+                                            </div>
+                                            <ErrorMessage
+                                              name={`socialMedia.${index}.type`}
+                                              component="div"
+                                              className="text-red-500"
+                                            />
+                                            <ErrorMessage
+                                              name={`socialMedia.${index}.link`}
+                                              component="div"
+                                              className="text-red-500"
+                                            />
+                                          </div>
+                                        );
+                                      },
+                                    )}
+                                  <div className="flex flex-col gap-2 w-full justify-center items-center">
+                                    <Button
+                                      type="button"
+                                      onClick={() => {
+                                        push({
+                                          type:
+                                            selectedSocialMedia.length > 0
+                                              ? Object.values(SocialMedia).find(
+                                                  (media) =>
+                                                    !selectedSocialMedia.includes(
+                                                      media,
+                                                    ),
+                                                )
+                                              : Object.values(SocialMedia)[0],
+                                          link: '',
+                                        });
+                                      }}
+                                      className="w-full h-14 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl flex justify-center items-center"
+                                    >
+                                      <LucideUserRoundPlus />
+                                      <span className="text-base font-light text-drcuotasPrimary-text leading-tight tracking-tight">
+                                        Agregar
+                                      </span>
+                                    </Button>
+                                  </div>
+                                </>
+                              );
+                            }}
+                          </FieldArray>
+                        </div>
+                      </>
+                    </div>
+                  </>
                 </div>
-              </div>
-              <div className="flex flex-col">
-                <Button
-                  type="submit"
-                  className="bg-[#6636E2] w-[200px] text-base text-white py-1 px-3 rounded-md justify-center items-center hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]"
-                >
-                  {formik.isSubmitting ? (
-                    <ImSpinner9 className="animate-spin h-6 text-white w-full" />
-                  ) : (
-                    t('form:saveChanges')
-                  )}
-                </Button>
-              </div>
+              </>
+              <>
+                <div className="w-full h-auto flex flex-row justify-start">
+                  <Button
+                    type="submit"
+                    className="w-full h-14 bg-drcuotasPrimary-bg text-base text-white  rounded-xl justify-center items-center    uppercase leading-tight tracking-tight"
+                  >
+                    {formik.isSubmitting ? (
+                      <ImSpinner9 className="animate-spin h-6 text-white w-full" />
+                    ) : (
+                      t('form:saveChanges')
+                    )}
+                  </Button>
+                </div>
+              </>
             </Form>
           </FormikProvider>
-        </div>
+        </>
       </div>
     </>
   );

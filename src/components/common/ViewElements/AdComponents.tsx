@@ -27,22 +27,21 @@ const AdsCarousel: React.FC = () => {
     );
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center p-4 lg:p-6">
+    <div className="w-full h-full hidden lg:flex flex-col justify-center items-center p-4 lg:p-6">
       <Carousel className="w-full max-w-screen-2xl overflow-x-auto snap-x scroll-smooth">
-        <CarouselContent className="grid grid-flow-col auto-cols-[calc(100%/3)] gap-4 lg:gap-6">
+        <CarouselContent className="grid grid-flow-col auto-cols-[calc(100%/3)]">
           {data?.getAdsQuery && data.getAdsQuery.length > 0 ? (
             data.getAdsQuery.map(
               (ad: { id: string; image: string; link: string }) => (
                 <div
                   key={ad.id}
-                  className="snap-center w-full min-w-[calc(100%/3)] h-40"
+                  className="snap-center w-full min-w-[calc(100%/3)] h-full "
                 >
                   <Link href={ad.link}>
-                    <div className="relative w-full h-full overflow-hidden rounded-xl shadow-lg transition-transform duration-300">
+                    <div className="relative h-full overflow-hidden  transition-transform duration-300 p-20 flex justify-center items-center">
                       <img
                         src={ad.image}
                         alt="Anuncio"
-                        className="w-full h-full object-cover rounded-xl"
                       />
                     </div>
                   </Link>

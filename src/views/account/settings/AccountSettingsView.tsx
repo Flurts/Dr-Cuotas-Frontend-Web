@@ -72,141 +72,175 @@ export default function AccountSettingsView() {
   return (
     <>
       <div className="flex flex-col justify-center w-full">
-        <div className="hidden space-y-6 p-10 pb-16 md:block w-full max-w-screen-2xl">
-          <div className="space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">
-              {t('common:account')}
-            </h2>
-            <p className="text-muted-foreground">
-              {t('common:accountDescription')}
-            </p>
-          </div>
-          <Separator className="my-6" />
-          <FormikProvider value={formik}>
-            <Form className="flex flex-col gap-6">
-              <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <div className="flex flex-col w-full gap-7 lg:max-w-2xl">
-                  <div className="flex flex-col gap-2 w-full">
-                    <div className="flex flex-row gap-2 w-full">
-                      <div className="flex flex-col gap-2 w-1/2">
-                        <span className="text-base font-semibold text-slate-800">
-                          {t('form:firstName')}
-                        </span>
-                        <Field
-                          type="text"
-                          id="first_name"
-                          name="first_name"
-                          placeholder={t('form:firstName')}
-                          className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                        />
-                        <ErrorMessage
-                          name="first_name"
-                          component="div"
-                          render={(msg) => (
-                            <div className="flex items-center text-red-500">
-                              <MdError className="mr-1" />
-                              <div className="text-sm lg:text-base">{msg}</div>
+        <Separator className="my-4" />
+        <>
+          <div className="w-full border rounded-xl p-10 ">
+            <>
+              <div className="mb-10">
+                <h2 className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                  {t('common:account')}
+                </h2>
+                <p className="text-sm  text-drcuotasTertiary-text leading-tight tracking-tight">
+                  {t('common:accountDescription')}
+                </p>
+              </div>
+            </>
+            <>
+              <FormikProvider value={formik}>
+                <Form className="flex flex-col gap-4">
+                  <div className="w-full h-full justify-center items-center flex flex-col gap-10">
+                    <>
+                      <div className="flex flex-col w-full gap-10">
+                        <>
+                          <div className="flex flex-col w-full">
+                            <div className="flex flex-row gap-2 w-full">
+                              {/* Nombre  */}
+                              <>
+                                <div className="flex flex-col gap-2 w-1/2">
+                                  <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                                    {t('form:firstName')}
+                                  </span>
+                                  <Field
+                                    type="text"
+                                    id="first_name"
+                                    name="first_name"
+                                    placeholder={t('form:firstName')}
+                                    className="bg-white border border-drcuotasPrimary-bg rounded-xl  text-drcuotasTertiary-text leading-tight tracking-tight w-full h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                                  />
+                                  <ErrorMessage
+                                    name="first_name"
+                                    component="div"
+                                    render={(msg) => (
+                                      <div className="flex items-center text-red-500">
+                                        <MdError className="mr-1" />
+                                        <div className="text-sm lg:text-base">
+                                          {msg}
+                                        </div>
+                                      </div>
+                                    )}
+                                  />
+                                </div>
+                              </>
+                              {/* Apellido  */}
+                              <>
+                                <div className="flex flex-col gap-2 w-1/2">
+                                  <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                                    {t('form:lastName')}
+                                  </span>
+                                  <Field
+                                    type="text"
+                                    id="last_name"
+                                    name="last_name"
+                                    placeholder={t('form:lastName')}
+                                    className="bg-white border border-drcuotasPrimary-bg rounded-xl  text-drcuotasTertiary-text leading-tight tracking-tight w-full h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                                  />
+                                  <ErrorMessage
+                                    name="last_name"
+                                    component="div"
+                                    render={(msg) => (
+                                      <div className="flex items-center text-red-500">
+                                        <MdError className="mr-1" />
+                                        <div className="text-sm lg:text-base">
+                                          {msg}
+                                        </div>
+                                      </div>
+                                    )}
+                                  />
+                                </div>
+                              </>
                             </div>
-                          )}
-                        />
+                          </div>
+                        </>
+                        <>
+                          <div className="flex flex-col w-full">
+                            <Field
+                              name="birth_Date"
+                              component={DatePickerField}
+                            />
+                          </div>
+                        </>
+                        <>
+                          <div className="flex flex-col w-full">
+                            <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                              {t('form:emailField')}
+                            </span>
+                            <span className="text-sm  text-drcuotasTertiary-text leading-tight tracking-tight mb-4">
+                              {t('form:emailFieldDescription')}
+                            </span>
+                            <Field
+                              type="email"
+                              id="email"
+                              name="email"
+                              placeholder={t('form:emailPlaceholder')}
+                              className="bg-white border border-drcuotasPrimary-bg rounded-xl  text-drcuotasTertiary-text leading-tight tracking-tight w-full h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                            />
+                            <ErrorMessage
+                              name="email"
+                              component="div"
+                              render={(msg) => (
+                                <div className="flex items-center text-red-500">
+                                  <MdError className="mr-1" />
+                                  <div className="text-sm lg:text-base">
+                                    {msg}
+                                  </div>
+                                </div>
+                              )}
+                            />
+                          </div>
+                        </>
+                        <>
+                          <div className="flex flex-col gap-2 w-full mb-10">
+                            <span className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+                              {t('form:phoneField')}
+                            </span>
+                            <span className="text-sm  text-drcuotasTertiary-text leading-tight tracking-tight">
+                              {t('form:phoneFieldDescription')}
+                            </span>
+                            <Field
+                              type="text"
+                              id="phone"
+                              name="phone"
+                              placeholder={t('form:phonePlaceholder')}
+                              className="bg-white border border-drcuotasPrimary-bg rounded-xl text-drcuotasTertiary-text leading-tight tracking-tight w-full h-14 p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300"
+                            />
+                            <ErrorMessage
+                              name="phone"
+                              component="div"
+                              render={(msg) => (
+                                <div className="flex items-center text-red-500">
+                                  <MdError className="mr-1" />
+                                  <div className="text-sm lg:text-base">
+                                    {msg}
+                                  </div>
+                                </div>
+                              )}
+                            />
+                          </div>
+                        </>
+                
                       </div>
-                      <div className="flex flex-col gap-2 w-1/2">
-                        <span className="text-base font-semibold text-slate-800">
-                          {t('form:lastName')}
-                        </span>
-                        <Field
-                          type="text"
-                          id="first_name"
-                          name="first_name"
-                          placeholder={t('form:lastName')}
-                          className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                        />
-                        <ErrorMessage
-                          name="first_name"
-                          component="div"
-                          render={(msg) => (
-                            <div className="flex items-center text-red-500">
-                              <MdError className="mr-1" />
-                              <div className="text-sm lg:text-base">{msg}</div>
-                            </div>
-                          )}
-                        />
-                      </div>
+                    </>
+                  </div>
+                  {/* Guardar Cambios  */}
+                  <>
+                    <div className="flex flex-col">
+                      <Button
+                        type="submit"
+                        className="bg-drcuotasPrimary-bg w-full h-14 text-base text-white  rounded-xl justify-center items-center    uppercase leading-tight tracking-tight"
+                      >
+                        {formik.isSubmitting ? (
+                          <ImSpinner9 className="animate-spin h-6 text-white w-full" />
+                        ) : (
+                          t('common:saveChanges')
+                        )}
+                      </Button>
                     </div>
-                    <span className="text-sm font-light text-slate-500">
-                      {t('form:namesDescription')}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-2 w-full">
-                    <Field name="birth_Date" component={DatePickerField} />
-                  </div>
-                  <div className="flex flex-col gap-2 w-full">
-                    <span className="text-base font-semibold text-slate-800">
-                      {t('form:emailField')}
-                    </span>
-                    <Field
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder={t('form:emailPlaceholder')}
-                      className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                    />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      render={(msg) => (
-                        <div className="flex items-center text-red-500">
-                          <MdError className="mr-1" />
-                          <div className="text-sm lg:text-base">{msg}</div>
-                        </div>
-                      )}
-                    />
-                    <span className="text-sm font-light text-slate-500">
-                      {t('form:emailFieldDescription')}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-2 w-full">
-                    <span className="text-base font-semibold text-slate-800">
-                      {t('form:phoneField')}
-                    </span>
-                    <Field
-                      type="text"
-                      id="phone"
-                      name="phone"
-                      placeholder={t('form:phonePlaceholder')}
-                      className="bg-white border border-[#6636E2] rounded-md text-slate-800 w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                    />
-                    <ErrorMessage
-                      name="phone"
-                      component="div"
-                      render={(msg) => (
-                        <div className="flex items-center text-red-500">
-                          <MdError className="mr-1" />
-                          <div className="text-sm lg:text-base">{msg}</div>
-                        </div>
-                      )}
-                    />
-                    <span className="text-sm font-light text-slate-500">
-                      {t('form:phoneFieldDescription')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <Button
-                  type="submit"
-                  className="bg-[#6636E2] w-[200px] text-base text-white py-1 px-3 rounded-md justify-center items-center  hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]"
-                >
-                  {formik.isSubmitting ? (
-                    <ImSpinner9 className="animate-spin h-6 text-white w-full" />
-                  ) : (
-                    t('common:saveChanges')
-                  )}
-                </Button>
-              </div>
-            </Form>
-          </FormikProvider>
-        </div>
+                  </>
+                </Form>
+              </FormikProvider>
+            </>
+          </div>
+        </>
       </div>
     </>
   );

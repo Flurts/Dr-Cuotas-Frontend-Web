@@ -35,7 +35,7 @@ const DoctorInfoCard: React.FC<DoctorProps> = ({ doctor }) => {
   return (
     <a
       href={`/view-account/doctor/${doctor.id}`}
-      className="w-60 lg:w-80 h-full rounded-xl border shadow-xl cursor-pointer flex flex-col justify-center items-center gap-4"
+      className="w-60 lg:w-80 h-full rounded-xl border cursor-pointer flex flex-col justify-center items-center gap-4"
     >
       {/* Contenedor de la imagen con tamaño fijo */}
       <Image
