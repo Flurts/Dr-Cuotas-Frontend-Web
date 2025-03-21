@@ -24,6 +24,7 @@ interface Product {
 
 const PrincipalLayout = ({ children, className }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
   const isLogged = useSelector(isLoggedIn);
   const user = useSelector(getCurrentUser);
   const [sticky, setSticky] = useState(true);
@@ -74,6 +75,12 @@ const PrincipalLayout = ({ children, className }: Props) => {
       }
     };
   }, [lastScrollY, scrollTimeout]);
+
+  useEffect(() => {
+    setHasToken(!!localStorage.getItem('accessToken'));
+    // Now you can safely log it
+    console.log('accessToken:', localStorage.getItem('accessToken'));
+  }, []);
 
   return (
     <div className={`${className}`}>
@@ -138,7 +145,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
         </>
         <>
           <div className="flex w-20 lg:w-full items-center justify-center gap-2">
-            {!isLogged ? (
+            {!isLogged && !hasToken ? (
               <>
                 <Link
                   href="/login"
@@ -160,19 +167,12 @@ const PrincipalLayout = ({ children, className }: Props) => {
                   href="/account"
                   className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  {/* <span className="uppercase leading-tight tracking-tight text-sm">
-                    Cuenta
-                  </span> */}
                   <FiUser className="text-2xl" />
                 </Link>
                 <Link
                   href="/account"
-                  className="  text-drcuotasPrimary hover:text-white hover:bg-green-500 font-black uppercase border-2 border-drcuotasPrimary hover:border-green-500 w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  className="text-drcuotasPrimary hover:text-white hover:bg-green-500 font-black uppercase border-2 border-drcuotasPrimary hover:border-green-500 w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  {/* <span className="uppercase leading-tight tracking-tight text-sm">
-                    Cuenta
-                  </span> */}
-                  {/* <FiUser className="text-2xl" /> */}
                   <LucideMessagesSquare className="text-2xl" />
                 </Link>
               </>

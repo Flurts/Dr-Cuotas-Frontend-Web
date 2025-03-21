@@ -421,6 +421,7 @@ export interface Surgery {
   adjudicateds?: Maybe<Adjudicated[]>;
   amount: Scalars['Float'];
   category: SurgeryCategories;
+  subCategory?: SubSurgeryCategories;
   created_at?: Maybe<Scalars['DateTimeISO']>;
   deleted_at?: Maybe<Scalars['DateTimeISO']>;
   description?: Maybe<Scalars['String']>;
@@ -437,16 +438,28 @@ export interface Surgery {
 
 /** Categories of surgeries */
 export enum SurgeryCategories {
-  BodySurgeries = 'BodySurgeries',
-  BreastSurgeries = 'BreastSurgeries',
-  FacialSurgeries = 'FacialSurgeries',
-  GeneralSurgeries = 'GeneralSurgeries',
-  ReconstructiveSurgeries = 'ReconstructiveSurgeries'
+  FacialSurgeries = "FacialSurgeries",
+  BreastSurgeries = "BreastSurgeries",
+  BodySurgeries = "BodySurgeries",
+  ReconstructiveSurgeries = "ReconstructiveSurgeries",
+  GeneralSurgeries = "GeneralSurgeries",
+  CosmeticSurgeries = "CosmeticSurgeries",
+  OrthopedicSurgeries = "OrthopedicSurgeries",
+  NeurologicalSurgeries = "NeurologicalSurgeries",
+  OphthalmicSurgeries = "OphthalmicSurgeries",
+  PediatricSurgeries = "PediatricSurgeries",
+  UrologicSurgeries = "UrologicSurgeries",
+  GynecologicSurgeries = "GynecologicSurgeries",
+  ThoracicSurgeries = "ThoracicSurgeries",
+  TransplantSurgeries = "TransplantSurgeries",
+  ENTSurgeries = "ENTSurgeries",
+  DentalSurgeries = "DentalSurgeries"
 }
 
 export interface SurgeryInput {
   amount?: InputMaybe<Scalars['Float']>;
   category?: InputMaybe<SurgeryCategories>;
+  subCategory?: InputMaybe<SubSurgeryCategories>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -459,20 +472,38 @@ export interface SurgeryInput {
 
 /** Types of surgeries */
 export enum SurgeryTypes {
-  Blepharoplasty = 'Blepharoplasty',
-  BreastAugmentation = 'BreastAugmentation',
-  BreastLift = 'BreastLift',
-  BreastReduction = 'BreastReduction',
-  BuccalFatRemoval = 'BuccalFatRemoval',
-  ButtockAugmentation = 'ButtockAugmentation',
-  Facelift = 'Facelift',
-  Liposuction = 'Liposuction',
-  LiposuctionWithButtockAugmentation = 'LiposuctionWithButtockAugmentation',
-  LiposuctionWithTummyTuck = 'LiposuctionWithTummyTuck',
-  Otoplasty = 'Otoplasty',
-  Rhinoplasty = 'Rhinoplasty',
-  SkinLesionTreatment = 'SkinLesionTreatment',
-  TummyTuck = 'TummyTuck'
+  // Facial Surgeries
+  Rhinoplasty = "Rhinoplasty", // Incluye estética y funcional
+  Facelift = "Facelift", // Lifting
+  Blepharoplasty = "Blepharoplasty", // Eyelid Surgery
+  Otoplasty = "Otoplasty", // Ear Surgery
+  BuccalFatRemoval = "BuccalFatRemoval", // Bichectomía
+  // BrowLift = "BrowLift",
+
+  // Breast Surgeries
+  BreastAugmentation = "BreastAugmentation",
+  BreastLift = "BreastLift",
+  BreastReduction = "BreastReduction",
+  // BreastReconstruction = "BreastReconstruction",
+
+  // Body Surgeries
+  Liposuction = "Liposuction", // Liposucción
+  TummyTuck = "TummyTuck", // Abdominoplastia convencional y circular
+  LiposuctionWithTummyTuck = "LiposuctionWithTummyTuck", // Lipo + abdominoplastia
+  LiposuctionWithButtockAugmentation = "LiposuctionWithButtockAugmentation", // Lipo + lipotransferencia glútea
+  SkinLesionTreatment = "SkinLesionTreatment", // Lesiones de piel
+  ButtockAugmentation = "ButtockAugmentation"
+}
+
+export enum SubSurgeryCategories {
+  EyelidSurgery = "EyelidSurgery",
+  Facelift = "Facelift",
+  BreastAugmentation = "BreastAugmentation",
+  BreastReduction = "BreastReduction",
+  BreastLift = "BreastLift",
+  Liposuction = "Liposuction",
+  TummyTuck = "TummyTuck",
+  ButtockLift = "ButtockLift"
 }
 
 export interface UpdateProfileCvResponse {

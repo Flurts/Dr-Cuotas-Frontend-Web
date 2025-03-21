@@ -32,7 +32,9 @@ function createCuotas(
     if (i < quotasPaid) {
       status = Payment_Status.Paid;
     } else {
-      const cuotaPaymentDate = new Date(startDate.getTime() + i * cuotaDuration);
+      const cuotaPaymentDate = new Date(
+        startDate.getTime() + i * cuotaDuration,
+      );
 
       if (cuotaPaymentDate <= currentDate) {
         status = Payment_Status.Pending;
@@ -136,7 +138,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
               {/* Buttons info del procedimiento e info del profesional */}
               <div className="w-full flex flex-col sm:flex-row  justify-center gap-2 md:gap-10">
                 <Link
-                  href={`/store/${adjudicated.surgery?.id}`}
+                  href={`/store/${adjudicated.surgery?.id}?adjudicatedId=${adjudicated.id}`}
                   className="flex w-full lg:w-1/2 h-10 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
                 >
                   <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
@@ -153,7 +155,8 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                 </Link>
               </div>
 
-              {adjudicated.adjudicated_status === Adjudicated_Status.Validating && (
+              {adjudicated.adjudicated_status ===
+                Adjudicated_Status.Validating && (
                 <div className="flex flex-col w-full items-center justify-center gap-2 p-16">
                   <span className="text-drcuotasPrimary-text text-2xl font-normal">
                     {t(
@@ -168,7 +171,8 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                 </div>
               )}
 
-              {adjudicated.adjudicated_status === Adjudicated_Status.Verified && (
+              {adjudicated.adjudicated_status ===
+                Adjudicated_Status.Verified && (
                 <div className="flex flex-col w-full items-center justify-center gap-5 p-16">
                   <span className="text-drcuotasPrimary-text text-5xl font-bold">
                     {t(
@@ -220,7 +224,10 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                   <div className="flex flex-col w-full justify-center items-center relative p-4">
                     <div className="flex flex-col sm:flex-row w-full justify-start sm:justify-between items-start sm:items-center md:px-3">
                       <span className="text-xs md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
-                        {t('constants:quotas', { current: 3, total: 10 })}
+                        {t('constants:quotas', {
+                          current: adjudicated.quotas_paid,
+                          total: adjudicated.quotas_number,
+                        })}
                       </span>
                       <span className="text-xs md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
                         {t('constants:nextPayment', { date: '02/25/2025' })}
@@ -228,29 +235,35 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                     </div>
                     <div className="lg:p-5">
                       <div className="w-full p-4 flex flex-row justify-center items-center">
-                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                        </div>
-                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                        </div>
-                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                        </div>
-                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                        </div>
-                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                        </div>
-                        <div className="w-4 h-2 bg-drcuotasTertiary-bg bg-opacity-50"></div>
-                        <div className="w-8 lg:w-10 h-8 lg:h-10 bg-drcuotasTertiary-bg bg-opacity-20 rounded-full flex justify-center items-center">
-                          <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
-                        </div>
+                        {Array.from({ length: adjudicated.quotas_number! }).map(
+                          (_, index) => (
+                            <React.Fragment key={index}>
+                              {/* Círculos */}
+                              <div
+                                className={`w-8 lg:w-10 h-8 lg:h-10 rounded-full flex justify-center items-center 
+                ${
+                  index < adjudicated.quotas_paid! // Cuotas pagadas
+                    ? 'bg-green-500' // Cuotas pagadas en verde
+                    : 'bg-drcuotasTertiary-bg bg-opacity-20'
+                }`}
+                              >
+                                <LucideLaugh className="text-drcuotasTertiary-text opacity-80 w-6 lg:w-8 h-6 lg:h-8" />
+                              </div>
+
+                              {/* Conectores (barras entre círculos) */}
+                              {index < adjudicated.quotas_number! - 1 && (
+                                <div
+                                  className={`w-4 h-2 
+                  ${
+                    index < adjudicated.quotas_paid! - 1
+                      ? 'bg-green-500' // Conectores en verde si están dentro de las cuotas pagadas
+                      : 'bg-drcuotasTertiary-bg bg-opacity-50'
+                  }`}
+                                ></div>
+                              )}
+                            </React.Fragment>
+                          ),
+                        )}
                       </div>
                     </div>
                   </div>

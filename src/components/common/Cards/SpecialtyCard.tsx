@@ -140,7 +140,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       data: {
         description: 'Pago de servicio',
         first_due_date: '2025-04-01',
-        first_total: 1500,
+        first_total: price / quotes,
         second_due_date: null,
         second_total: null,
         back_url_success: 'http://localhost:3000/account',

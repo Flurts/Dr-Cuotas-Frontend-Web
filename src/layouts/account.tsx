@@ -41,6 +41,7 @@ const MainContent = ({ children }: Props) => {
 };
 
 function AccountLayout({ children, className }: Props) {
+  const [hasToken, setHasToken] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLogged = useSelector(isLoggedIn);
   const user = useSelector(getCurrentUser);
@@ -54,6 +55,8 @@ function AccountLayout({ children, className }: Props) {
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  console.log('isLogged', isLogged);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,6 +85,12 @@ function AccountLayout({ children, className }: Props) {
       }
     };
   }, [lastScrollY, scrollTimeout]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    setHasToken(!!localStorage.getItem('accessToken'));
+    // Now you can safely log it
+    console.log('accessToken:', localStorage.getItem('accessToken'));
+  }, []);
 
   return (
     <div className={`${className}`}>
@@ -146,7 +155,7 @@ function AccountLayout({ children, className }: Props) {
         </>
         <>
           <div className="flex w-20 lg:w-full items-center justify-center gap-2">
-            {!isLogged ? (
+            {!isLogged && !hasToken ? (
               <>
                 <Link
                   href="/login"

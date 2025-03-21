@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoSettings } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -20,6 +20,7 @@ import CustomImageUploader from '@/components/common/Editable/UserImage';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import { toast } from '@/components/ui/use-toast';
+import settings from '@/settings';
 import { getCurrentUser, updateProfileImage } from '@/store';
 import {
   Gender,
@@ -34,6 +35,10 @@ import { createS3Url, refFileImage } from '@/utils/refFileImage';
 export default function AccountView() {
   const { t } = useTranslation('common');
   const user = useSelector(getCurrentUser);
+  const [userData, setUserData] = useState<{
+    first_name: string;
+    last_name: string;
+  } | null>(null);
 
   // -----> Ajusta la obtención de datos según tu estructura de usuario/doctores
   const doctorName = user?.first_name ?? 'Desconocido';
@@ -197,6 +202,54 @@ export default function AccountView() {
   });
   // -----------------------------------------------------------------------
 
+  const getUserData = async () => {
+    const query = `
+      query GetUserData {
+        getUserData {
+          user {
+            first_name
+            last_name
+          }
+        }
+      }
+    `;
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+      const data = await response.json();
+      if (data.errors)
+        throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
+
+      console.log('Datos del usuario:', data.data.getUserData.user);
+      return data.data.getUserData.user;
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+      return null;
+    }
+  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await getUserData();
+      if (data) {
+        setUserData(data);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <>
       <div className="w-full h-full overflow-hidden">
@@ -211,18 +264,21 @@ export default function AccountView() {
             <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
               {/* Imagen del Doctor */}
               <div className="h-32 w-32 border-4 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
-              <CustomImageUploader
-                width={120}
-                height={120}
-                imageUrl={user.profile_picture ?? undefined}
-                onChange={handleChange}
-              />
+                <CustomImageUploader
+                  width={120}
+                  height={120}
+                  imageUrl={user.profile_picture ?? undefined}
+                  onChange={handleChange}
+                />
               </div>
 
               {/* Información del Doctor */}
               <div className="w-full flex-1 text-center md:text-left">
-                <h1 className="text-2xl lg:text-4xl font-black uppercase leading-tight tracking-tight text-drcuotasPrimary-text sm:text-white lg:-mt-4  flex flex-row gap-2 items-center justify-center sm:justify-start">  
-                {user.first_name + ' ' + user.last_name}{' '} <LucideShieldCheck className='w-4 lg:w-6 h-4 lg:h-6'/>
+                <h1 className="text-2xl lg:text-4xl font-black uppercase leading-tight tracking-tight text-drcuotasPrimary-text sm:text-white lg:-mt-4  flex flex-row gap-2 items-center justify-center sm:justify-start">
+                  {userData
+                    ? `${userData.first_name} ${userData.last_name}`
+                    : 'Cargando...'}
+                  <LucideShieldCheck className="w-4 lg:w-6 h-4 lg:h-6" />
                 </h1>
                 <p className="text-base uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
                   {/* {specialty} */}
@@ -257,20 +313,27 @@ export default function AccountView() {
                       <>
                         <div>
                           <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
-                            Bienvenido 
+                            Bienvenido
                           </p>
                           {/* etiquetas de tipos de cirugias  */}
                           <>
                             <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                              ¡Bienvenido, {user.first_name + ' ' + user.last_name}, a Dr. Cuotas! 🎉
-                              Aquí encontrarás los mejores tratamientos y cirugías estéticas a precios accesibles. Transforma tu imagen con opciones flexibles y la mejor calidad. ¡Tu bienestar y belleza están en las mejores manos! ✨
+                              ¡Bienvenido,{' '}
+                              {userData
+                                ? `${userData.first_name} ${userData.last_name}`
+                                : 'Cargando...'}
+                              , a Dr. Cuotas! 🎉 Aquí encontrarás los mejores
+                              tratamientos y cirugías estéticas a precios
+                              accesibles. Transforma tu imagen con opciones
+                              flexibles y la mejor calidad. ¡Tu bienestar y
+                              belleza están en las mejores manos! ✨
                             </span>
                           </>
                         </div>
                       </>
                       <>
                         <div>
-                          <div className='w-full flex flex-row items-center gap-8 p-4'>
+                          <div className="w-full flex flex-row items-center gap-8 p-4">
                             <>
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
                                 <LucideMap className="w-4 h-4 text-drcuotasTertiary-text" />
@@ -289,13 +352,12 @@ export default function AccountView() {
                             </>
                             <>
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
-                                <LucideCalendar  className="w-4 h-4 text-drcuotasTertiary-text" />
+                                <LucideCalendar className="w-4 h-4 text-drcuotasTertiary-text" />
                                 <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                Se unió en Marzo 2022
+                                  Se unió en Marzo 2022
                                 </span>
                               </button>
                             </>
-              
                           </div>
 
                           {/* etiquetas de tipos de cirugias  */}
@@ -335,24 +397,20 @@ export default function AccountView() {
                         Conexiones
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-2 flex flex-row items-center justify-center sm:justify-start gap-2">
-                        <LucidePartyPopper className='w-4 h-4' /> 245 Cirugias Compradas
+                        <LucidePartyPopper className="w-4 h-4" /> 245 Cirugias
+                        Compradas
                       </p>
-
                     </div>
                   </>
 
                   {/* Actividad reciente */}
-                  <>
-                
-                  </>
+                  <></>
                 </div>
               </>
             </div>
           </>
         </div>
       </div>
-
-
 
       {/* <UserInfoImageEditable user={user} handleChange={handleChange} /> */}
 
