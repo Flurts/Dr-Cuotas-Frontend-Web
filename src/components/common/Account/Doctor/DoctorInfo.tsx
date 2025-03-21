@@ -133,10 +133,10 @@ export default function DoctorInfo({
         /> */}
 
         <>
-          <div className="w-full h-auto flex flex-row gap-2 justify-center items-center ">
+          <div className="w-80 lg:w-full h-auto flex flex-col sm:flex-row gap-2 justify-center items-center p-4 sm:p-0">
             <Link
               href="/account/settings"
-              className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+              className="w-full sm:w-32 lg:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
             >
               <IoSettings className="text-2xl" />
               <span className="leading-tight tracking-tight">
@@ -146,10 +146,10 @@ export default function DoctorInfo({
             </Link>
             
             <button
-              className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+              className="w-full sm:w-32 lg:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={cvHandler}
             >
-              <LucideFile  className="text-2xl" />
+              <LucideFile  className="text-sm lg:text-2xl" />
               <span className="leading-tight tracking-tight">
                 {/* {t('uploadCv')} */}
                 Doctor
@@ -157,10 +157,10 @@ export default function DoctorInfo({
             </button>
 
             <button
-              className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+              className="w-full sm:w-32 lg:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={editInfoHandler}
             >
-              <LucideFilePen className='text-2xl' />
+              <LucideFilePen className='text-sm lg:text-2xl' />
               <span className="leading-tight tracking-tight">
                 {/* {t('editInfo')} */}
                 Doctor

@@ -541,7 +541,7 @@ export default function DoctorView() {
           {/* Profile header */}
           <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
             {/* Imagen del Doctor */}
-            <div className="h-32 w-32 border-4 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
+            <div className="h-32 w-32 border-2 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
               {/* <Image
                 src={profilePicture}
                 alt={`Foto de ${doctorName}`}
@@ -562,11 +562,11 @@ export default function DoctorView() {
 
             {/* Información del Doctor */}
             <div className="w-full flex-1 text-center md:text-left">
-              <h1 className="text-4xl font-black uppercase leading-tight tracking-tight text-white -mt-4 flex flex-row gap-2 items-center">
+              <h1 className="text-2xl lg:text-4xl uppercase font-black leading-tight tracking-tight text-drcuotasPrimary-text md:text-white">
                 {user.first_name + ' ' + user.last_name}{' '}
-                <LucideShieldCheck className="w-6 h-6" />
+                {/* <LucideShieldCheck className="w-6 h-6" /> */}
               </h1>
-              <p className="text-base uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
+              <p className="text-sm uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
                 Doctor Registrado
               </p>
             </div>
@@ -630,26 +630,23 @@ export default function DoctorView() {
 
           {/** Edit Info */}
           {editInfo && (
-            <div className="relative flex flex-col gap-4 items-center w-full h-full mt-8">
-              <span className="text-xl text-[#7863f7] font-semibold">
-                Editar Información Personal
-              </span>
-
+            <div className="relative flex flex-col gap-4 items-center w-96 lg:w-full h-full">
               {doctorLoading ? (
                 <ImSpinner9 className="animate-spin h-6 text-[#7863f7]" />
               ) : (
                 <FormikProvider value={formikDoctorProfile}>
-                  <Form className="w-full flex flex-col items-center gap-3">
-                    <div className="flex flex-row gap-3 w-full">
+                  <Form className="w-full flex flex-col items-center gap-2 p-10">
+                    <>
+                      <div className="flex flex-row gap-2 w-full">
                       <div className="w-full">
-                        <span className="text-[#7863f7] font-semibold">
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                           Profesión
                         </span>
                         <Field
                           name="profession"
                           type="text"
                           placeholder="Profesión"
-                          className="p-2 focus:outline-none focus:ring-2 w-full focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
+                          className="p-2 focus:outline-none focus:ring-2 w-full focus:ring-drcuotasPrimary-bg transition-all duration-300 rounded-xl border text-drcuotasPrimary-text  leading-tight tracking-tight"
                         />
                         <ErrorMessage
                           name="profession"
@@ -662,7 +659,7 @@ export default function DoctorView() {
                           )}
                         />
                       </div>
-                      <div className="">
+                      {/* <div className="">
                         <span className="text-[#7863f7] font-semibold">
                           Estado
                         </span>
@@ -688,10 +685,12 @@ export default function DoctorView() {
                             </div>
                           )}
                         />
+                      </div> */}
                       </div>
-                    </div>
-                    <div className="relative w-full flex-col">
-                      <span className="text-[#7863f7] font-semibold">
+                    </>
+                    <>
+                      <div className="relative w-full flex-col">
+                      <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                         Resumen Profesional
                       </span>
                       <Field
@@ -699,65 +698,62 @@ export default function DoctorView() {
                         type="text"
                         placeholder="Descripción"
                         as="textarea"
-                        className="w-full h-[100px] min-h-[100px] max-h-[500px] p-2 rounded-md border  focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                        className="w-full h-[100px] min-h-[100px] max-h-[500px] p-2 rounded-xl border  focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300 text-drcuotasPrimary-text leading-tight tracking-tight"
                       />
-                    </div>
-                    <div className="relative flex flex-row gap-3">
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[#7863f7] font-semibold">
+                      </div>
+                    </>
+                    <>
+                      <div className="relative w-full flex flex-col lg:flex-row gap-2">
+                        <>
+                          <div className="w-full flex flex-col">
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                           Fecha de Registro
                         </span>
                         <Field
                           name="created_at"
                           type="text"
                           placeholder="Fecha de Creación"
-                          className="text-center p-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
+                          className="text-center p-2 focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition-all duration-300 rounded-xl border text-drcuotasPrimary-text leading-tight tracking-tight"
                           readOnly
                         />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[#7863f7] font-semibold">
+                          </div>
+                        </>
+                        <>
+                          <div className="w-full flex flex-col">
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                           Ultimo Cambio
                         </span>
                         <Field
                           name="updated_at"
                           type="text"
                           placeholder="Fecha de Actualización"
-                          className="text-center p-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300 rounded-md border text-slate-800"
+                          className="text-center p-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300 rounded-xl border text-drcuotasPrimary-text leading-tight tracking-tight"
                           readOnly
                         />
+                          </div>
+                        </>
+
                       </div>
-                    </div>
+                    </>
                   </Form>
                 </FormikProvider>
               )}
 
-              <div className="flex flex-row gap-3">
-                <div className="flex flex-col gap-2 justify-center items-center">
-                  <span className="text-[#7863f7] font-semibold">
-                    Curriculum Profesional
-                  </span>
+              <div className="flex flex-row gap-3 p-10">
+                <div className="w-full flex flex-col gap-2 justify-center items-center">
+                  <span className="w-full text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">Guardar</span>
                   <button
-                    className="rounded-full bg-[#7863f7] text-white p-2 px-5 w-auto"
-                    onClick={cvGetterHandler}
-                  >
-                    {isLoading ? (
-                      <ImSpinner9 className="animate-spin h-6 text-white w-full" />
-                    ) : (
-                      'Descargar Existente'
-                    )}
-                  </button>
-                </div>
-                <div className="flex flex-col gap-2 justify-center items-center">
-                  <span className="text-[#7863f7] font-semibold">Guardar</span>
-                  <button
-                    className="rounded-full bg-[#7863f7] text-white p-2 px-5 w-auto"
+                    className="rounded-xl bg-[#7863f7] text-white w-80 h-14"
                     onClick={formikDoctorProfile.submitForm}
                   >
                     {isLoading ? (
-                      <ImSpinner9 className="animate-spin h-6 text-white w-full" />
+                      <ImSpinner9 className="animate-spin h-6 text-white " />
                     ) : (
-                      'Guardar cambios'
+                      <>
+                      <span className='text-white font-black uppercase leading-tight tracking-tight'>
+                        Guardar cambios
+                      </span>
+                      </>
                     )}
                   </button>
                 </div>
@@ -767,7 +763,7 @@ export default function DoctorView() {
 
           {editUpdateSurgery && (
             <div className="w-full flex flex-col gap-4 items-center p-10">
-              <h2 className="text-2xl font-black uppercase tracking-tight text-drcuotasPrimary-text">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-drcuotasPrimary-text b">
                 Crear Nueva Cirugía
               </h2>
 
@@ -814,17 +810,18 @@ export default function DoctorView() {
                       </FileUploader>
                     </div>
                     {/* Sección de campos */}
-                    <div className="flex flex-col gap-6 flex-1">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="w-80 h-full flex flex-col gap-4">
+                      <>
+                        <div className="w-full gap-4">
                         <div>
-                          <span className="block text-sm font-semibold text-drcuotasPrimary-text  uppercase leading-tight tracking-tight">
+                          <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                             Nombre
                           </span>
                           <Field
                             name="name"
                             type="text"
                             placeholder="Nombre de la Cirugía"
-                            className="w-full p-2 border rounded-md text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition"
+                            className="w-full h-14 p-2 border rounded-xl uppercase leading-tight tracking-tight focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition"
                           />
                           <ErrorMessage
                             name="name"
@@ -837,7 +834,7 @@ export default function DoctorView() {
                             )}
                           />
                         </div>
-                        <div>
+                        {/* <div>
                           <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
                             Estado
                           </span>
@@ -862,17 +859,19 @@ export default function DoctorView() {
                               </div>
                             )}
                           />
+                        </div> */}
                         </div>
-                      </div>
-                      <div>
-                        <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
-                          Monto
+                      </>
+                      <>
+                        <div>
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                          Precio
                         </span>
                         <Field
                           name="amount"
                           type="number"
                           placeholder="Monto"
-                          className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
+                          className="w-full h-14 p-2 border rounded-xl text-drcuotasTertiary-text uppercase leading-tight tracking-tight focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg transition"
                         />
                         <ErrorMessage
                           name="amount"
@@ -884,72 +883,81 @@ export default function DoctorView() {
                             </div>
                           )}
                         />
-                      </div>
-                      <div>
-                        <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                        </div>
+                      </>
+                      <>
+                        <div>
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                           Descripción
                         </span>
                         <Field
                           name="description"
                           as="textarea"
                           placeholder="Descripción"
-                          className="w-full h-[100px] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
+                          className="w-full h-14 p-2 border rounded-xl  focus:ring-2 focus:ring-drcuotasPrimary-bg leading-tight tracking-tight"                          
                         />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
-                            Tipo de Cirugía
-                          </span>
-                          <Field
-                            name="surgeryType"
-                            as="select"
-                            className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2] leading-tight tracking-tight"
-                          >
-                            {Object.values(SurgeryTypes).map((status) => (
-                              <option key={status} value={status}>
-                                {t(`surgeries:${status}`)}
-                              </option>
-                            ))}
-                          </Field>
-                          <ErrorMessage
-                            name="surgeryType"
-                            component="div"
-                            render={(msg) => (
-                              <div className="flex items-center text-red-500 text-sm mt-1">
-                                <MdError className="mr-1" />
-                                {msg}
-                              </div>
-                            )}
-                          />
                         </div>
-                        <div>
-                          <span className="block text-sm font-semibold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
-                            Categoría de la Cirugía
-                          </span>
-                          <Field
-                            name="surgeryCategory"
-                            as="select"
-                            className="w-full p-2 border rounded-md text-drcuotasTertiary-text focus:outline-none focus:ring-2 focus:ring-[#6636E2]  leading-tight tracking-tight"
-                          >
-                            {Object.values(SurgeryCategories).map((status) => (
-                              <option key={status} value={status}>
-                                {t(`surgeries:${status}`)}
-                              </option>
-                            ))}
-                          </Field>
-                          <ErrorMessage
-                            name="surgeryCategory"
-                            component="div"
-                            render={(msg) => (
-                              <div className="flex items-center text-red-500 text-sm mt-1">
-                                <MdError className="mr-1" />
-                                {msg}
-                              </div>
-                            )}
-                          />
+                      </>
+                      <>
+                        <div className="flex flex-row gap-2">
+                          <>
+                            <div className='w-full'>
+                            <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                              Tipo de Cirugía
+                            </span>
+                            <Field
+                              name="surgeryType"
+                              as="select"
+                              className="w-full h-14 p-2 border rounded-xl text-drcuotasTertiary-text leading-tight tracking-tight focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg"
+                            >
+                              {Object.values(SurgeryTypes).map((status) => (
+                                <option key={status} value={status}>
+                                  {t(`surgeries:${status}`)}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage
+                              name="surgeryType"
+                              component="div"
+                              render={(msg) => (
+                                <div className="flex items-center text-red-500 text-sm mt-1">
+                                  <MdError className="mr-1" />
+                                  {msg}
+                                </div>
+                              )}
+                            />
+                            </div>
+                          </>
+                          <>
+                            <div className='w-full'>
+                            <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                              Categoría
+                            </span>
+                            <Field
+                              name="surgeryCategory"
+                              as="select"
+                              className="w-full h-14 p-2 border rounded-xl text-drcuotasTertiary-text leading-tight tracking-tight focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg"
+                            >
+                              {Object.values(SurgeryCategories).map((status) => (
+                                <option key={status} value={status}>
+                                  {t(`surgeries:${status}`)}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage
+                              name="surgeryCategory"
+                              component="div"
+                              render={(msg) => (
+                                <div className="flex items-center text-red-500 text-sm mt-1">
+                                  <MdError className="mr-1" />
+                                  {msg}
+                                </div>
+                              )}
+                            />
+                            </div>
+                          </>
                         </div>
-                      </div>
+                      </>
                     </div>
                   </Form>
                 </FormikProvider>
@@ -972,13 +980,10 @@ export default function DoctorView() {
 
           {/** Cv file Upload */}
           {cvUpload && (
-            <div className="flex flex-col gap-2 items-center w-full h-full mt-8 ">
-              <span className="text-xl text-[#7863f7] font-semibold">
-                Curriculum Profesional
-              </span>
-
+            <div className="flex flex-col gap-2 items-center justify-center w-full h-full ">
+     
               <button
-                className="rounded-full bg-[#7863f7] text-white p-2 px-5 w-60"
+                className="rounded-xl bg-drcuotasPrimary-bg text-white  w-60 h-14"
                 onClick={cvGetterHandler}
               >
                 {isLoading ? (
@@ -992,7 +997,7 @@ export default function DoctorView() {
                 name="file"
                 types={['PDF']}
               >
-                <button className="rounded-full bg-[#7863f7] text-white p-2 px-5 w-60 cursor-pointer justify-center items-center">
+                <button className="rounded-xl bg-drcuotasPrimary-bg text-white  w-60 h-14 cursor-pointer">
                   {isLoading ? (
                     <ImSpinner9 className="animate-spin h-6 text-white w-full" />
                   ) : (

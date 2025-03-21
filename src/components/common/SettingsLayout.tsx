@@ -30,15 +30,15 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col p-20">
+      <div className="w-full h-full flex flex-col p-10 sm:p-20">
         <>
-          <div className="hidden md:block w-full h-full">
+          <div className="w-full h-full">
             <>
-              <div className="w-full flex flex-col">
-                <h2 className="text-2xl text-drcuotasTertiary-text font-bold uppercase leading-tight tracking-tight">
+              <div className="w-full hidden sm:flex flex-col">
+                <h2 className="text-sm sm:text-2xl text-drcuotasTertiary-text font-bold uppercase leading-tight tracking-tight">
                   {t('constants:settings')}
                 </h2>
-                <p className="text-base text-drcuotasTertiary-text leading-tight tracking-tight">
+                <p className="hidden lg:block text-base text-drcuotasTertiary-text leading-tight tracking-tight">
                   {t('constants:settingsDescription')}
                 </p>
               </div>

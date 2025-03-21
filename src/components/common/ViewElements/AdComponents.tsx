@@ -49,8 +49,8 @@ const AdsCarousel: React.FC = () => {
               ),
             )
           ) : (
-            <div className="flex items-center justify-center w-full h-40">
-              <span className="text-gray-500">No hay anuncios disponibles</span>
+            <div className="hidden items-center justify-center w-full h-40">
+              <span className="">No hay anuncios disponibles</span>
             </div>
           )}
         </CarouselContent>

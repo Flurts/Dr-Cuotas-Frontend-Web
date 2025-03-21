@@ -36,7 +36,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
             pathname === item.href
               ? 'bg-muted hover:bg-muted'
               : 'hover:bg-transparent hover:underline',
-            'flex  items-center border text-base  uppercase text-drcuotasTertiary-text leading-tight tracking-tight  w-full h-14 text-left rounded-xl p-2 transition-colors duration-200 ease-in-out',
+            'flex  items-center border text-xs sm:text-base  uppercase text-drcuotasTertiary-text leading-tight tracking-tight  w-full h-14 text-left rounded-xl p-2 transition-colors duration-200 ease-in-out',
           )}
         >
           {t(`common:${item.title}`)}
