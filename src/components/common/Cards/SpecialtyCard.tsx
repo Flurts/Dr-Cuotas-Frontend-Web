@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
 import settings from '@/settings';
+import { useRouter } from 'next/navigation';
 
 interface HomeSpecialtieCardProps {
   id: string;
@@ -26,6 +27,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const quotes = 10;
+  const router = useRouter();
 
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
@@ -45,6 +47,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   async function subscribeSurgerie() {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
+      router.push('/login');
       console.error('No access token found');
       return;
     }
@@ -126,6 +129,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
     const token = localStorage.getItem('accessToken');
     if (!token) {
+      router.push('/login');
       alert('No se encontró el token de autenticación.');
       return;
     }
@@ -274,114 +278,102 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
               {/* Formulario de Pago */}
               <form className="w-full h-full flex flex-col justify-center gap-2">
-                {/* Número de Tarjeta */}
-                <div>
-                  <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                    Número de Tarjeta
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="**** **** **** ****"
-                      maxLength={19}
-                      className="w-full h-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm"
-                    />
-                  </div>
-                </div>
+                <div className=" h-72 w-full  mb-20">
+                  <div className="flex gap-2 mb-8">
+                    {/* Selección de plan o nombre */}
+                    <div className="w-1/2 ">
+                      <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                        Seleccionar Doctor
+                      </label>
+                      <select
+                        value={selectedPlan}
+                        onChange={(e) => {
+                          setSelectedPlan(e.target.value);
+                        }}
+                        className="w-full h-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm text-drcuotasTertiary-text"
+                      >
+                        <option value="">Elige una opción</option>
+                        {planOptions.map((plan, index) => (
+                          <option key={index} value={plan}>
+                            {plan}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                {/* Nombre del Titular */}
-                <div>
-                  <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                    Nombre del Titular
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ejemplo: Juan Pérez"
-                    className="w-full h-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm"
-                  />
-                </div>
-
-                {/* Expiración y CVV */}
-                <div className="flex gap-2">
-                  <div className="w-1/2">
-                    <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                      Expiración
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="MM/YY"
-                      maxLength={5}
-                      className="w-full h-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm"
-                    />
+                    <div className="w-1/2">
+                      <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                        Número de Cuotas
+                      </label>
+                      <select
+                        value={selectedCuotas}
+                        onChange={(e) => {
+                          setSelectedCuotas(e.target.value);
+                        }}
+                        className="w-full h-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm text-drcuotasTertiary-text"
+                      >
+                        <option value="">Elige una opción</option>
+                        {cuotasOptions.map((cuota) => (
+                          <option key={cuota} value={cuota}>
+                            {cuota} cuotas
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  <div className="w-1/2">
-                    <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                      CVV
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="***"
-                      maxLength={3}
-                      className="w-full h-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  {/* Selección de plan o nombre */}
-                  <div className="w-1/2 ">
-                    <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                      Seleccionar Doctor
-                    </label>
-                    <select
-                      value={selectedPlan}
-                      onChange={(e) => {
-                        setSelectedPlan(e.target.value);
-                      }}
-                      className="w-full h-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm text-drcuotasTertiary-text"
-                    >
-                      <option value="">Elige una opción</option>
-                      {planOptions.map((plan, index) => (
-                        <option key={index} value={plan}>
-                          {plan}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="w-1/2">
-                    <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                      Número de Cuotas
-                    </label>
-                    <select
-                      value={selectedCuotas}
-                      onChange={(e) => {
-                        setSelectedCuotas(e.target.value);
-                      }}
-                      className="w-full h-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm text-drcuotasTertiary-text"
-                    >
-                      <option value="">Elige una opción</option>
-                      {cuotasOptions.map((cuota) => (
-                        <option key={cuota} value={cuota}>
-                          {cuota} cuotas
-                        </option>
-                      ))}
-                    </select>
+                  <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight text-drcuotasPrimary-text w-full h-auto">
+                    Pago A cuenta Bancaria
+                  </h2>
+                  <h2 className="text-sm  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
+                    Pagando Via Transaccion disrecta ahorra
+                    <br /> hasta un 1% del vaLor total de tu cirugia
+                  </h2>
+                  <div className=" h-44 w-full flex mt-5">
+                    <div className=" h-52 w-full justify-center items-center flex flex-col gap-4">
+                      <Image
+                        src="/images/logo/qr.png"
+                        alt="QR"
+                        width={158}
+                        height={124}
+                      />
+                      <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
+                        QR
+                      </h2>
+                    </div>
+                    <div className=" h-52 w-full flex flex-col justify-center items-center gap-4">
+                      <Image
+                        src="/images/logo/banco.jpg"
+                        alt="QR"
+                        width={158}
+                        height={124}
+                      />
+                      <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
+                        numero: 123456789
+                      </h2>
+                    </div>
                   </div>
                 </div>
               </form>
+              <div className="w-full h-20 flex flex-col justify-center items-center gap-4 mt-10">
+                <button
+                  onClick={subscribeSurgerie}
+                  type="submit"
+                  className="w-full h-16 uppercase bg-green-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight  truncate"
+                >
+                  Pagar ahora a cuenta bancaria
+                </button>
+              </div>
 
               <div className="w-full h-full flex flex-col justify-end items-center gap-2">
-                <>
-                  <div className="w-full h-auto flex justify-center items-center">
-                    <span className="text-sm text-drcuotasTertiary-text text-center">
-                      {selectedCuotas
-                        ? `${selectedCuotas} cuotas de $${(price / Number(selectedCuotas)).toFixed(2)}`
-                        : 'Seleccione cuotas'}
-                      <br /> Para pagar el valor total de ${price}
-                    </span>
-                  </div>
-                </>
+                <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight text-drcuotasPrimary-text w-full h-auto">
+                  Pago por Pasarela
+                </h2>
+                <h2 className="text-sm  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
+                  Pagando Via pasarela tienes la facilidad de pagar por varias{' '}
+                  <br />
+                  opciones como tarjeta de credito, debito, efectivo y otros
+                </h2>
+
                 <>
                   <div className="w-full h-20 flex flex-col justify-center items-center gap-4">
                     <button
@@ -389,9 +381,19 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                       type="submit"
                       className="w-full h-16 uppercase bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight  truncate"
                     >
-                      Pagar ahora
+                      Pagar ahora pasarela de pago
                     </button>
                   </div>
+                  <>
+                    <div className="w-full h-auto flex justify-center items-center">
+                      <span className="text-sm text-drcuotasTertiary-text text-center">
+                        {selectedCuotas
+                          ? `${selectedCuotas} cuotas de $${(price / Number(selectedCuotas)).toFixed(2)}`
+                          : 'Seleccione cuotas'}
+                        <br /> Para pagar el valor total de ${price}
+                      </span>
+                    </div>
+                  </>
                 </>
               </div>
             </div>

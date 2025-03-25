@@ -46,6 +46,7 @@ import {
   useGetAdjudicatedListDoctorQuery,
   useVerifyAdjudicatedMutation,
 } from '@/types';
+
 export function AdjudicadosTable({
   // editUpdateSurgeryHandler,
   onSurgeryCreated,
