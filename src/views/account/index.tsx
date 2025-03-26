@@ -19,6 +19,7 @@ import CardCirugia from '@/components/common/Cards/CardCirugia';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
 import OurServices from '@/components/common/ViewElements/OurServices';
+import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import settings from '@/settings';
 import { getCurrentUser, updateProfileImage } from '@/store';
@@ -43,7 +44,7 @@ export default function AccountView() {
   // -----> Ajusta la obtención de datos según tu estructura de usuario/doctores
   const doctorName = user?.first_name ?? 'Desconocido';
   const specialty = user?.doctor?.specialty ?? 'Especialidad no especificada';
-
+  const router = useRouter();
   const defaultImage = '/images/elements/doctor.svg';
   const [profilePicture, setProfilePicture] = useState(
     user?.profile_image && user.profile_image !== ''
@@ -236,6 +237,8 @@ export default function AccountView() {
       return data.data.getUserData.user;
     } catch (error) {
       console.error('Error al obtener los datos del usuario:', error);
+      router.push('/login');
+
       return null;
     }
   };
