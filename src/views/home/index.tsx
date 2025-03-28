@@ -33,16 +33,15 @@ export default function HomeView() {
         <CarouselHome />
       </>
       <div
-        className="w-full h-auto bg-[#E5F9F7] bg-opacity-80 relative bg-cover bg-center "
+        className="w-full h-auto bg-drcuotasPrimary-bg bg-opacity-10 relative bg-cover bg-center "
         style={{ backgroundImage: "url('/images/fondo/DrCuotasFondo.svg')" }}
       >
-        <div className="absolute inset-0 bg-[#E5F9F7] bg-opacity-0"></div>
+        <div className="absolute inset-0 bg-drcuotasPrimary-bg bg-opacity-0"></div>
         <div className="relative">
-          <Cuotas />
-
           <OurSpecialties />
+          <Cuotas />
           <KnowOurProfessionals />
-          <div className="w-full h-full flex flex-col justify-center items-center bg-white p-20">
+          <div className="w-full h-full hidden lg:flex flex-col justify-center items-center bg-white p-20">
             <OurServices />
             <AdComponents />
           </div>

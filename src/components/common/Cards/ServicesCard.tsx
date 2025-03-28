@@ -18,14 +18,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => {
   return (
     <>
-      <button className="w-auto h-auto min-w-[200px] min-h-[150px] lg:w-[320px] lg:h-[199px] flex flex-col  hover:z-50 hover:scale-105 transition-all duration-300 rounded-3xl gap-4">
+      <button className="w-auto h-auto min-w-[200px] min-h-[150px] lg:w-[320px] lg:h-[199px] flex flex-col  hover:z-50 hover:scale-105 transition-all duration-300 rounded-xl gap-4">
         <Link href={link} className="relative w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full rounded-xl">
           <Image
             src={imageSrc}
             alt="Service Image"
             layout="fill"
             objectFit="cover"
-            className="rounded-[16px] blur-sm"
+            className="rounded-xl blur-sm"
           />
           <div className=" w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full flex flex-col justify-center items-center   rounded-xl">
             <h1 className="text-white lg:text-2xl font-bold leading-tight uppercase tracking-tight z-50">

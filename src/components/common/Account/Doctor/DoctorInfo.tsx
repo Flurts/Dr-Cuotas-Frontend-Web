@@ -146,7 +146,7 @@ export default function DoctorInfo({
             </Link>
             
             <button
-              className="w-full sm:w-32 lg:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+              className="w-full sm:w-32 lg:w-40 h-14 hidden flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={cvHandler}
             >
               <LucideFile  className="text-sm lg:text-2xl" />
@@ -157,7 +157,7 @@ export default function DoctorInfo({
             </button>
 
             <button
-              className="w-full sm:w-32 lg:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+              className="w-full sm:w-32 lg:w-40 h-14 hidden  flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={editInfoHandler}
             >
               <LucideFilePen className='text-sm lg:text-2xl' />

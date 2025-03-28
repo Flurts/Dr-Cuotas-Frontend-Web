@@ -1,7 +1,6 @@
 import { useFormik } from 'formik';
 import {
   LucideCalendar,
-  LucideDownload,
   LucideMap,
   LucideMapPinned,
   LucideMessagesSquare,
@@ -9,6 +8,7 @@ import {
   LucideShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 import { IoSettings } from 'react-icons/io5';
@@ -19,7 +19,6 @@ import CardCirugia from '@/components/common/Cards/CardCirugia';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
 import OurServices from '@/components/common/ViewElements/OurServices';
-import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import settings from '@/settings';
 import { getCurrentUser, updateProfileImage } from '@/store';

@@ -254,32 +254,12 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                 Paga a Cuotas Tu Sueño
               </h2>
 
-              {/* Logos de Tarjetas */}
-              <div className="flex justify-center gap-2 h-auto">
-                <Image
-                  src="/images/visa-3-svgrepo-com.svg"
-                  alt="Visa"
-                  width={40}
-                  height={20}
-                />
-                <Image
-                  src="/images/mastercard-svgrepo-com.svg"
-                  alt="MasterCard"
-                  width={40}
-                  height={20}
-                />
-                <Image
-                  src="/images/amex-svgrepo-com.svg"
-                  alt="Amex"
-                  width={40}
-                  height={20}
-                />
-              </div>
-
               {/* Formulario de Pago */}
-              <form className="w-full h-full flex flex-col justify-center gap-2">
-                <div className=" h-72 w-full  mb-20">
-                  <div className="flex gap-2 mb-8">
+              <form className="w-full h-full">
+                <>
+                  <div className=" h-full w-full flex flex-col gap-2  p-10">
+                    <>
+                      <div className="w-full h-20 flex gap-2">
                     {/* Selección de plan o nombre */}
                     <div className="w-1/2 ">
                       <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
@@ -320,16 +300,21 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                         ))}
                       </select>
                     </div>
-                  </div>
-                  <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight text-drcuotasPrimary-text w-full h-auto">
-                    Pago A cuenta Bancaria
-                  </h2>
-                  <h2 className="text-sm  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
-                    Pagando Via Transaccion disrecta ahorra
-                    <br /> hasta un 1% del vaLor total de tu cirugia
-                  </h2>
-                  <div className=" h-44 w-full flex mt-5">
-                    <div className=" h-52 w-full justify-center items-center flex flex-col gap-4">
+                      </div>
+                    </>
+                    <>
+                      <h2 className="text-sm  uppercase font-black leading-tight tracking-tight text-drcuotasPrimary-text w-full h-auto">
+                        Pago A cuenta Bancaria
+                      </h2>
+                    </>
+                    <>
+                      <p className="w-full text-sm  leading-tight tracking-tight  text-drcuotasTertiary-text">
+                        Pagando Via Transaccion disrecta ahorra hasta un 1% del vaLor total de tu cirugia
+                      </p>
+                    </>
+                    <>
+                      <div className=" h-full border p-10 w-full flex">
+                        <div className="justify-center items-center flex flex-col gap-2">
                       <Image
                         src="/images/logo/qr.png"
                         alt="QR"
@@ -339,8 +324,8 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                       <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
                         QR
                       </h2>
-                    </div>
-                    <div className=" h-52 w-full flex flex-col justify-center items-center gap-4">
+                        </div>
+                        <div className="flex flex-col justify-center items-center gap-2">
                       <Image
                         src="/images/logo/banco.jpg"
                         alt="QR"
@@ -350,10 +335,13 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                       <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
                         numero: 123456789
                       </h2>
-                    </div>
+                        </div>
+                      </div>
+                    </>
                   </div>
-                </div>
+                </>
               </form>
+            
               <div className="w-full h-20 flex flex-col justify-center items-center gap-4 mt-10">
                 <button
                   onClick={subscribeSurgerie}

@@ -3,6 +3,8 @@ import { FaListUl, FaThLarge } from 'react-icons/fa'; // Para el toggle de vista
 
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
+import AdComponents from '@/components/common/ViewElements/AdComponents';
+
 
 export default function StoreView() {
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
@@ -41,11 +43,12 @@ export default function StoreView() {
   });
 
   return (
-    <div className="w-full h-auto min-h-screen flex flex-col px-4 md:px-10 lg:px-20 py-6 mb-40">
-      {/* Contenedor principal: Filtros + Contenido */}
-      <div className="flex flex-col lg:flex-row gap-6">
+    <>
+      <div className="w-full h-full flex flex-col justify-between items-center p-10">
+        {/* Contenedor principal: Filtros + Contenido */}
+        <div className=" w-full h-full flex flex-col lg:flex-row gap-2">
         {/* Panel lateral de filtros */}
-        <aside className="w-full lg:w-64 h-auto border p-4 flex-shrink-0">
+        <aside className="w-full lg:w-64 h-auto border rounded-xl p-4 flex-shrink-0">
           <div className="mb-4">
             <h2 className="text-lg mb-2 text-drcuotasTertiary-text font-black uppercase leading-tight tracking-tight">
               Filtros
@@ -237,7 +240,9 @@ export default function StoreView() {
             </span>
           )}
         </div>
+        </div>
       </div>
-    </div>
+        <AdComponents />
+    </>
   );
 }

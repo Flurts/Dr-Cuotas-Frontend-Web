@@ -23,7 +23,7 @@ const AdsCarousel: React.FC = () => {
     return <p className="text-center text-gray-500">Cargando anuncios...</p>;
   if (error)
     return (
-      <p className="text-center text-red-500">Error al cargar anuncios.</p>
+      <p className="text-center text-red-500 hidden">Error al cargar anuncios.</p>
     );
 
   return (

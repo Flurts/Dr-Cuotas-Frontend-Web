@@ -35,12 +35,14 @@ const OurSpecialties = () => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center lg:p-20">
-      <TitleElements
-        primaryText="Puedes pagar en Pequeñas Cuotas"
-        secondaryText="Cirugias disponibles"
-        descriptionText="Consigue tu cirugia con nuestros planes de Financiamiento."
-      />
+    <div className="w-full h-full flex flex-col justify-center items-center lg:p-20">
+      <div className='hidden lg:block'>
+        <TitleElements
+          primaryText="Puedes pagar en Pequeñas Cuotas"
+          secondaryText="Cirugias disponibles"
+          descriptionText="Consigue tu cirugia con nuestros planes de Financiamiento."
+        />
+      </div>
 
       <div className="relative w-full  flex justify-center items-center">
         <button
