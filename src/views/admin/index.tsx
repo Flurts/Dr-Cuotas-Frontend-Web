@@ -22,6 +22,7 @@ import { DoctorByStatus } from './doctorByStatus';
 import LotteryComponent from './Lottery';
 import RevenueChart from './revenuechart';
 import { SurgeryByStatus } from './surgeryByStatus';
+import TransactionByStatus from './transactionByStatus';
 
 export default function AdminView() {
   const [selectedStatus, setSelectedStatus] = useState<Status>(Status.Active);
@@ -306,6 +307,44 @@ export default function AdminView() {
                     </AccordionContent>
                   </AccordionItem>
                 </>
+                <>
+                  <AccordionItem
+                    value="item-8"
+                    className="bg-white rounded-xl border px-4 "
+                  >
+                    <AccordionTrigger>
+                      <div className="w-full flex flex-row gap-4 items-center">
+                        <LucideFolder className="text-drcuotasPrimary" />
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                          Transacciones
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="w-full h-screen flex flex-col items-center  gap-10">
+                      <TransactionByStatus status="pending" />
+                    </AccordionContent>
+                  </AccordionItem>
+                </>
+                <></>
+                <>
+                  <AccordionItem
+                    value="item-9"
+                    className="bg-white rounded-xl border px-4 "
+                  >
+                    <AccordionTrigger>
+                      <div className="w-full flex flex-row gap-4 items-center">
+                        <LucideFolder className="text-drcuotasPrimary" />
+                        <span className="text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                          Total Transacciones
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="w-full h-screen flex flex-col items-center  gap-10">
+                      <TransactionByStatus status="success" />
+                    </AccordionContent>
+                  </AccordionItem>
+                </>
+                <></>
               </Accordion>
             </div>
           </>
