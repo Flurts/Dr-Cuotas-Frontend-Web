@@ -24,6 +24,8 @@ const OurSpecialties = () => {
     }
   }, [data, error]);
 
+  console.log('surgery', data);
+
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const scrollAmount = 320 * 4; // Tamaño de un item * cantidad visible
@@ -36,7 +38,7 @@ const OurSpecialties = () => {
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center lg:p-20">
-      <div className='hidden lg:block'>
+      <div className="hidden lg:block">
         <TitleElements
           primaryText="Puedes pagar en Pequeñas Cuotas"
           secondaryText="Cirugias disponibles"
@@ -70,6 +72,12 @@ const OurSpecialties = () => {
                     surgery.description ?? 'Descripción no disponible'
                   }
                   rating={surgery.rating}
+                  doctors={(surgery.doctors ?? []).map((d) => ({
+                    id: d.doctor?.id ?? '',
+                    provincia: d.doctor?.provincia ?? 'Sin provincia',
+                    first_name: d.doctor?.user?.first_name ?? 'Sin nombre',
+                    last_name: d.doctor?.user?.last_name ?? 'Sin apellido',
+                  }))}
                   imageUrl={
                     surgery.file_banner?.file_link ??
                     '/images/elements/specialty.svg'

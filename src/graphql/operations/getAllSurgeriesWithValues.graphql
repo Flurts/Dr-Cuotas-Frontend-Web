@@ -11,5 +11,19 @@ query GetAllSurgeriesWithValues($offset: Float, $limit: Float) {
     file_banner {
       file_link
     }
+    doctors {
+      id
+      doctors {
+        id
+        doctor {
+          provincia
+          user {
+            first_name
+            last_name
+          }
+          id
+        }
+      }
+    }
   }
 }

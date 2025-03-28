@@ -2,11 +2,11 @@ import { gql, GraphQLClient } from 'graphql-request';
 import { LucideMessagesSquare, LucideZoomIn } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
 import settings from '@/settings';
-import { useRouter } from 'next/navigation';
 
 interface HomeSpecialtieCardProps {
   id: string;
@@ -15,6 +15,12 @@ interface HomeSpecialtieCardProps {
   title: string;
   description: string;
   price: number;
+  doctors: Array<{
+    id: string;
+    provincia: string;
+    first_name: string;
+    last_name: string;
+  }>;
 }
 
 const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
@@ -24,11 +30,16 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   description,
   price,
   id,
+  doctors,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const cuotasOptions = [4, 8, 12, 16]; // Opciones de cuotas
   const quotes = 10;
   const router = useRouter();
 
+  const [selectedQuota, setSelectedQuota] = useState(cuotasOptions[0]); // Valor inicial
+  console.log('Cuotas seleccionadas:', selectedQuota); // <- Verifica que se está enviando el número de cuotas seleccionado
+  console.log('doctors', doctors);
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
     const newItem = { imageUrl, rating, title, description, price };
@@ -36,7 +47,11 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   };
 
   const [selectedCuotas, setSelectedCuotas] = useState('');
-  const [selectedPlan, setSelectedPlan] = useState('');
+  const [selectedDoctorId, setSelectedDoctorId] = useState(
+    doctors[0]?.id || '',
+  );
+  console.log('selectedDoctorId', selectedDoctorId);
+  console.log('selectedCuotas', selectedCuotas);
 
   const CREATE_PAYMENT_MUTATION = gql`
     mutation CreatePaymentRequest($data: PaymentInput!) {
@@ -53,6 +68,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
 
     console.log('ID enviado:', id); // <- Verifica que se está enviando el ID correcto
+
     console.log('Precio total:', price); // <- Verifica que se está enviando el precio correcto
     console.log('Número de cuotas:', quotes); // <- Verifica que se está enviando el número de cuotas correcto
     console.log('Precio por cuota:', price / quotes); // <- Verifica que se está calculando el precio por cuota correctamente
@@ -80,9 +96,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
             documentIdentification: 'A123456789',
             lastName: 'Doe',
             firstName: 'John',
-            quotaPrice: price / quotes,
+            quotaPrice: Math.floor(price / selectedQuota),
             totalPrice: price,
-            quotasNumber: quotes,
+            quotasNumber: selectedQuota,
+            doctorId: selectedDoctorId,
           },
         }),
       });
@@ -144,7 +161,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       data: {
         description: 'Pago de servicio',
         first_due_date: '2025-04-01',
-        first_total: price / quotes,
+        first_total: price / selectedQuota,
         second_due_date: null,
         second_total: null,
         back_url_success: 'http://localhost:3000/account',
@@ -177,8 +194,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
   };
 
-  const cuotasOptions = [4, 8, 12, 16]; // Opciones de cuotas
-  const planOptions = ['Miguel Angel', 'Brayan Suarosky', 'Johan Jimenez']; // Opciones de planes/nombres
+  const planOptions = doctors.map(
+    (doctor) => `${doctor.id} - ${doctor.provincia}`,
+  );
+  // Opciones de planes/nombres
 
   return (
     <>
@@ -260,46 +279,44 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                   <div className=" h-full w-full flex flex-col gap-2  p-10">
                     <>
                       <div className="w-full h-20 flex gap-2">
-                    {/* Selección de plan o nombre */}
-                    <div className="w-1/2 ">
-                      <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                        Seleccionar Doctor
-                      </label>
-                      <select
-                        value={selectedPlan}
-                        onChange={(e) => {
-                          setSelectedPlan(e.target.value);
-                        }}
-                        className="w-full h-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm text-drcuotasTertiary-text"
-                      >
-                        <option value="">Elige una opción</option>
-                        {planOptions.map((plan, index) => (
-                          <option key={index} value={plan}>
-                            {plan}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                        {/* Selección de plan o nombre */}
+                        <div className="w-1/2 ">
+                          <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                            Seleccionar Doctor
+                          </label>
+                          <select
+                            value={selectedDoctorId}
+                            onChange={(e) => {
+                              // Solo establece el ID del doctor seleccionado
+                              setSelectedDoctorId(e.target.value);
+                            }}
+                          >
+                            {doctors.map((doctor) => (
+                              <option key={doctor.id} value={doctor.id}>
+                                {doctor.first_name} {doctor.last_name} -{' '}
+                                {doctor.provincia}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
 
-                    <div className="w-1/2">
-                      <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
-                        Número de Cuotas
-                      </label>
-                      <select
-                        value={selectedCuotas}
-                        onChange={(e) => {
-                          setSelectedCuotas(e.target.value);
-                        }}
-                        className="w-full h-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition text-sm text-drcuotasTertiary-text"
-                      >
-                        <option value="">Elige una opción</option>
-                        {cuotasOptions.map((cuota) => (
-                          <option key={cuota} value={cuota}>
-                            {cuota} cuotas
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                        <div className="w-1/2">
+                          <label className="text-sm font-medium text-drcuotasTertiary-text text-center leading-tight tracking-tight  truncate">
+                            Número de Cuotas
+                          </label>
+                          <select
+                            value={selectedQuota}
+                            onChange={(e) =>
+                              setSelectedQuota(Number(e.target.value))
+                            }
+                          >
+                            {cuotasOptions.map((quota) => (
+                              <option key={quota} value={quota}>
+                                {quota} cuotas
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
                     </>
                     <>
@@ -309,39 +326,40 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                     </>
                     <>
                       <p className="w-full text-sm  leading-tight tracking-tight  text-drcuotasTertiary-text">
-                        Pagando Via Transaccion disrecta ahorra hasta un 1% del vaLor total de tu cirugia
+                        Pagando Via Transaccion disrecta ahorra hasta un 1% del
+                        vaLor total de tu cirugia
                       </p>
                     </>
                     <>
                       <div className=" h-full border p-10 w-full flex">
                         <div className="justify-center items-center flex flex-col gap-2">
-                      <Image
-                        src="/images/logo/qr.png"
-                        alt="QR"
-                        width={158}
-                        height={124}
-                      />
-                      <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
-                        QR
-                      </h2>
+                          <Image
+                            src="/images/logo/qr.png"
+                            alt="QR"
+                            width={158}
+                            height={124}
+                          />
+                          <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
+                            QR
+                          </h2>
                         </div>
                         <div className="flex flex-col justify-center items-center gap-2">
-                      <Image
-                        src="/images/logo/banco.jpg"
-                        alt="QR"
-                        width={158}
-                        height={124}
-                      />
-                      <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
-                        numero: 123456789
-                      </h2>
+                          <Image
+                            src="/images/logo/banco.jpg"
+                            alt="QR"
+                            width={158}
+                            height={124}
+                          />
+                          <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
+                            numero: 123456789
+                          </h2>
                         </div>
                       </div>
                     </>
                   </div>
                 </>
               </form>
-            
+
               <div className="w-full h-20 flex flex-col justify-center items-center gap-4 mt-10">
                 <button
                   onClick={subscribeSurgerie}

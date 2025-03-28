@@ -48,6 +48,7 @@ export enum Adjudicated_Status {
 }
 
 export interface Doctor {
+  doctor: any;
   __typename?: 'Doctor';
   adjudicateds: Adjudicated[];
   created_at?: Maybe<Scalars['DateTimeISO']>;
@@ -426,6 +427,16 @@ export interface Surgery {
   deleted_at?: Maybe<Scalars['DateTimeISO']>;
   description?: Maybe<Scalars['String']>;
   doctor?: Maybe<Doctor>;
+  doctors: Array<{
+    id: string;
+    doctor: {
+      provincia: string;
+      user: {
+        first_name: string;
+        last_name: string;
+      };
+    };
+  }>;
   file_banner?: Maybe<File_Db>;
   files?: Maybe<File_Db[]>;
   id: Scalars['ID'];
@@ -628,7 +639,38 @@ export type GetAllSurgeriesWithValuesQueryVariables = Exact<{
 }>;
 
 
-export interface GetAllSurgeriesWithValuesQuery { __typename?: 'Query', getAllSurgeriesWithValues: Array<{ __typename?: 'Surgery', name: string, description?: string | null, rating: number, type: SurgeryTypes, id: string, category: SurgeryCategories, amount: number, status: Status, file_banner?: { __typename?: 'File_DB', file_link?: string | null } | null }> }
+export interface GetAllSurgeriesWithValuesQuery { 
+  __typename?: 'Query', 
+  getAllSurgeriesWithValues: Array<{ 
+    __typename?: 'Surgery', 
+    name: string, 
+    description?: string | null, 
+    rating: number, 
+    type: SurgeryTypes, 
+    id: string, 
+    category: SurgeryCategories, 
+    amount: number, 
+    status: Status, 
+    file_banner?: { 
+      __typename?: 'File_DB', 
+      file_link?: string | null 
+    } | null, 
+    doctors: Array<{ 
+      __typename?: 'DoctorAssignment', 
+      id: string, 
+      doctor: { 
+        __typename?: 'Doctor', 
+        provincia: string, 
+        user: { 
+          first_name: string, 
+          last_name: string 
+        } 
+        id: string,
+      } 
+    }> 
+  }> 
+}
+
 
 export type GetCvFileMutationVariables = Exact<{
   userId: Scalars['String'];
@@ -1260,6 +1302,17 @@ export const GetAllSurgeriesWithValuesDocument = gql`
     status
     file_banner {
       file_link
+    }
+      doctors {
+      id
+      doctor {
+        provincia
+        user {
+          first_name
+          last_name
+        }
+        id
+      }
     }
   }
 }
