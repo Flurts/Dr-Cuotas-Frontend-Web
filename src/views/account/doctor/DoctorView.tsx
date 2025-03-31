@@ -1,13 +1,14 @@
 'use client';
 import { LucidePlus, LucideX } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoSettings } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
-
+import { useRouter } from 'next/navigation';
 import DrViewCard from '@/components/common/Cards/drViewCard';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
 import { useToast } from '@/components/ui/use-toast';
+import settings from '@/settings';
 import { getCurrentUser } from '@/store';
 import {
   Status,
@@ -20,7 +21,10 @@ export default function DoctorView() {
   const user = useSelector(getCurrentUser);
   const { toast } = useToast();
   const [createSurgery] = useCreateNewSurgerieMutation();
-
+  const [userData, setUserData] = useState<{
+    first_name: string;
+    last_name: string;
+  } | null>(null);
   // State for surgery creation
   const [isSurgeryModalOpen, setIsSurgeryModalOpen] = useState(false);
   const [surgeries, setSurgeries] = useState<any[]>([]);
@@ -33,6 +37,56 @@ export default function DoctorView() {
     surgeryCategory: SurgeryCategories.GeneralSurgeries,
     surgeryImage: null as File | null,
   });
+  const router = useRouter();
+  const getUserData = async () => {
+    const query = `
+      query GetUserData {
+        getUserData {
+          user {
+            first_name
+            last_name
+          }
+        }
+      }
+    `;
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+      const data = await response.json();
+      if (data.errors)
+        throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
+
+      console.log('Datos del usuario:', data.data.getUserData.user);
+      return data.data.getUserData.user;
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+      router.push('/login');
+
+      return null;
+    }
+  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await getUserData();
+      if (data) {
+        setUserData(data);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -152,10 +206,12 @@ export default function DoctorView() {
             />
           </div>
 
-          {/* Doctor Information */}
+          {/* Doctor Information  @@ */}
           <div className="w-full flex-1 text-center md:text-left">
             <h1 className="text-2xl lg:text-4xl uppercase mb-5 font-black leading-tight tracking-tight text-drcuotasPrimary-text md:text-white">
-              {user.first_name + ' ' + user.last_name}
+              {user?.first_name && user?.last_name
+                ? ` Dr ${user.first_name} ${user.last_name}`
+                : `Dr ${userData?.first_name ?? ''} ${userData?.last_name ?? ''}`}
             </h1>
             <p className="text-sm uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
               Doctor Registrado

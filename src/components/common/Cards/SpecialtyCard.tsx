@@ -30,7 +30,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   description,
   price,
   id,
-  doctors,
+  doctors = [], // Provide empty array as default value
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const cuotasOptions = [4, 8, 12, 16]; // Opciones de cuotas
@@ -38,7 +38,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   const router = useRouter();
 
   const [selectedQuota, setSelectedQuota] = useState(cuotasOptions[0]); // Valor inicial
-  console.log('Cuotas seleccionadas:', selectedQuota); // <- Verifica que se está enviando el número de cuotas seleccionado
+  console.log('Cuotas seleccionadas:', selectedQuota);
   console.log('doctors', doctors);
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
@@ -48,7 +48,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
   const [selectedCuotas, setSelectedCuotas] = useState('');
   const [selectedDoctorId, setSelectedDoctorId] = useState(
-    doctors[0]?.id || '',
+    doctors && doctors.length > 0 ? doctors[0].id : '',
   );
   console.log('selectedDoctorId', selectedDoctorId);
   console.log('selectedCuotas', selectedCuotas);
@@ -138,6 +138,141 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
   }
 
+  async function subscribeSurgerieDirect() {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      router.push('/login');
+      console.error('No access token found');
+      return;
+    }
+
+    console.log('ID enviado:', id); // <- Verifica que se está enviando el ID correcto
+
+    console.log('Precio total:', price); // <- Verifica que se está enviando el precio correcto
+    console.log('Número de cuotas:', quotes); // <- Verifica que se está enviando el número de cuotas correcto
+    console.log('Precio por cuota:', price / quotes); // <- Verifica que se está calculando el precio por cuota correctamente
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+    mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $quotaPrice: Float!, $totalPrice: Float!, $quotasNumber: Int!, $documentIdentification: String!, $lastName: String!, $firstName: String!, $doctorId: String) {
+  subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, quotaPrice: $quotaPrice, totalPrice: $totalPrice, quotasNumber: $quotasNumber, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName, doctorId: $doctorId) {
+    adjudicated_status
+    id
+  }
+}
+          `,
+          variables: {
+            surgerieId: id,
+            phone: '5551234567',
+            email: 'example@email.com',
+            documentIdentification: 'A123456789',
+            lastName: 'Doe',
+            firstName: 'John',
+            quotaPrice: Math.floor(price / selectedQuota),
+            totalPrice: price,
+            quotasNumber: selectedQuota,
+            doctorId: selectedDoctorId,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      console.log('📌 Respuesta completa de la API:', result); // <-- Log completo
+
+      if (!response.ok) {
+        console.error('GraphQL Error:', result.errors);
+        throw new Error(result.errors?.[0]?.message || 'Error en la API');
+      }
+
+      if (result.errors) {
+        console.error('❌ GraphQL Errors:', result.errors);
+        throw new Error(
+          result.errors[0]?.message || 'Error desconocido en GraphQL',
+        );
+      }
+
+      if (!result.data?.subscribeSurgerie) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de subscribeSurgerie');
+      }
+
+      const adjudicadosId = result.data.subscribeSurgerie.id;
+      console.log('✅ ID :', result.data);
+      console.log('✅ ID :', result.data.subscribeSurgerie.id);
+
+      console.log('✅ ID adjudicado:', adjudicadosId);
+      alert(
+        'El pago se ha realizado. Por favor, Espera a la confirmacion de un adminstrador para apreciar tu pago.',
+      );
+      router.push('/account');
+      void createTransaction(adjudicadosId);
+      return adjudicadosId;
+    } catch (error) {
+      console.error('🚨 Error en subscribeSurgerie:', error);
+    }
+  }
+
+  async function createTransaction(adjudicatedId: string) {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      router.push('/login');
+      console.error('No access token found');
+      return;
+    }
+
+    console.log('📌 ID adjudicado enviado:', adjudicatedId);
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation CreateTransaction($adjudicatedId: String!) {
+              createTransaction(adjudicatedId: $adjudicatedId) {
+                AdjudicadosId
+              }
+            }
+          `,
+          variables: {
+            adjudicatedId,
+          },
+        }),
+      });
+
+      const result = await response.json();
+      console.log('📌 Respuesta completa de la API:', result);
+
+      if (!response.ok || result.errors) {
+        console.error('❌ GraphQL Error:', result.errors);
+        throw new Error(result.errors?.[0]?.message || 'Error en la API');
+      }
+
+      if (!result.data?.createTransaction) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de createTransaction');
+      }
+
+      const adjudicadosId = result.data.createTransaction.AdjudicadosId;
+      console.log('✅ ID adjudicado:', adjudicadosId);
+      alert('Transacción creada exitosamente.');
+      return adjudicadosId;
+    } catch (error) {
+      console.error('🚨 Error en createTransaction:', error);
+    }
+  }
+
   const handlePayment = async (adjudicadosId: string) => {
     if (!adjudicadosId) {
       alert('El ID de adjudicación es inválido.');
@@ -194,9 +329,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
   };
 
-  const planOptions = doctors.map(
-    (doctor) => `${doctor.id} - ${doctor.provincia}`,
-  );
+  const planOptions = Array.isArray(doctors)
+    ? doctors.map((doctor) => `${doctor.id} - ${doctor.provincia}`)
+    : [];
   // Opciones de planes/nombres
 
   const images = [
@@ -211,7 +346,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   return (
     <>
       <div
-        className="flex flex-col w-60 lg:w-80 h-full rounded-xl bg-white  cursor-pointer border "
+        className="flex flex-col w-60 lg:w-80 h-full rounded-xl bg-white cursor-pointer border"
         onClick={() => {
           setIsOpen(true);
         }}
@@ -225,13 +360,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
               width={238}
               height={224}
             />
-            {/* <Image
-              src={imageUrl ?? '/images/elements/specialty.svg'}
-              alt=""
-              className="w-full h-full object-cover"
-              width={238}
-              height={224}
-            /> */}
           </div>
         </>
 
@@ -241,12 +369,12 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
               <FaStar className="text-yellow-400 text-sm" />
               <span className="text-white text-xs">{rating ?? 0}</span>
             </div>
-            <div className="flex flex-col justify-center items-center  w-full">
+            <div className="flex flex-col justify-center items-center w-full">
               <span className="uppercase leading-tight tracking-tight font-black text-xl text-drcuotasTertiary-text truncate">
                 {title}
               </span>
               <span className="text-drcuotasTertiary-text text-xs line-clamp-3 uppercase leading-tight tracking-tight">
-                {description.length > 0
+                {description?.length > 0
                   ? description
                   : 'Descripción no disponible'}
               </span>
@@ -257,7 +385,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
       {/* Modal */}
       {isOpen && (
-        <div className="fixed inset-0 w-full h-full backdrop-blur-md bg-drcuotasSecondary-bg bg-opacity-60 flex flex-col-reverse lg:flex-row justify-center items-center z-50 gap-2 p-14  lg:p-10">
+        <div className="fixed inset-0 w-full h-full backdrop-blur-md bg-drcuotasSecondary-bg bg-opacity-60 flex flex-col-reverse lg:flex-row justify-center items-center z-50 gap-2 p-14 lg:p-10">
           {/* Miniaturas */}
           <div className="w-auto h-full hidden lg:flex flex-col gap-1">
             {images.map((img, index) => (
@@ -267,7 +395,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                 alt={`Miniatura ${index}`}
                 width={100}
                 height={100}
-                className={`w-24 h-14 cursor-pointer  bg-white border-2 transition-all ${
+                className={`w-24 h-14 cursor-pointer bg-white border-2 transition-all ${
                   selectedImage === img
                     ? 'border-drcuotasPrimary-bg bg-drcuotasPrimary-bg'
                     : 'border-gray-300'
@@ -295,19 +423,21 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
           </>
           {/* Pagar  */}
           <>
-            <div className="bg-white w-full lg:w-[40vw] h-full  p-4 lg:p-10 flex flex-col shadow-xl shadow-drcuotasPrimary-bg rounded-xl">
-              <h2 className="text-md xl:text-2xl  uppercase font-black  leading-tight tracking-tight  text-drcuotasPrimary-text w-full">
+            <div className="bg-white w-full lg:w-[40vw] h-full p-4 lg:p-10 flex flex-col shadow-xl shadow-drcuotasPrimary-bg rounded-xl">
+              <h2 className="text-md xl:text-2xl uppercase font-black leading-tight tracking-tight text-drcuotasPrimary-text w-full">
                 Paga a Cuotas Tu Sueño
               </h2>
-              <span className="text-xs xl:text-sm uppercase font-bold  leading-tight tracking-tight text-drcuotasPrimary-text w-full">
+              <span className="text-xs xl:text-sm uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text w-full">
                 {title}
               </span>
 
               <>
                 <div className="w-full h-40 flex items-center">
-                  <span className="text-xs xl:text-sm text-drcuotasTertiary-text  leading-tight tracking-tight">
+                  <span className="text-xs xl:text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
                     {selectedCuotas
-                      ? `${selectedCuotas} cuotas de $${(price / Number(selectedCuotas)).toFixed(2)}`
+                      ? `${selectedCuotas} cuotas de $${(
+                          price / Number(selectedCuotas)
+                        ).toFixed(2)}`
                       : 'Seleccione cuotas'}
                     <br /> Para pagar el valor total de ${price}
                   </span>
@@ -321,21 +451,23 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                     <div className="w-full h-auto hidden lg:flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
                       {/* Selección de plan o nombre */}
                       <div className="w-1/2 flex flex-col justify-start items-start">
-                        <p className="text-xs  font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                        <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
                           Categoria
                         </p>
-                        <p className="text-xs  text-drcuotasTertiary-text text-center leading-tight tracking-tight">
+                        <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
                           Sin Categoria
                         </p>
                       </div>
 
                       <div className="w-1/3 flex flex-col justify-start items-start">
-                        <p className="text-xs  font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                        <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
                           Precio
                         </p>
-                        <p className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight">
+                        <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
                           {selectedCuotas
-                            ? `${selectedCuotas} $${(price / Number(selectedCuotas)).toFixed(2)}`
+                            ? `${selectedCuotas} $${(
+                                price / Number(selectedCuotas)
+                              ).toFixed(2)}`
                             : 'Calculando'}
                         </p>
                       </div>
@@ -343,28 +475,34 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                     <div className="w-full h-auto flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
                       {/* Selección de plan o nombre */}
                       <div className="w-1/2 flex flex-col justify-start items-start">
-                        <label className="text-xs  font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                        <label className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
                           Doctor
                         </label>
-                        <select
-                          value={selectedDoctorId}
-                          onChange={(e) => {
-                            // Solo establece el ID del doctor seleccionado
-                            setSelectedDoctorId(e.target.value);
-                          }}
-                          className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight"
-                        >
-                          {doctors.map((doctor) => (
-                            <option key={doctor.id} value={doctor.id}>
-                              {doctor.first_name} {doctor.last_name} -{' '}
-                              {doctor.provincia}
-                            </option>
-                          ))}
-                        </select>
+                        {Array.isArray(doctors) && doctors.length > 0 ? (
+                          <select
+                            value={selectedDoctorId}
+                            onChange={(e) => {
+                              // Solo establece el ID del doctor seleccionado
+                              setSelectedDoctorId(e.target.value);
+                            }}
+                            className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
+                          >
+                            {doctors.map((doctor) => (
+                              <option key={doctor.id} value={doctor.id}>
+                                {doctor.first_name} {doctor.last_name} -{' '}
+                                {doctor.provincia}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
+                            No hay doctores disponibles
+                          </p>
+                        )}
                       </div>
 
                       <div className="w-1/3 flex flex-col justify-start items-start">
-                        <label className="text-xs  font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                        <label className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
                           Cuotas
                         </label>
                         <select
@@ -372,7 +510,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                           onChange={(e) => {
                             setSelectedQuota(Number(e.target.value));
                           }}
-                          className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight"
+                          className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
                         >
                           {cuotasOptions.map((quota) => (
                             <option key={quota} value={quota}>
@@ -383,41 +521,15 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                       </div>
                     </div>
                   </>
-                  <>
-                    {/* <div className=" h-full border w-full flex justify-center items-center">
-                      <div className="justify-center items-center flex flex-col gap-2">
-                        <Image
-                          src="/images/logo/qr.png"
-                          alt="QR"
-                          width={158}
-                          height={124}
-                        />
-                        <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
-                          QR
-                        </h2>
-                      </div>
-                      <div className="flex flex-col justify-center items-center gap-2">
-                        <Image
-                          src="/images/logo/banco.jpg"
-                          alt="QR"
-                          width={158}
-                          height={124}
-                        />
-                        <h2 className="text-xl  uppercase font-black text-center leading-tight tracking-tight  text-drcuotasPrimary-text w-full h-auto">
-                          numero: 123456789
-                        </h2>
-                      </div>
-                    </div> */}
-                  </>
                 </div>
               </form>
               <>
                 <div className="w-full h-full flex flex-col justify-center items-center gap-4">
-                  <div className="w-full  flex flex-col justify-center">
+                  <div className="w-full flex flex-col justify-center">
                     <span className="text-xs font-bold text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
                       Descripcion
                     </span>
-                    <p className="text-xs text-drcuotasTertiary-text  leading-tight tracking-tight h-full">
+                    <p className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight h-full">
                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
                       Ipsam, distinctio? Ratione labore laboriosam voluptatem
                       sint consequatur totam perferendis sapiente voluptas!
@@ -428,36 +540,36 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                   <div className="w-full h-auto hidden sm:flex flex-row justify-between gap-4 lg:gap-0">
                     {/* Selección de plan o nombre */}
                     <div className="w-1/2 flex flex-col justify-start items-start">
-                      <p className="text-xs  font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
+                      <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
                         Informacion
                       </p>
                       <Link
                         href="/faq"
-                        className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight underline hidden lg:block"
+                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline hidden lg:block"
                       >
                         Ver mas
                       </Link>
                       <Link
                         href="/faq"
-                        className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight underline block lg:hidden"
+                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline block lg:hidden"
                       >
                         Terminos y Condiciones
                       </Link>
                     </div>
 
                     <div className="w-1/2 flex flex-col justify-start items-start">
-                      <p className="text-xs font-bold   text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
+                      <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
                         Soporte Tecnico
                       </p>
                       <Link
                         href="/faq"
-                        className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight underline hidden lg:block"
+                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline hidden lg:block"
                       >
                         Ver mas
                       </Link>
                       <Link
                         href="/faq"
-                        className="text-xs  text-drcuotasTertiary-text text-center  leading-tight tracking-tight underline block lg:hidden"
+                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline block lg:hidden"
                       >
                         Preguntas Frecuentes
                       </Link>
@@ -472,18 +584,18 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                     <button
                       onClick={subscribeSurgerie}
                       type="submit"
-                      className="w-full h-14 uppercase bg-drcuotasPrimary-bg text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight  truncate"
+                      className="w-full h-14 uppercase bg-drcuotasPrimary-bg text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight truncate"
                     >
-                      <p className="text-xs   text-white text-center uppercase leading-tight tracking-tight">
+                      <p className="text-xs text-white text-center uppercase leading-tight tracking-tight">
                         Pasarela de Pago
                       </p>
                     </button>
                     <button
-                      onClick={subscribeSurgerie}
+                      onClick={subscribeSurgerieDirect}
                       type="submit"
-                      className="w-full h-14 uppercase bg-green-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight  truncate"
+                      className="w-full h-14 uppercase bg-green-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight truncate"
                     >
-                      <p className="text-xs  text-white text-center uppercase leading-tight tracking-tight">
+                      <p className="text-xs text-white text-center uppercase leading-tight tracking-tight">
                         Cuenta Bancaria
                       </p>
                     </button>
@@ -496,7 +608,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
           <>
             <div className="w-full lg:w-auto h-full flex flex-row lg:flex-col gap-1">
               <button
-                className="  text-drcuotasPrimary hover:text-white bg-white hover:bg-red-500 font-black uppercase border-2 hover:border-red-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                className="text-drcuotasPrimary hover:text-white bg-white hover:bg-red-500 font-black uppercase border-2 hover:border-red-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 onClick={() => {
                   setIsOpen(false);
                 }}
@@ -509,12 +621,8 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
               <>
                 <Link
                   href="/"
-                  className="  text-drcuotasPrimary hover:text-white bg-white hover:bg-green-500 font-black uppercase border-2 hover:border-green-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  className="text-drcuotasPrimary hover:text-white bg-white hover:bg-green-500 font-black uppercase border-2 hover:border-green-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
-                  {/* <span className="uppercase leading-tight tracking-tight text-sm">
-                                  Cuenta
-                                </span> */}
-                  {/* <FiUser className="text-2xl" /> */}
                   <LucideZoomIn className="text-2xl" />
                   <span className="font-black uppercase leading-tight tracking-tight text-xs lg:text-base block lg:hidden">
                     Ver mas

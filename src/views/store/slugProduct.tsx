@@ -5,18 +5,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FiChevronLeft } from 'react-icons/fi';
 
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import settings from '@/settings';
 
 // Define TypeScript interface for adjudicated data
@@ -82,6 +70,59 @@ export default function ProductPage() {
 
     fetchAdjudicatedData();
   }, [isReady, query.adjudicatedId]);
+
+  const createTransaction = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      void router.push('/login');
+      console.error('No access token found');
+      return;
+    }
+
+    console.log('📌 ID adjudicado enviado:', query.adjudicatedId);
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation CreateTransaction($adjudicatedId: String!) {
+              createTransaction(adjudicatedId: $adjudicatedId) {
+                AdjudicadosId
+              }
+            }
+          `,
+          variables: {
+            adjudicatedId: query.adjudicatedId,
+          },
+        }),
+      });
+
+      const result = await response.json();
+      console.log('📌 Respuesta completa de la API:', result);
+
+      if (!response.ok || result.errors) {
+        console.error('❌ GraphQL Error:', result.errors);
+        throw new Error(result.errors?.[0]?.message || 'Error en la API');
+      }
+
+      if (!result.data?.createTransaction) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de createTransaction');
+      }
+
+      const adjudicadosId = result.data.createTransaction.AdjudicadosId;
+      console.log('✅ ID adjudicado:', adjudicadosId);
+      alert('Transacción creada exitosamente.');
+      return adjudicadosId;
+    } catch (error) {
+      console.error('🚨 Error en createTransaction:', error);
+    }
+  };
 
   const handlePayment = async () => {
     if (!query.adjudicatedId) {
@@ -213,14 +254,22 @@ export default function ProductPage() {
             {/* Botones para pagar */}
             <div className="w-full h-40 flex flex-row justify-center items-center gap-2">
               <button
-                className="border border-drcuotasPrimary-bg w-40 h-10"
+                className="border border-drcuotasPrimary-bg p-1"
                 onClick={handlePayment}
               >
                 <span className="text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-bold">
-                  Pagar Cuota
+                  Pagar Cuota Pasarela
                 </span>
               </button>
-              <button className="bg-drcuotasPrimary-bg w-48 h-10">
+              <button
+                className="border border-drcuotasPrimary-bg p-1"
+                onClick={createTransaction}
+              >
+                <span className="text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-bold">
+                  Pagar Cuota Transaccion
+                </span>
+              </button>
+              <button className="bg-drcuotasPrimary-bg p-1">
                 <span className="text-sm text-white uppercase leading-tight tracking-tight font-bold">
                   Completar Cuotas
                 </span>
@@ -239,7 +288,9 @@ export default function ProductPage() {
                   ? 'border-drcuotasPrimary-bg '
                   : 'border-transparent'
               }`}
-              onClick={() => setSelectedImage(img)}
+              onClick={() => {
+                setSelectedImage(img);
+              }}
             >
               <Image
                 src={img}

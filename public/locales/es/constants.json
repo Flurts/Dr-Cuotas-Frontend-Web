@@ -35,7 +35,7 @@
         "Active": "El plan está activo y puede ser utilizado.",
         "Blocked": "El plan ha sido bloqueado y no puede ser utilizado.",
         "Rejected": "El plan ha sido rechazado y no puede ser utilizado.",
-        "Validating": "El plan está siendo validado y no puede ser utilizado.",
+        "Validating": "El plan está siendo validado y no puede ser utilizado contacte con un administardor para que actualice su estado.",
         "Verified": "El plan ha sido verificado y puede ser utilizado."
     },
     "actions": "Acciones",

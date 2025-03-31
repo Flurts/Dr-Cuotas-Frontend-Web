@@ -42,6 +42,7 @@ const AdComponent = () => {
   }, []);
 
   const createAd = async () => {
+    const accessToken = localStorage.getItem('accessToken');
     if (!newImage.trim() || !newLink.trim()) {
       console.warn('⚠️ Datos incompletos.');
       return;
@@ -58,7 +59,10 @@ const AdComponent = () => {
 
       const response = await fetch(`${settings.API_URL}/graphql`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
         body: JSON.stringify(requestBody),
       });
 

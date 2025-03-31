@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { FaListUl, FaThLarge } from 'react-icons/fa'; // Para el toggle de vista
 
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
-import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 import AdComponents from '@/components/common/ViewElements/AdComponents';
+import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 export default function StoreView() {
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
@@ -221,10 +221,18 @@ export default function StoreView() {
                     {/* Card principal (imagen, título, descripción, etc.) */}
                     <SpecialtyCard
                       title={surgery.name}
+                      id={surgery.id}
+                      price={surgery.amount}
                       description={
                         surgery.description ?? 'Descripción no disponible'
                       }
                       rating={surgery.rating}
+                      doctors={(surgery.doctors ?? []).map((d) => ({
+                        id: d.doctor?.id ?? '',
+                        provincia: d.doctor?.provincia ?? 'Sin provincia',
+                        first_name: d.doctor?.user?.first_name ?? 'Sin nombre',
+                        last_name: d.doctor?.user?.last_name ?? 'Sin apellido',
+                      }))}
                       imageUrl={
                         surgery.file_banner?.file_link ??
                         '/images/elements/specialty.svg'

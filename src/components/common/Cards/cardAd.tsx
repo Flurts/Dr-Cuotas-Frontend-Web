@@ -26,6 +26,7 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
   };
 
   const updateAd = async (): Promise<void> => {
+    const accessToken = localStorage.getItem('accessToken');
     if (!selectedAd || !newImage.trim() || !newLink.trim()) {
       console.warn('⚠️ Datos incompletos');
       return;
@@ -45,7 +46,10 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
 
       const response = await fetch(`${settings.API_URL}/graphql`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
         body: JSON.stringify(requestBody),
       });
 
@@ -68,6 +72,7 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
 
   const deleteAd = async (adId: string) => {
     console.log('🔍 ID recibido para eliminar:', adId);
+    const accessToken = localStorage.getItem('accessToken');
 
     try {
       const requestBody = {
@@ -79,7 +84,10 @@ const CardAd: React.FC<CardAdProps> = ({ id, image, link }) => {
 
       const response = await fetch(`${settings.API_URL}/graphql`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
         body: JSON.stringify(requestBody),
       });
 
