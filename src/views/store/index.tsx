@@ -223,6 +223,7 @@ export default function StoreView() {
                       title={surgery.name}
                       id={surgery.id}
                       price={surgery.amount}
+                      category={surgery.category}
                       description={
                         surgery.description ?? 'Descripción no disponible'
                       }

@@ -14,6 +14,7 @@ interface HomeSpecialtieCardProps {
   rating: number;
   title: string;
   description: string;
+  category: string;
   price: number;
   doctors: Array<{
     id: string;
@@ -26,6 +27,7 @@ interface HomeSpecialtieCardProps {
 const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   imageUrl,
   rating,
+  category,
   title,
   description,
   price,
@@ -455,7 +457,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                           Categoria
                         </p>
                         <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
-                          Sin Categoria
+                          {category}
                         </p>
                       </div>
 
@@ -464,11 +466,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                           Precio
                         </p>
                         <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
-                          {selectedCuotas
-                            ? `${selectedCuotas} $${(
-                                price / Number(selectedCuotas)
-                              ).toFixed(2)}`
-                            : 'Calculando'}
+                          {price / selectedQuota
+                            ? `$${(price / selectedQuota).toFixed(2)}`
+                            : 'calculando...'}
                         </p>
                       </div>
                     </div>

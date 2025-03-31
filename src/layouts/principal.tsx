@@ -40,6 +40,20 @@ const PrincipalLayout = ({ children, className }: Props) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setRole(localStorage.getItem('role'));
+    }
+  }, []);
+
+  const getAccountUrl = () => {
+    if (role === 'Admin') return '/admin';
+    if (role === 'User') return '/account';
+    return '/account'; // Default
+  };
+
   const handleCartOpen = () => {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
@@ -164,13 +178,13 @@ const PrincipalLayout = ({ children, className }: Props) => {
             ) : (
               <>
                 <Link
-                  href="/account"
+                  href={getAccountUrl()}
                   className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
                   <FiUser className="text-2xl" />
                 </Link>
                 <Link
-                  href="/account"
+                  href={getAccountUrl()}
                   className="text-drcuotasPrimary hover:text-white hover:bg-green-500 font-black uppercase border-2 border-drcuotasPrimary hover:border-green-500 w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
                 >
                   <LucideMessagesSquare className="text-2xl" />
