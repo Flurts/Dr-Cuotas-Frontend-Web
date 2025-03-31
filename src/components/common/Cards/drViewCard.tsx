@@ -113,42 +113,46 @@ const fetchAdjudicated = async (
 };
 
 const SurgeryCard = ({ surgeries }: { surgeries: Surgery[] }) => (
-  <div className="w-full bg-white rounded-2xl shadow-lg p-6">
+  <div className="w-full h-full p-4   rounded-xl ">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer">
       {surgeries.length > 0 ? (
         surgeries.map((surgery, index) => (
           <div
             key={index}
-            className="bg-drcuotasPrimary-bg bg-opacity-10 rounded-xl p-4 border border-drcuotasPrimary-text border-opacity-20 hover:shadow-md transition-all duration-300"
+            className="bg-drcuotasPrimary-bg bg-opacity-10 rounded-xl p-4 flex flex-col gap-4"
           >
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-lg font-bold text-drcuotasPrimary-text truncate">
-                {surgery.name}
-              </h2>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  surgery.status === 'Active'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
-                }`}
-              >
-                {surgery.status}
-              </span>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">Amount:</span> $
-                {surgery.amount.toLocaleString()}
-              </p>
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">Category:</span>{' '}
-                {surgery.category}
-              </p>
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">Subcategory:</span>{' '}
-                {surgery.subcategory}
-              </p>
-            </div>
+            <>
+              <div className="w-full flex flex-row justify-between items-center">
+                <h2 className="text-sm text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
+                  {surgery.name}
+                </h2>
+                <span
+                  className={`px-2 py-2 rounded-xl text-xs  font-bold uppercase leading-tight tracking-tight ${
+                    surgery.status === 'Active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {surgery.status}
+                </span>
+              </div>
+            </>
+            <>
+              <div className="w-full flex flex-col gap-2">
+                <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
+                  <span className="font-medium">Amount:</span> $
+                  {surgery.amount.toLocaleString()}
+                </p>
+                <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
+                  <span className="font-medium">Category:</span>{' '}
+                  {surgery.category}
+                </p>
+                <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
+                  <span className="font-medium">Subcategory:</span>{' '}
+                  {surgery.subcategory}
+                </p>
+              </div>
+            </>
           </div>
         ))
       ) : (
@@ -161,20 +165,20 @@ const SurgeryCard = ({ surgeries }: { surgeries: Surgery[] }) => (
 );
 
 const AdjudicatedCard = ({ adjudicated }: { adjudicated: Adjudicated[] }) => (
-  <div className="w-full bg-white rounded-2xl shadow-lg p-6">
+  <div className="w-full h-full p-4 rounded-xl">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer">
       {adjudicated.length > 0 ? (
         adjudicated.map((adj, index) => (
           <div
             key={index}
-            className="bg-drcuotasPrimary-bg bg-opacity-10 rounded-xl p-4 border border-drcuotasPrimary-text border-opacity-20 hover:shadow-md transition-all duration-300"
+            className="bg-drcuotasPrimary-bg bg-opacity-10 rounded-xl p-4 flex flex-col gap-4"
           >
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-lg font-bold text-drcuotasPrimary-text truncate">
+            <div className="w-full flex flex-row justify-between items-center">
+              <h2 className="text-sm text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
                 {adj.user.first_name}
               </h2>
               <span
-                className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                className={`px-2 py-2 rounded-xl text-xs font-bold uppercase leading-tight tracking-tight ${
                   adj.status === 'Active'
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
@@ -183,23 +187,23 @@ const AdjudicatedCard = ({ adjudicated }: { adjudicated: Adjudicated[] }) => (
                 {adj.status}
               </span>
             </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-sm">
+            <div className="w-full flex flex-col gap-2">
+              <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
                 <span className="font-medium">Total Price:</span> $
                 {adj.total_price.toLocaleString()}
               </p>
-              <p className="text-gray-600 text-sm">
+              <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
                 <span className="font-medium">Quotas:</span> {adj.quotas_paid}/
                 {adj.quotas_number}
               </p>
-              <p className="text-gray-600 text-sm">
+              <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
                 <span className="font-medium">Surgery:</span> {adj.surgery.name}
               </p>
-              <p className="text-gray-600 text-sm">
+              <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
                 <span className="font-medium">Adjudication Status:</span>{' '}
                 {adj.adjudicated_status}
               </p>
-              <p className="text-gray-600 text-sm">
+              <p className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
                 <span className="font-medium">Last Access:</span>{' '}
                 {new Date(adj.user.last_access).toLocaleDateString()}
               </p>
@@ -215,6 +219,7 @@ const AdjudicatedCard = ({ adjudicated }: { adjudicated: Adjudicated[] }) => (
   </div>
 );
 
+
 const DrViewCard = () => {
   const [surgeries, setSurgeries] = useState<Surgery[]>([]);
   const [adjudicated, setAdjudicated] = useState<Adjudicated[]>([]);
@@ -225,26 +230,19 @@ const DrViewCard = () => {
   }, []);
 
   return (
-    <div
-      className="w-full min-h-screen bg-drcuotasPrimary-bg bg-opacity-10 p-8"
-      style={{ backgroundImage: "url('/images/fondo/DrCuotasFondo.svg')" }}
-    >
-      <div className="max-w-7xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold text-drcuotasPrimary-text mb-6">
-          Mi Panel de Cirugías
-        </h1>
-
-        <div className="bg-white rounded-3xl p-8 shadow-xl">
-          <h2 className="text-2xl font-semibold text-drcuotasPrimary-text mb-4">
+    <div className="w-full min-h-screen  lg:p-10">
+      <div className="w-full flex flex-col gap-4">
+        <div className="bg-white rounded-xl border  border-drcuotasPrimary-bg p-4">
+          <p className="text-xl text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
             Mis Cirugías
-          </h2>
+          </p>
           <SurgeryCard surgeries={surgeries} />
         </div>
 
-        <div className="bg-white rounded-3xl p-8 shadow-xl">
-          <h2 className="text-2xl font-semibold text-drcuotasPrimary-text mb-4">
+        <div className="bg-white rounded-xl border border-drcuotasPrimary-bg p-4">
+          <p className="text-xl text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
             Mis Adjudicados
-          </h2>
+          </p>
           <AdjudicatedCard adjudicated={adjudicated} />
         </div>
       </div>

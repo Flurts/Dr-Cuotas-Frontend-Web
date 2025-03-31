@@ -1,9 +1,10 @@
 'use client';
 import { LucidePlus, LucideX } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
+import { IoSettings } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
-import DoctorInfo from '@/components/common/Account/Doctor/DoctorInfo';
 import DrViewCard from '@/components/common/Cards/drViewCard';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
 import { useToast } from '@/components/ui/use-toast';
@@ -139,7 +140,7 @@ export default function DoctorView() {
       <div className="h-72 bg-gradient-to-b from-white to-drcuotasPrimary-bg" />
 
       {/* Main Container */}
-      <div className="w-full h-full flex flex-col justify-center gap-4 px-8">
+      <div className="px-6 pb-6  flex flex-col justify-center gap-4">
         {/* Profile header */}
         <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
           {/* Doctor Image */}
@@ -162,23 +163,33 @@ export default function DoctorView() {
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-2 items-center">
-            <DoctorInfo
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center justify-end">
+            {/* <DoctorInfo
               user={user}
               // Add placeholder handlers if not defined
               editInfoHandler={() => {}}
               cvHandler={() => {}}
               imagesHandler={() => {}}
-            />
+            /> */}
+
+            <Link
+              href="/account/settings"
+              className="w-full  sm:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+            >
+              <IoSettings className="text-2xl" />
+              <span className="leading-tight tracking-tight">
+                {/* {t('uploadCv')} */}
+                Perfil
+              </span>
+            </Link>
 
             {/* New Surgery Creation Button */}
             <button
               onClick={() => {
                 setIsSurgeryModalOpen(true);
               }}
-              className="flex items-center gap-2 bg-drcuotasPrimary-text text-white w-full h-14 p-4 border-2 rounded-xl transition-colors"
+              className="w-full sm:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl"
             >
-              <LucidePlus />
               <span className="w-full">Crear Cirugía</span>
             </button>
           </div>
@@ -191,129 +202,177 @@ export default function DoctorView() {
 
       {/* Surgery Creation Modal */}
       {isSurgeryModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-            {/* Close Button */}
-            <button
-              onClick={() => {
-                setIsSurgeryModalOpen(false);
-              }}
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
-            >
-              <LucideX className="w-6 h-6" />
-            </button>
-
-            <h2 className="text-2xl font-bold">Cirugía</h2>
-
-            <form onSubmit={handleCreateSurgery} className="space-y-4">
-              {/* Name Input */}
-              <div>
-                <label className="block mb-2 font-medium">
-                  Nombre de la Cirugía
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newSurgery.name}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2"
-                  placeholder="Nombre de la cirugía"
-                  required
-                />
+        <div className="fixed inset-0 w-full h-full backdrop-blur-md bg-drcuotasSecondary-bg bg-opacity-60 flex flex-col-reverse lg:flex-row justify-center items-center z-50 gap-2 p-10">
+          <>
+            <div className="w-[40vw] h-[45vw] bg-white rounded-xl hidden lg:flex flex-col p-4">
+              <h2 className="text-xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                Subir Imagenes
+              </h2>
+              <div className="w-full h-full rounded-xl flex flex-col items-center gap-2 py-4">
+                <>
+                  <button className="w-full h-40  rounded-xl border border-drcuotasPrimary-bg flex justify-center items-center">
+                    <LucidePlus className="text-2xl text-drcuotasPrimary-text" />
+                  </button>
+                </>
+                <>
+                  <button className="w-full h-40  rounded-xl border border-drcuotasPrimary-bg flex justify-center items-center">
+                    <LucidePlus className="text-2xl text-drcuotasPrimary-text" />
+                  </button>
+                </>
+                <>
+                  <button className="w-full h-40  rounded-xl border border-drcuotasPrimary-bg flex justify-center items-center">
+                    <LucidePlus className="text-2xl text-drcuotasPrimary-text" />
+                  </button>
+                </>
               </div>
-
-              {/* Description Input */}
-              <div>
-                <label className="block mb-2 font-medium">Descripción</label>
-                <input
-                  type="text"
-                  name="description"
-                  value={newSurgery.description}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2"
-                  placeholder="Descripción de la cirugía"
-                  required
-                />
-              </div>
-
-              {/* Amount Input */}
-              <div>
-                <label className="block mb-2 font-medium">Monto</label>
-                <input
-                  type="number"
-                  name="amount"
-                  value={newSurgery.amount}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2"
-                  placeholder="Monto de la cirugía"
-                  required
-                />
-              </div>
-
-              {/* Surgery Type Select */}
-              <div>
-                <label className="block mb-2 font-medium">
-                  Tipo de Cirugía
-                </label>
-                <select
-                  name="surgeryType"
-                  value={newSurgery.surgeryType}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2"
-                >
-                  {Object.values(SurgeryTypes).map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Surgery Category Select */}
-              <div>
-                <label className="block mb-2 font-medium">
-                  Categoría de Cirugía
-                </label>
-                <select
-                  name="surgeryCategory"
-                  value={newSurgery.surgeryCategory}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2"
-                >
-                  {Object.values(SurgeryCategories).map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Status Select */}
-              <div>
-                <label className="block mb-2 font-medium">Estado</label>
-                <select
-                  name="status"
-                  value={newSurgery.status}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2"
-                >
-                  {Object.values(Status).map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Submit Button */}
+            </div>
+          </>
+          <>
+            <div className="w-full h-screen lg:h-[45vw] bg-white rounded-xl  relative p-4 flex flex-col ">
+              {/* Close Button */}
               <button
-                type="submit"
-                className="w-full bg-drcuotasPrimary-text text-white py-2 rounded-md hover:bg-opacity-90 transition-colors"
+                onClick={() => {
+                  setIsSurgeryModalOpen(false);
+                }}
+                className="absolute top-4 right-4 "
               >
-                Crear Cirugía
+                <LucideX className="w-6 h-6" />
               </button>
-            </form>
-          </div>
+
+              <div className="w-full mb-2">
+                <h2 className="text-xl hidden lg:block text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                  Formulario para Crear Cirugia
+                </h2>
+                <h2 className="text-xl block lg:hidden text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+                  Crear Cirugia
+                </h2>
+              </div>
+
+              <form
+                onSubmit={handleCreateSurgery}
+                className="w-full h-full flex flex-col gap-2 lg:gap-2"
+              >
+                {/* Name Input */}
+                <div>
+                  <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                    Nombre de la Cirugía
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={newSurgery.name}
+                    onChange={handleInputChange}
+                    className="w-full border rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text border-drcuotasPrimary-bg leading-tight tracking-tight"
+                    placeholder="Nombre de la cirugía"
+                    required
+                  />
+                </div>
+
+                {/* Description Input */}
+                <div className="w-full">
+                  <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                    Descripción
+                  </label>
+                  <input
+                    type="text"
+                    name="description"
+                    value={newSurgery.description}
+                    onChange={handleInputChange}
+                    className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                    placeholder="Descripción de la cirugía"
+                    required
+                  />
+                </div>
+
+                {/* Amount Input */}
+                <div>
+                  <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                    Monto
+                  </label>
+                  <input
+                    type="number"
+                    name="amount"
+                    value={newSurgery.amount}
+                    onChange={handleInputChange}
+                    className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                    placeholder="Monto de la cirugía"
+                    required
+                  />
+                </div>
+
+                <div className="w-full flex flex-row gap-4">
+                  {/* Surgery Type Select */}
+                  <div>
+                    <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                      {' '}
+                      Tipo de Cirugía{' '}
+                    </label>
+                    <select
+                      name="surgeryType"
+                      value={newSurgery.surgeryType}
+                      onChange={handleInputChange}
+                      className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                    >
+                      {Object.values(SurgeryTypes).map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Surgery Category Select */}
+                  <div className="w-full">
+                    <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                      Categoría
+                    </label>
+                    <select
+                      name="surgeryCategory"
+                      value={newSurgery.surgeryCategory}
+                      onChange={handleInputChange}
+                      className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                    >
+                      {Object.values(SurgeryCategories).map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Status Select */}
+                <div>
+                  <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                    Estado
+                  </label>
+                  <select
+                    name="status"
+                    value={newSurgery.status}
+                    onChange={handleInputChange}
+                    className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                  >
+                    {Object.values(Status).map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="w-full flex flex-row gap-4">
+                  <>
+                    <button
+                      type="submit"
+                      className="w-full bg-drcuotasPrimary-text text-sm text-white leading-tight font-bold tracking-tight h-10 xl:h-14 rounded-xl"
+                    >
+                      Crear Cirugía
+                    </button>
+                  </>
+                </div>
+              </form>
+            </div>
+          </>
         </div>
       )}
     </div>

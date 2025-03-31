@@ -56,7 +56,6 @@ export const DoctorView = ({ doctor }) => {
         <div className="h-72  bg-gradient-to-b from-white to-drcuotasPrimary-bg" />
 
         {/* Contenedor Principal */}
-
         <div className="px-6 pb-6 flex flex-col  justify-center gap-4">
           {/* Profile header */}
           <>
@@ -253,7 +252,9 @@ export const DoctorView = ({ doctor }) => {
           </>
         </div>
       </div>
-      <OurServices />
+      <div className='w-full mb-40'>
+        <OurServices />
+      </div>
     </>
   );
 };
