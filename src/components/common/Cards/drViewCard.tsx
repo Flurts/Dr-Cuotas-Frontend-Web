@@ -230,7 +230,7 @@ const DrViewCard = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen  lg:p-10">
+    <div className="w-full   lg:p-10">
       <div className="w-full flex flex-col gap-4">
         <div className="bg-white rounded-xl border  border-drcuotasPrimary-bg p-4">
           <p className="text-xl text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">

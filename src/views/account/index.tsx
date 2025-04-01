@@ -18,6 +18,7 @@ import * as Yup from 'yup';
 import CardCirugia from '@/components/common/Cards/CardCirugia';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
+import EvidenceCard from '@/components/common/ViewElements/cardEvidence';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import { toast } from '@/components/ui/use-toast';
 import settings from '@/settings';
@@ -443,6 +444,8 @@ export default function AccountView() {
           file={file}
         />
       )}
+
+
     </>
   );
 }

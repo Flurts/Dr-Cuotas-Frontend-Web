@@ -1,12 +1,14 @@
 'use client';
 import { LucidePlus, LucideX } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { IoSettings } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
+
 import DrViewCard from '@/components/common/Cards/drViewCard';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
+import EvidenceForm from '@/components/common/ViewElements/formEvidence';
 import { useToast } from '@/components/ui/use-toast';
 import settings from '@/settings';
 import { getCurrentUser } from '@/store';
@@ -252,8 +254,8 @@ export default function DoctorView() {
         </div>
 
         {/* Surgeries List */}
-
         <DrViewCard />
+        <EvidenceForm />
       </div>
 
       {/* Surgery Creation Modal */}

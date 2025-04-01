@@ -17,6 +17,7 @@ import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 
 import AdComponents from '@/components/common/ViewElements/AdComponents';
+import EvidenceCard from '@/components/common/ViewElements/cardEvidence';
 import OurServices from '@/components/common/ViewElements/OurServices';
 
 export const DoctorView = ({ doctor }) => {
@@ -31,7 +32,8 @@ export const DoctorView = ({ doctor }) => {
       : defaultImage,
   );
 
-  const doctorName = doctor?.user?.first_name + ' ' + doctor?.user?.last_name || 'Desconocido';
+  const doctorName =
+    doctor?.user?.first_name + ' ' + doctor?.user?.last_name || 'Desconocido';
   const specialty = doctor?.specialty || 'Especialidad no especificada';
 
   // Estado para los "Me gusta"
@@ -47,7 +49,6 @@ export const DoctorView = ({ doctor }) => {
       setLiked(false);
     }
   };
-
 
   return (
     <>
@@ -76,8 +77,9 @@ export const DoctorView = ({ doctor }) => {
 
               {/* Información del Doctor */}
               <div className="w-full flex-1 text-center md:text-left">
-                <h1 className="text-2xl lg:text-4xl font-black uppercase leading-tight tracking-tight text-drcuotasPrimary-text sm:text-white lg:-mt-4  flex flex-row gap-2 items-center justify-center sm:justify-start">  
-                {doctorName} <LucideShieldCheck className='w-4 lg:w-6 h-4 lg:h-6'/>
+                <h1 className="text-2xl lg:text-4xl font-black uppercase leading-tight tracking-tight text-drcuotasPrimary-text sm:text-white lg:-mt-4  flex flex-row gap-2 items-center justify-center sm:justify-start">
+                  {doctorName}{' '}
+                  <LucideShieldCheck className="w-4 lg:w-6 h-4 lg:h-6" />
                 </h1>
                 <p className="text-base uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text">
                   {/* {specialty} */}
@@ -87,7 +89,7 @@ export const DoctorView = ({ doctor }) => {
 
               {/* Botones */}
               <div className="flex gap-2">
-              <button
+                <button
                   className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
                   onClick={() => {
                     const link = document.createElement('a');
@@ -98,14 +100,16 @@ export const DoctorView = ({ doctor }) => {
                     document.body.removeChild(link);
                   }}
                 >
-                <LucideDownload className="text-2xl" />
-                Perfil
-              </button>
+                  <LucideDownload className="text-2xl" />
+                  Perfil
+                </button>
 
                 <button
                   onClick={handleLike}
                   className={`w-40 h-14 flex flex-row justify-center items-center gap-2 rounded-xl border border-white ${
-                    liked ? 'bg-drcuotasPrimary-bg text-white' : 'bg-drcuotasSecondary-bg text-white'
+                    liked
+                      ? 'bg-drcuotasPrimary-bg text-white'
+                      : 'bg-drcuotasSecondary-bg text-white'
                   }`}
                 >
                   <LucideStar className="text-2xl" />
@@ -142,7 +146,7 @@ export const DoctorView = ({ doctor }) => {
                       </>
                       <>
                         <div>
-                          <div className='w-full flex flex-row items-center gap-8 p-4'>
+                          <div className="w-full flex flex-row items-center gap-8 p-4">
                             <>
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
                                 <LucideMap className="w-4 h-4 text-drcuotasTertiary-text" />
@@ -161,13 +165,12 @@ export const DoctorView = ({ doctor }) => {
                             </>
                             <>
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
-                                <LucideCalendar  className="w-4 h-4 text-drcuotasTertiary-text" />
+                                <LucideCalendar className="w-4 h-4 text-drcuotasTertiary-text" />
                                 <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                Se unió en Marzo 2022
+                                  Se unió en Marzo 2022
                                 </span>
                               </button>
                             </>
-              
                           </div>
 
                           {/* etiquetas de tipos de cirugias  */}
@@ -193,6 +196,10 @@ export const DoctorView = ({ doctor }) => {
                         </div>
                       </>
                     </div>
+                    <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight ">
+                      Evidencias
+                    </p>
+                    <EvidenceCard />
                   </>
                 </div>
               </>
@@ -207,10 +214,12 @@ export const DoctorView = ({ doctor }) => {
                         Conexiones
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-2 flex flex-row items-center justify-center sm:justify-start  gap-2">
-                        <LucidePartyPopper className='w-4 h-4' /> 245 Cirugias Creadas
+                        <LucidePartyPopper className="w-4 h-4" /> 245 Cirugias
+                        Creadas
                       </p>
-                      <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight flex flex-row  items-center justify-center sm:justify-start gap-2"><LucideStar className='w-4 h-4' /> {likes} Me gusta</p>
-
+                      <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight flex flex-row  items-center justify-center sm:justify-start gap-2">
+                        <LucideStar className="w-4 h-4" /> {likes} Me gusta
+                      </p>
                     </div>
                   </>
 
@@ -220,11 +229,12 @@ export const DoctorView = ({ doctor }) => {
                       <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight mb-2 flex justify-center sm:justify-start">
                         Redes Sociales
                       </p>
-                       {/* Redes sociales */}
+                      {/* Redes sociales */}
                       <div className="w-full h-full flex justify-center sm:justify-start items-center gap-4 text-drcuotasPrimary-text">
                         {doctor.user.social_media.length ? (
                           doctor.user.social_media.slice(0, 3).map((social) => {
-                            const Icon = socialMediaIcons[social.type as SocialMedia];
+                            const Icon =
+                              socialMediaIcons[social.type as SocialMedia];
                             return (
                               <a
                                 href={social.link}
@@ -243,7 +253,7 @@ export const DoctorView = ({ doctor }) => {
                             <LucideGlobe className="w-4 h-4" />
                           </span>
                         )}
-                      </div>        
+                      </div>
                     </div>
                   </>
                 </div>
@@ -252,7 +262,7 @@ export const DoctorView = ({ doctor }) => {
           </>
         </div>
       </div>
-      <div className='w-full mb-40'>
+      <div className="w-full mb-40">
         <OurServices />
       </div>
     </>
