@@ -1,24 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
-  Link,
   LucideCalendar,
   LucideDownload,
   LucideGlobe,
-  LucideInstagram,
   LucideMap,
   LucideMapPinned,
-  LucideMessagesSquare,
   LucidePartyPopper,
   LucideShieldCheck,
   LucideStar,
-  LucideTwitter,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 
-import AdComponents from '@/components/common/ViewElements/AdComponents';
+// eslint-disable-next-line import/no-named-as-default
 import EvidenceCard from '@/components/common/ViewElements/cardEvidence';
 import OurServices from '@/components/common/ViewElements/OurServices';
+import useDoctorDetails, { rateDoctor } from '@/graphql/operations/getDoctor';
 
 export const DoctorView = ({ doctor }) => {
   const { t } = useTranslation('common');
@@ -34,21 +33,21 @@ export const DoctorView = ({ doctor }) => {
 
   const doctorName =
     doctor?.user?.first_name + ' ' + doctor?.user?.last_name || 'Desconocido';
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const specialty = doctor?.specialty || 'Especialidad no especificada';
 
   // Estado para los "Me gusta"
   const [likes, setLikes] = useState(doctor?.likes || 0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [liked, setLiked] = useState(false);
 
+  const { doctorData, error, doctorId } = useDoctorDetails();
+  console.log('Doctor Data:', doctorData); // Log para depuración
+  console.log('Error:', error); // Log para depuración
   const handleLike = () => {
-    if (!liked) {
-      setLikes(likes + 1);
-      setLiked(true);
-    } else {
-      setLikes(likes - 1);
-      setLiked(false);
-    }
+    rateDoctor(doctorId!);
   };
+  const ratingValue = doctorData?.doctor?.user?.ratings?.[0]?.rating ?? 0;
 
   return (
     <>
@@ -135,11 +134,8 @@ export const DoctorView = ({ doctor }) => {
                           <>
                             <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
                               {' '}
-                              Lorem ipsum dolor sit amet consectetur,
-                              adipisicing elit. Ea architecto autem ut
-                              reiciendis aliquam rem? Accusamus voluptates
-                              similique nostrum nam sunt pariatur corrupti? Enim
-                              vitae debitis itaque alias dicta obcaecati?
+                              {doctorData?.doctor.description ??
+                                'No hay descripción disponible.'}
                             </span>
                           </>
                         </div>
@@ -151,7 +147,7 @@ export const DoctorView = ({ doctor }) => {
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
                                 <LucideMap className="w-4 h-4 text-drcuotasTertiary-text" />
                                 <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                  Argentina
+                                  {doctorData?.doctor.country ?? 'Argentina'}
                                 </span>
                               </button>
                             </>
@@ -159,7 +155,8 @@ export const DoctorView = ({ doctor }) => {
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
                                 <LucideMapPinned className="w-4 h-4 text-drcuotasTertiary-text" />
                                 <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                  Corrientes - Goya
+                                  {doctorData?.doctor.provincia ??
+                                    'Buenos Aires'}
                                 </span>
                               </button>
                             </>
@@ -214,11 +211,12 @@ export const DoctorView = ({ doctor }) => {
                         Conexiones
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-2 flex flex-row items-center justify-center sm:justify-start  gap-2">
-                        <LucidePartyPopper className="w-4 h-4" /> 245 Cirugias
-                        Creadas
+                        <LucidePartyPopper className="w-4 h-4" />{' '}
+                        {doctorData?.doctor.surgeries.length} Cirugias Creadas
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight flex flex-row  items-center justify-center sm:justify-start gap-2">
-                        <LucideStar className="w-4 h-4" /> {likes} Me gusta
+                        <LucideStar className="w-4 h-4" /> {ratingValue} Me
+                        gusta
                       </p>
                     </div>
                   </>
