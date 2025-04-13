@@ -55,6 +55,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   console.log('selectedDoctorId', selectedDoctorId);
   console.log('selectedCuotas', selectedCuotas);
 
+  // Estado para los términos y condiciones
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const CREATE_PAYMENT_MUTATION = gql`
     mutation CreatePaymentRequest($data: PaymentInput!) {
       createPaymentRequest(data: $data)
@@ -62,6 +65,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   `;
 
   async function subscribeSurgerie() {
+    if (!termsAccepted) {
+      alert('Debes aceptar los términos y condiciones para continuar.');
+      return;
+    }
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
       router.push('/login');
@@ -69,11 +76,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       return;
     }
 
-    console.log('ID enviado:', id); // <- Verifica que se está enviando el ID correcto
-
-    console.log('Precio total:', price); // <- Verifica que se está enviando el precio correcto
-    console.log('Número de cuotas:', quotes); // <- Verifica que se está enviando el número de cuotas correcto
-    console.log('Precio por cuota:', price / quotes); // <- Verifica que se está calculando el precio por cuota correctamente
+    console.log('ID enviado:', id);
+    console.log('Precio total:', price);
+    console.log('Número de cuotas:', quotes);
+    console.log('Precio por cuota:', price / quotes);
 
     try {
       const response = await fetch(`${settings.API_URL}/graphql`, {
@@ -108,7 +114,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
       const result = await response.json();
 
-      console.log('📌 Respuesta completa de la API:', result); // <-- Log completo
+      console.log('📌 Respuesta completa de la API:', result);
 
       if (!response.ok) {
         console.error('GraphQL Error:', result.errors);
@@ -128,9 +134,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       }
 
       const adjudicadosId = result.data.subscribeSurgerie.id;
-      console.log('✅ ID :', result.data);
-      console.log('✅ ID :', result.data.subscribeSurgerie.id);
-
       console.log('✅ ID adjudicado:', adjudicadosId);
 
       void handlePayment(adjudicadosId);
@@ -141,6 +144,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   }
 
   async function subscribeSurgerieDirect() {
+    if (!termsAccepted) {
+      alert('Debes aceptar los términos y condiciones para continuar.');
+      return;
+    }
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
       router.push('/login');
@@ -148,11 +155,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       return;
     }
 
-    console.log('ID enviado:', id); // <- Verifica que se está enviando el ID correcto
-
-    console.log('Precio total:', price); // <- Verifica que se está enviando el precio correcto
-    console.log('Número de cuotas:', quotes); // <- Verifica que se está enviando el número de cuotas correcto
-    console.log('Precio por cuota:', price / quotes); // <- Verifica que se está calculando el precio por cuota correctamente
+    console.log('ID enviado:', id);
+    console.log('Precio total:', price);
+    console.log('Número de cuotas:', quotes);
+    console.log('Precio por cuota:', price / quotes);
 
     try {
       const response = await fetch(`${settings.API_URL}/graphql`, {
@@ -187,7 +193,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 
       const result = await response.json();
 
-      console.log('📌 Respuesta completa de la API:', result); // <-- Log completo
+      console.log('📌 Respuesta completa de la API:', result);
 
       if (!response.ok) {
         console.error('GraphQL Error:', result.errors);
@@ -207,9 +213,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       }
 
       const adjudicadosId = result.data.subscribeSurgerie.id;
-      console.log('✅ ID :', result.data);
-      console.log('✅ ID :', result.data.subscribeSurgerie.id);
-
       console.log('✅ ID adjudicado:', adjudicadosId);
       alert(
         'El pago se ha realizado. Por favor, Espera a la confirmacion de un adminstrador para apreciar tu pago.',
@@ -304,7 +307,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
         back_url_success: 'http://localhost:3000/account',
         back_url_pending: 'http://localhost:3000/',
         back_url_rejected: 'http://localhost:3000/',
-        adjudicadosId: String(adjudicadosId), // Convertir a string
+        adjudicadosId: String(adjudicadosId),
       },
     };
 
@@ -353,36 +356,31 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
           setIsOpen(true);
         }}
       >
-        <>
-          <div className="flex justify-center items-center">
-            <Image
-              src="/images/elements/girl_footer.svg"
-              alt=""
-              className="w-full h-full object-cover rounded-xl p-4"
-              width={238}
-              height={224}
-            />
+        <div className="flex justify-center items-center">
+          <Image
+            src="/images/elements/girl_footer.svg"
+            alt=""
+            className="w-full h-full object-cover rounded-xl p-4"
+            width={238}
+            height={224}
+          />
+        </div>
+        <div className="flex flex-col gap-4 items-center justify-center p-8 flex-grow">
+          <div className="hidden flex-row w-[60px] items-center justify-center bg-[#26335D] gap-2 rounded-3xl p-1">
+            <FaStar className="text-yellow-400 text-sm" />
+            <span className="text-white text-xs">{rating ?? 0}</span>
           </div>
-        </>
-
-        <>
-          <div className="flex flex-col gap-4 items-center justify-center p-8 flex-grow">
-            <div className="hidden flex-row w-[60px] items-center justify-center bg-[#26335D] gap-2 rounded-3xl p-1">
-              <FaStar className="text-yellow-400 text-sm" />
-              <span className="text-white text-xs">{rating ?? 0}</span>
-            </div>
-            <div className="flex flex-col justify-center items-center w-full">
-              <span className="uppercase leading-tight tracking-tight font-black text-xl text-drcuotasTertiary-text truncate">
-                {title}
-              </span>
-              <span className="text-drcuotasTertiary-text text-xs line-clamp-3 uppercase leading-tight tracking-tight">
-                {description?.length > 0
-                  ? description
-                  : 'Descripción no disponible'}
-              </span>
-            </div>
+          <div className="flex flex-col justify-center items-center w-full">
+            <span className="uppercase leading-tight tracking-tight font-black text-xl text-drcuotasTertiary-text truncate">
+              {title}
+            </span>
+            <span className="text-drcuotasTertiary-text text-xs line-clamp-3 uppercase leading-tight tracking-tight">
+              {description?.length > 0
+                ? description
+                : 'Descripción no disponible'}
+            </span>
           </div>
-        </>
+        </div>
       </div>
 
       {/* Modal */}
@@ -408,229 +406,225 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
               />
             ))}
           </div>
-          {/* Informacion de Cirugia  */}
-          <>
-            <div className="bg-white w-[80vw] lg:w-full h-full p-6 shadow-xl rounded-xl hidden lg:flex flex-col items-center gap-4">
-              {/* Imagen Principal */}
-              <div className="w-full h-full flex justify-center">
-                <Image
-                  src={selectedImage}
-                  alt="Imagen Principal"
-                  className="rounded-xl border w-screen object-cover"
-                  width={300}
-                  height={300}
-                />
-              </div>
+          {/* Información de Cirugía */}
+          <div className="bg-white w-[80vw] lg:w-full h-full p-6 shadow-xl rounded-xl hidden lg:flex flex-col items-center gap-4">
+            {/* Imagen Principal */}
+            <div className="w-full h-full flex justify-center">
+              <Image
+                src={selectedImage}
+                alt="Imagen Principal"
+                className="rounded-xl border w-screen object-cover"
+                width={300}
+                height={300}
+              />
             </div>
-          </>
-          {/* Pagar  */}
-          <>
-            <div className="bg-white w-full lg:w-[40vw] h-full p-4 lg:p-10 flex flex-col shadow-xl shadow-drcuotasPrimary-bg rounded-xl">
-              <h2 className="text-md xl:text-2xl uppercase font-black leading-tight tracking-tight text-drcuotasPrimary-text w-full">
-                Paga a Cuotas Tu Sueño
-              </h2>
-              <span className="text-xs xl:text-sm uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text w-full">
-                {title}
+          </div>
+          {/* Pagar */}
+          <div className="bg-white w-full lg:w-[40vw] h-full p-4 lg:p-10 flex flex-col shadow-xl shadow-drcuotasPrimary-bg rounded-xl">
+            <h2 className="text-md xl:text-2xl uppercase font-black leading-tight tracking-tight text-drcuotasPrimary-text w-full">
+              Paga a Cuotas Tu Sueño
+            </h2>
+            <span className="text-xs xl:text-sm uppercase font-bold leading-tight tracking-tight text-drcuotasPrimary-text w-full">
+              {title}
+            </span>
+            <div className="w-full h-40 flex items-center">
+              <span className="text-xs xl:text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
+                {selectedCuotas
+                  ? `${selectedCuotas} cuotas de $${(
+                      price / Number(selectedCuotas)
+                    ).toFixed(2)}`
+                  : 'Seleccione cuotas'}
+                <br /> Para pagar el valor total de ${price}
               </span>
+            </div>
 
-              <>
-                <div className="w-full h-40 flex items-center">
-                  <span className="text-xs xl:text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
-                    {selectedCuotas
-                      ? `${selectedCuotas} cuotas de $${(
-                          price / Number(selectedCuotas)
-                        ).toFixed(2)}`
-                      : 'Seleccione cuotas'}
-                    <br /> Para pagar el valor total de ${price}
-                  </span>
-                </div>
-              </>
-
-              {/* Formulario de Pago */}
-              <form>
-                <div className="w-full h-40 flex flex-col justify-center items-center gap-2">
-                  <>
-                    <div className="w-full h-auto hidden lg:flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
-                      {/* Selección de plan o nombre */}
-                      <div className="w-1/2 flex flex-col justify-start items-start">
-                        <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
-                          Categoria
-                        </p>
-                        <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
-                          {category}
-                        </p>
-                      </div>
-
-                      <div className="w-1/3 flex flex-col justify-start items-start">
-                        <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
-                          Precio
-                        </p>
-                        <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
-                          {price / selectedQuota
-                            ? `$${(price / selectedQuota).toFixed(2)}`
-                            : 'calculando...'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="w-full h-auto flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
-                      {/* Selección de plan o nombre */}
-                      <div className="w-1/2 flex flex-col justify-start items-start">
-                        <label className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
-                          Doctor
-                        </label>
-                        {Array.isArray(doctors) && doctors.length > 0 ? (
-                          <select
-                            value={selectedDoctorId}
-                            onChange={(e) => {
-                              // Solo establece el ID del doctor seleccionado
-                              setSelectedDoctorId(e.target.value);
-                            }}
-                            className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
-                          >
-                            {doctors.map((doctor) => (
-                              <option key={doctor.id} value={doctor.id}>
-                                {doctor.first_name} {doctor.last_name} -{' '}
-                                {doctor.provincia}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
-                            No hay doctores disponibles
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="w-1/3 flex flex-col justify-start items-start">
-                        <label className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
-                          Cuotas
-                        </label>
-                        <select
-                          value={selectedQuota}
-                          onChange={(e) => {
-                            setSelectedQuota(Number(e.target.value));
-                          }}
-                          className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
-                        >
-                          {cuotasOptions.map((quota) => (
-                            <option key={quota} value={quota}>
-                              {quota} cuotas
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </>
-                </div>
-              </form>
-              <>
-                <div className="w-full h-full flex flex-col justify-center items-center gap-4">
-                  <div className="w-full flex flex-col justify-center">
-                    <span className="text-xs font-bold text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
-                      Descripcion
-                    </span>
-                    <p className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight h-full">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Ipsam, distinctio? Ratione labore laboriosam voluptatem
-                      sint consequatur totam perferendis sapiente voluptas!
-                      Corrupti ratione nemo quo cupiditate ipsum quidem
-                      dignissimos, praesentium libero.
+            {/* Formulario de Pago */}
+            <form>
+              <div className="w-full h-40 flex flex-col justify-center items-center gap-2">
+                <div className="w-full h-auto hidden lg:flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
+                  {/* Selección de Categoria */}
+                  <div className="w-1/2 flex flex-col justify-start items-start">
+                    <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                      Categoria
+                    </p>
+                    <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
+                      {category}
                     </p>
                   </div>
-                  <div className="w-full h-auto hidden sm:flex flex-row justify-between gap-4 lg:gap-0">
-                    {/* Selección de plan o nombre */}
-                    <div className="w-1/2 flex flex-col justify-start items-start">
-                      <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
-                        Informacion
-                      </p>
-                      <Link
-                        href="/faq"
-                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline hidden lg:block"
-                      >
-                        Ver mas
-                      </Link>
-                      <Link
-                        href="/faq"
-                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline block lg:hidden"
-                      >
-                        Terminos y Condiciones
-                      </Link>
-                    </div>
-
-                    <div className="w-1/2 flex flex-col justify-start items-start">
-                      <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
-                        Soporte Tecnico
-                      </p>
-                      <Link
-                        href="/faq"
-                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline hidden lg:block"
-                      >
-                        Ver mas
-                      </Link>
-                      <Link
-                        href="/faq"
-                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline block lg:hidden"
-                      >
-                        Preguntas Frecuentes
-                      </Link>
-                    </div>
+                  <div className="w-1/3 flex flex-col justify-start items-start">
+                    <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                      Precio
+                    </p>
+                    <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
+                      {price / selectedQuota
+                        ? `$${(price / selectedQuota).toFixed(2)}`
+                        : 'calculando...'}
+                    </p>
                   </div>
                 </div>
-              </>
-
-              <>
-                <div className="w-full h-full flex flex-col lg:flex-row justify-end items-end gap-1">
-                  <>
-                    <button
-                      onClick={subscribeSurgerie}
-                      type="submit"
-                      className="w-full h-14 uppercase bg-drcuotasPrimary-bg text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight truncate"
-                    >
-                      <p className="text-xs text-white text-center uppercase leading-tight tracking-tight">
-                        Pasarela de Pago
+                <div className="w-full h-auto flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
+                  {/* Selección de doctor */}
+                  <div className="w-1/2 flex flex-col justify-start items-start">
+                    <label className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                      Doctor
+                    </label>
+                    {Array.isArray(doctors) && doctors.length > 0 ? (
+                      <select
+                        value={selectedDoctorId}
+                        onChange={(e) => setSelectedDoctorId(e.target.value)}
+                        className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
+                      >
+                        {doctors.map((doctor) => (
+                          <option key={doctor.id} value={doctor.id}>
+                            {doctor.first_name} {doctor.last_name} - {doctor.provincia}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <p className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight">
+                        No hay doctores disponibles
                       </p>
-                    </button>
-                    <button
-                      onClick={subscribeSurgerieDirect}
-                      type="submit"
-                      className="w-full h-14 uppercase bg-green-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition text-center leading-tight tracking-tight truncate"
+                    )}
+                  </div>
+                  {/* Selección de cuotas */}
+                  <div className="w-1/3 flex flex-col justify-start items-start">
+                    <label className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight truncate">
+                      Cuotas
+                    </label>
+                    <select
+                      value={selectedQuota}
+                      onChange={(e) => setSelectedQuota(Number(e.target.value))}
+                      className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
                     >
-                      <p className="text-xs text-white text-center uppercase leading-tight tracking-tight">
-                        Cuenta Bancaria
-                      </p>
-                    </button>
-                  </>
+                      {cuotasOptions.map((quota) => (
+                        <option key={quota} value={quota}>
+                          {quota} cuotas
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </>
+              </div>
+            </form>
+
+            {/* Checkbox de Términos y Condiciones */}
+            <div className="w-full flex items-center gap-2 mb-4">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                id="terms"
+              />
+              <label htmlFor="terms" className="text-xs text-drcuotasTertiary-text underline cursor-pointer">
+                <a href='/faq' className='leading-tight tracking-tight uppercase'>
+                Acepto Términos y Condiciones
+                </a>
+              </label>
             </div>
-          </>
-          {/* Cerrar Modal  */}
-          <>
-            <div className="w-full lg:w-auto h-full flex flex-row lg:flex-col gap-1">
-              <button
-                className="text-drcuotasPrimary hover:text-white bg-white hover:bg-red-500 font-black uppercase border-2 hover:border-red-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <LucideX className="text-2xl" />
-                <span className="font-black uppercase leading-tight tracking-tight text-xs lg:text-base block lg:hidden">
-                  Cerrar
+
+            <div className="w-full h-full flex flex-col justify-center items-center gap-4">
+              <div className="w-full flex flex-col justify-center">
+                <span className="text-xs font-bold text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
+                  Descripcion
                 </span>
-              </button>
-              <>
-                <Link
-                  href="/"
-                  className="text-drcuotasPrimary hover:text-white bg-white hover:bg-green-500 font-black uppercase border-2 hover:border-green-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
-                >
-                  <LucideZoomIn className="text-2xl" />
-                  <span className="font-black uppercase leading-tight tracking-tight text-xs lg:text-base block lg:hidden">
+                <p className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight h-full">
+             {description}
+                </p>
+              </div>
+              <div className="w-full h-auto hidden sm:flex flex-col justify-between gap-4 ">
+                <div className="w-1/2 flex flex-col justify-start items-start">
+                  <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
+                    Informacion
+                  </p>
+                  <Link
+                    href="/faq"
+                    className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline hidden lg:block"
+                  >
                     Ver mas
-                  </span>
-                </Link>
-              </>
+                  </Link>
+                  <Link
+                    href="/faq"
+                    className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline block lg:hidden"
+                  >
+                    Términos y Condiciones
+                  </Link>
+                </div>
+                <div className="w-1/2 flex flex-col justify-start items-start">
+                  <p className="text-xs font-bold text-drcuotasTertiary-text text-center uppercase leading-tight tracking-tight">
+                    Soporte Tecnico
+                  </p>
+                  <Link
+                    href="/faq"
+                    className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline hidden lg:block"
+                  >
+                    Ver mas
+                  </Link>
+                  <Link
+                    href="/faq"
+                    className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight underline block lg:hidden"
+                  >
+                    Preguntas Frecuentes
+                  </Link>
+                </div>
+              </div>
             </div>
-          </>
+
+            {/* Botones de Pago */}
+            <span className="w-full h-full flex items-end justify-start text-xs text-drcuotasTertiary-text leading-tight tracking-tight mb-4 font-bold uppercase">
+              Comprar por:
+            </span>
+            <div className="w-full h-auto flex flex-col lg:flex-row justify-end items-end gap-1">
+              <button
+                onClick={subscribeSurgerie}
+                type="submit"
+                disabled={!termsAccepted}
+                className={`w-full h-14 uppercase rounded-xl font-bold text-lg transition text-center leading-tight tracking-tight truncate ${
+                  termsAccepted
+                    ? 'bg-drcuotasPrimary-bg text-white hover:bg-blue-700'
+                    : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                }`}
+              >
+                <p className="text-xs text-white text-center uppercase leading-tight tracking-tight">
+                  Pasarela de Pago
+                </p>
+              </button>
+              <button
+                onClick={subscribeSurgerieDirect}
+                type="submit"
+                disabled={!termsAccepted}
+                className={`w-full h-14 uppercase rounded-xl font-bold text-lg transition text-center leading-tight tracking-tight truncate ${
+                  termsAccepted
+                    ? 'bg-green-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                }`}
+              >
+                <p className="text-xs text-white text-center uppercase leading-tight tracking-tight">
+                  Cuenta Bancaria
+                </p>
+              </button>
+            </div>
+          </div>
+          {/* Cerrar Modal */}
+          <div className="w-full lg:w-auto h-full flex flex-row lg:flex-col gap-1">
+            <button
+              className="text-drcuotasPrimary hover:text-white bg-white hover:bg-red-500 font-black uppercase border-2 hover:border-red-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+              onClick={() => setIsOpen(false)}
+            >
+              <LucideX className="text-2xl" />
+              <span className="font-black uppercase leading-tight tracking-tight text-xs lg:text-base block lg:hidden">
+                Cerrar
+              </span>
+            </button>
+            <Link
+              href="/"
+              className="text-drcuotasPrimary hover:text-white bg-white hover:bg-green-500 font-black uppercase border-2 hover:border-green-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+            >
+              <LucideZoomIn className="text-2xl" />
+              <span className="font-black uppercase leading-tight tracking-tight text-xs lg:text-base block lg:hidden">
+                Ver mas
+              </span>
+            </Link>
+          </div>
         </div>
       )}
     </>
