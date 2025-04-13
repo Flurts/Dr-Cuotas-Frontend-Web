@@ -7,6 +7,7 @@ import settings from '@/settings';
 interface Doctor {
   id: string;
   status: string;
+  description: string;
   user: {
     first_name: string;
     last_name: string;
@@ -27,6 +28,7 @@ export function DoctorByStatus({ status }: DoctorByStatusProps) {
   query GetDoctorByStatus($status: String!) {
   getDoctorByStatus(status: $status) {
     description
+    status
     user {
       first_name
       last_name
@@ -111,7 +113,9 @@ export function DoctorByStatus({ status }: DoctorByStatusProps) {
               id={doctor.id}
               firstName={doctor.user.first_name}
               lastName={doctor.user.last_name}
+              descripción={doctor.description}
               status={doctor.status} // <-- Verifica que doctor.status existe
+              type="doctor"
               onUpdateStatus={updateDoctorStatus}
             />
           ) : null;

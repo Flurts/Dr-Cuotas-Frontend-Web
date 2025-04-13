@@ -11,8 +11,14 @@ interface Surgery {
   description: string;
   amount: number;
   status: string;
+  doctors: Array<{
+    doctor: {
+      user: {
+        first_name: string;
+      };
+    };
+  }>; // <- esto es lo que cambia
 }
-
 // Definir las props que acepta el componente
 interface SurgeryByStatusProps {
   status: string;
@@ -31,6 +37,13 @@ export function SurgeryByStatus({ status }: SurgeryByStatusProps) {
             description
             amount
             status
+            doctors {
+      doctor {
+        user {
+          first_name
+        }
+      }
+    }
           }
         }
       `;
@@ -100,9 +113,11 @@ export function SurgeryByStatus({ status }: SurgeryByStatusProps) {
             key={surg.id}
             id={surg.id}
             firstName={surg.name}
-            lastName={surg.description}
+            lastName={surg.doctors[0]?.doctor.user.first_name ?? 'Sin doctor'}
+            descripción={surg.description}
             status={surg.status}
             onUpdateStatus={updateSurgeryStatus}
+            type="surgery"
           />
         ))
       ) : (
