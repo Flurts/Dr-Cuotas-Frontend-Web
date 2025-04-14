@@ -11,6 +11,10 @@ import settings from '@/settings';
 interface AdjudicatedData {
   quota_price: number;
   quotas_number: number;
+  surgery: {
+    name: string;
+    description: string;
+  };
 }
 
 const GET_ADJUDICATED_BY_ID = gql`
@@ -18,6 +22,10 @@ const GET_ADJUDICATED_BY_ID = gql`
     getAdjudicatedById(adjudicatedId: $adjudicatedId) {
       quota_price
       quotas_number
+      surgery {
+        name
+        description
+      }
     }
   }
 `;
@@ -44,6 +52,13 @@ export default function ProductPage() {
   const [adjudicatedData, setAdjudicatedData] =
     useState<AdjudicatedData | null>(null);
 
+  console.log('adjudicatedData', adjudicatedData);
+
+  const getDatePlusDays = (days: number): string => {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return date.toISOString().split('T')[0]; // devuelve 'yyyy-mm-dd'
+  };
   useEffect(() => {
     if (!isReady || !query.adjudicatedId) return;
 
@@ -150,7 +165,7 @@ export default function ProductPage() {
     const variables = {
       data: {
         description: 'Pago de servicio',
-        first_due_date: '2025-04-01',
+        first_due_date: getDatePlusDays(2),
         first_total: adjudicatedData.quota_price,
         second_due_date: null,
         second_total: null,
@@ -218,10 +233,11 @@ export default function ProductPage() {
             {/* Título del Producto */}
             <div className="w-full h-auto flex flex-col">
               <span className="text-2xl text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-black">
-                Otoplastia
+                {adjudicatedData?.surgery.name ?? 'Nombre del Producto'}
               </span>
               <span className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
-                Cirugía General
+                {adjudicatedData?.surgery.description ??
+                  'Descripción del Producto'}
               </span>
             </div>
             {/* Precio del Producto */}
@@ -245,11 +261,21 @@ export default function ProductPage() {
                 Términos y Condiciones
               </span>
               <span className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe
-                facere eos inventore quasi tenetur obcaecati sed libero esse
-                quam soluta similique debitis perferendis tempore praesentium,
-                facilis minus incidunt ab error.
+                A continuación se describen los Términos y Condiciones Generales
+                (en adelante las "Condiciones Generales") aplicables a la
+                utilización de los servicios y contenidos suministrados por el
+                Sitio de Internet www.drcuotas.com (en adelante, la "LA
+                APLICACIÓN Y/O SITIO WEB") que Dr. Cuotas S.A. (en adelante "DR.
+                CUOTAS") pone a disposición de los Usuarios en general. Los
+                presentes Términos y Condiciones Generales abarcan a las
+                “CONDICIONES DE UTILIZACIÓN DE LA APLICACIÓN Y/O SITIO WEB” y a
+                la “POLÍTICA DE PRIVACIDAD
               </span>
+              <Link href="/faq">
+                <button className="text-xs text-drcuotasPrimary-bg uppercase leading-tight tracking-tight">
+                  Ver más
+                </button>
+              </Link>
             </div>
             {/* Botones para pagar */}
             <div className="w-full h-40 flex flex-row justify-center items-center gap-2">

@@ -48,6 +48,12 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     localStorage.setItem('cart', JSON.stringify([...cart, newItem]));
   };
 
+  const getDatePlusDays = (days: number): string => {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return date.toISOString().split('T')[0]; // devuelve 'yyyy-mm-dd'
+  };
+
   const [selectedCuotas, setSelectedCuotas] = useState('');
   const [selectedDoctorId, setSelectedDoctorId] = useState(
     doctors && doctors.length > 0 ? doctors[0].id : '',
@@ -300,8 +306,8 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     const variables = {
       data: {
         description: 'Pago de servicio',
-        first_due_date: '2025-04-01',
-        first_total: price / selectedQuota,
+        first_due_date: getDatePlusDays(2),
+        first_total: Math.round(price / selectedQuota),
         second_due_date: null,
         second_total: null,
         back_url_success: 'http://localhost:3000/account',
@@ -476,7 +482,8 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                       >
                         {doctors.map((doctor) => (
                           <option key={doctor.id} value={doctor.id}>
-                            {doctor.first_name} {doctor.last_name} - {doctor.provincia}
+                            {doctor.first_name} {doctor.last_name} -{' '}
+                            {doctor.provincia}
                           </option>
                         ))}
                       </select>
@@ -515,9 +522,15 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                 onChange={(e) => setTermsAccepted(e.target.checked)}
                 id="terms"
               />
-              <label htmlFor="terms" className="text-xs text-drcuotasTertiary-text underline cursor-pointer">
-                <a href='/faq' className='leading-tight tracking-tight uppercase'>
-                Acepto Términos y Condiciones
+              <label
+                htmlFor="terms"
+                className="text-xs text-drcuotasTertiary-text underline cursor-pointer"
+              >
+                <a
+                  href="/faq"
+                  className="leading-tight tracking-tight uppercase"
+                >
+                  Acepto Términos y Condiciones
                 </a>
               </label>
             </div>
@@ -528,7 +541,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                   Descripcion
                 </span>
                 <p className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight h-full">
-             {description}
+                  {description}
                 </p>
               </div>
               <div className="w-full h-auto hidden sm:flex flex-col justify-between gap-4 ">
