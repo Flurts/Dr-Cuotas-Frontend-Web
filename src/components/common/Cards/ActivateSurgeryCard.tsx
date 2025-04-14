@@ -74,7 +74,7 @@ export default function ActivateSurgeryCard({
 
   useEffect(() => {
     if (type === 'surgery') {
-      fetchDoctors();
+      void fetchDoctors();
     }
   }, [type]);
 
@@ -163,7 +163,7 @@ export default function ActivateSurgeryCard({
     if (type === 'doctor') {
       window.location.href = `/view-account/doctor/${id}`;
     } else if (type === 'surgery') {
-      window.location.href = `/store/${id}`;
+      window.location.href = `/store/${id}?${id}`;
     }
   };
 

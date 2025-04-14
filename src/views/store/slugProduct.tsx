@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { gql, GraphQLClient } from 'graphql-request';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -36,6 +37,13 @@ const CREATE_PAYMENT_MUTATION = gql`
   }
 `;
 
+// Define TypeScript interface for surgerie data
+interface SurgerieData {
+  description: string;
+  name: string;
+  amount: number;
+}
+
 export default function ProductPage() {
   // Array de imágenes de ejemplo; reemplázalas por tus URLs reales
   const images = [
@@ -51,8 +59,7 @@ export default function ProductPage() {
   const { isReady, query } = router;
   const [adjudicatedData, setAdjudicatedData] =
     useState<AdjudicatedData | null>(null);
-
-  console.log('adjudicatedData', adjudicatedData);
+  const [surgerieData, setSurgerieData] = useState<SurgerieData | null>(null);
 
   const getDatePlusDays = (days: number): string => {
     const date = new Date();
@@ -60,31 +67,72 @@ export default function ProductPage() {
     return date.toISOString().split('T')[0]; // devuelve 'yyyy-mm-dd'
   };
   useEffect(() => {
-    if (!isReady || !query.adjudicatedId) return;
+    if (!isReady) return; // Solo verificamos isReady
 
-    const fetchAdjudicatedData = async () => {
+    const fetchData = async () => {
       try {
+        // 1° Intento: Fetch AdjudicatedData (si existe adjudicatedId)
+        if (query.adjudicatedId) {
+          console.log('Intentando fetchAdjudicatedData...');
+          const token = localStorage.getItem('accessToken');
+          const client = new GraphQLClient(`${settings.API_URL}/graphql`, {
+            headers: { Authorization: `${token}` },
+          });
+
+          const response = await client.request(GET_ADJUDICATED_BY_ID, {
+            adjudicatedId: query.adjudicatedId,
+          });
+
+          const data = response as { getAdjudicatedById: AdjudicatedData };
+          setAdjudicatedData(data.getAdjudicatedById);
+          return; // Si tiene éxito, terminamos aquí
+        }
+      } catch (error) {
+        console.error('Error en fetchAdjudicatedData:', error);
+        // Si falla, continuamos con fetchSurgerieData
+      }
+
+      // 2° Intento: Fetch SurgerieData (si no hay adjudicatedId o si falló el primero)
+      try {
+        console.log('Intentando fetchSurgerieData...');
+        const surgerieId = query.adjudicatedId ?? extraerIdDeURL(); // Fallback a URL
+        if (!surgerieId) throw new Error('No hay ID disponible');
+
         const token = localStorage.getItem('accessToken');
         const client = new GraphQLClient(`${settings.API_URL}/graphql`, {
-          headers: {
-            Authorization: `${token}`, // Added 'Bearer' prefix
-          },
+          headers: { Authorization: `${token}` },
         });
 
-        const response = await client.request(GET_ADJUDICATED_BY_ID, {
-          adjudicatedId: query.adjudicatedId,
-        });
+        const response = await client.request(
+          gql`
+            query GetSurgerieById($id: String!) {
+              getSurgerieById(id: $id) {
+                description
+                name
+                amount
+              }
+            }
+          `,
+          { id: surgerieId },
+        );
 
-        // Type assertion for the response data
-        const data = response as { getAdjudicatedById: AdjudicatedData };
-        setAdjudicatedData(data.getAdjudicatedById);
+        const data = response as { getSurgerieById: SurgerieData };
+        setSurgerieData(data.getSurgerieById);
+        console.log('Datos de cirugía recibidos:', data);
       } catch (error) {
-        console.error('Error fetching adjudicated data:', error);
+        console.error('Error en fetchSurgerieData:', error);
+        // Aquí puedes manejar el error final (ej: mostrar un toast)
       }
     };
 
-    fetchAdjudicatedData();
-  }, [isReady, query.adjudicatedId]);
+    void fetchData();
+  }, [isReady, query.adjudicatedId]); // query.adjudicatedId sigue en dependencias
+
+  // Función auxiliar para extraer ID de la URL si no viene en query
+  const extraerIdDeURL = () => {
+    const path = window.location.pathname.split('/');
+    return path[path.length - 1]; // Último segmento de la URL
+  };
 
   const createTransaction = async () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -233,23 +281,26 @@ export default function ProductPage() {
             {/* Título del Producto */}
             <div className="w-full h-auto flex flex-col">
               <span className="text-2xl text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-black">
-                {adjudicatedData?.surgery.name ?? 'Nombre del Producto'}
+                {adjudicatedData?.surgery.name ??
+                  surgerieData?.name ??
+                  'Nombre del Producto'}
               </span>
               <span className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
                 {adjudicatedData?.surgery.description ??
+                  surgerieData?.description ??
                   'Descripción del Producto'}
               </span>
             </div>
             {/* Precio del Producto */}
             <div className="w-full h-auto flex flex-row justify-start items-center gap-4">
               <span className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">
-                Cuotas de ${adjudicatedData?.quota_price ?? 200}
+                Cuotas ${adjudicatedData?.quota_price ?? 'comodas'}
               </span>
               <span className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight">
                 ( Valor Total $
                 {adjudicatedData
                   ? adjudicatedData.quota_price * adjudicatedData.quotas_number
-                  : 4000}{' '}
+                  : surgerieData?.amount}{' '}
                 )
               </span>
             </div>
