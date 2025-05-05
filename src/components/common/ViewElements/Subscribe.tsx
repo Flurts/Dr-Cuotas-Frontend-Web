@@ -22,7 +22,10 @@ function SubscribeComponent() {
             type="email"
             placeholder="Correo electronico"
           />
-          <Button type="submit" className="bg-[#8576FF] h-16 w-48 leading-tight tracking-wide rounded-xl shadow-md">
+          <Button
+            type="submit"
+            className="bg-[#8576FF] h-16 w-48 leading-tight tracking-wide rounded-xl shadow-md"
+          >
             Subscribe
           </Button>
         </div>

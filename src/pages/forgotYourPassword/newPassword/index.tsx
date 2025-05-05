@@ -10,7 +10,6 @@ import * as Yup from 'yup';
 
 import { Head } from '@/components/constants';
 import { toast } from '@/components/ui/use-toast';
-import RegisterModal from '@/layouts/components/SignUp';
 import { chargeUser } from '@/store';
 import { useLoginMutation } from '@/types';
 
@@ -166,9 +165,6 @@ const NewPasswordView = () => {
               className="text-2xl text-gray-500 absolute top-4 right-4 cursor-pointer"
               onClick={modalHandler}
             />
-            <div className="z-50">
-              <RegisterModal modalHandler={modalHandler} />
-            </div>
           </div>
         </div>
       )}

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
@@ -21,6 +22,7 @@ import React, { useState } from 'react';
 import EvidenceCard from '@/components/common/ViewElements/cardEvidence';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import useDoctorDetails, { rateDoctor } from '@/graphql/operations/getDoctor';
+import { Doctor } from '@/types';
 
 // Definiciones de tipos
 type SocialMedia =
@@ -41,16 +43,6 @@ interface User {
   profile_picture?: string;
   social_media: SocialMediaLink[];
   ratings?: Array<{ rating: number }>;
-}
-
-interface Doctor {
-  user?: User;
-  specialty?: string;
-  likes?: number;
-  description?: string;
-  country?: string;
-  provincia?: string;
-  surgeries: any[];
 }
 
 interface DoctorViewProps {
@@ -81,10 +73,10 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
   const doctorName = doctor?.user
     ? `${doctor.user.first_name} ${doctor.user.last_name}`
     : 'Desconocido';
-  const specialty = doctor?.specialty ?? 'Especialidad no especificada';
+  const specialty = doctor?.profession ?? 'Especialidad no especificada';
 
   // Estado para los "Me gusta"
-  const [likes, setLikes] = useState<number>(doctor?.likes ?? 0);
+  const [likes, setLikes] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [liked, setLiked] = useState<boolean>(false);
 
@@ -288,7 +280,7 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
                           doctor.user.social_media.slice(0, 3).map((social) => {
                             // Usamos la función getSafeIcon para evitar componentes undefined
                             const Icon = getSafeIcon(
-                              social.type as SocialMedia,
+                              social.type as unknown as SocialMedia,
                             );
                             return (
                               <a

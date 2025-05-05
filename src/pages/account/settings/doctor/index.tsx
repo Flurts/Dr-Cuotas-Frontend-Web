@@ -8,7 +8,7 @@ import DoctorSettingView from '@/views/account/settings/DoctorSettingView';
 
 export default function SettingsAccount() {
   const { t } = useTranslation('constants');
-  
+
   return (
     <>
       <Head title={t('constants:settings')} />

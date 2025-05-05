@@ -1,7 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 
-import { AdjudicatedList } from '@/views/awarded';
+// views/awarded.ts
+export interface AdjudicatedList {
+  quotas_number: string;
+  surgery: { name: string };
+  user: { first_name: string; last_name: string };
+  locality: { name: string };
+  date_payment: string;
+}
 
 interface WinningBiddersProps {
   adjudicatedData: AdjudicatedList[] | null;

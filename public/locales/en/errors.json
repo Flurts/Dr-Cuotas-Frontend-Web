@@ -1,13 +1,13 @@
 {
-    "firstNameIsRequired": "First name is required",
-    "lastNameIsRequired": "Last name is required",
-    "emailOrPhoneIsRequired": "Email or phone is required",
-    "passwordIsRequired": "Password is required",
-    "passwordMustBeAtLeast8Characters": "Password must be at least 8 characters",
-    "dateOfBirthIsRequired": "Date of birth is required",
-    "dayOfBirthIsRequired": "Day of birth is required",
-    "monthOfBirthIsRequired": "Month of birth is required",
-    "yearOfBirthIsRequired": "Year of birth is required",
-    "genderIsRequired": "Gender is required",
-    "mustBe18OrOlder": "You must be 18 or older"
+  "firstNameIsRequired": "First name is required",
+  "lastNameIsRequired": "Last name is required",
+  "emailOrPhoneIsRequired": "Email or phone is required",
+  "passwordIsRequired": "Password is required",
+  "passwordMustBeAtLeast8Characters": "Password must be at least 8 characters",
+  "dateOfBirthIsRequired": "Date of birth is required",
+  "dayOfBirthIsRequired": "Day of birth is required",
+  "monthOfBirthIsRequired": "Month of birth is required",
+  "yearOfBirthIsRequired": "Year of birth is required",
+  "genderIsRequired": "Gender is required",
+  "mustBe18OrOlder": "You must be 18 or older"
 }

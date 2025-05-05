@@ -13,8 +13,6 @@ import { Toaster } from '@/components/ui/toaster';
 import FooterWrapper from '@/footers';
 import LayoutWrapper from '@/layouts';
 import { wrapper } from '@/store/wrapper';
-import Link from 'next/link';
-import { FiShoppingCart } from 'react-icons/fi';
 
 const poppins = Poppins({
   subsets: ['latin'],

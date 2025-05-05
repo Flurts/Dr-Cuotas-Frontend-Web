@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 'use client';
-import { log } from 'console';
 import Link from 'next/link';
 import { useRouter } from 'next/router'; // Añadido useRouter
 import React, { useEffect, useState } from 'react';
@@ -7,7 +7,6 @@ import {
   FiCalendar,
   FiInstagram,
   FiLogOut,
-  FiServer,
   FiSettings,
   FiShoppingCart,
   FiTwitter,

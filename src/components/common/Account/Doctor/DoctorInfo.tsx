@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { LucideFile, LucideFilePen } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { BsUpload } from 'react-icons/bs';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoSettings } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
@@ -14,11 +17,6 @@ import {
 } from '@/types';
 import { createS3Url, refFileImage } from '@/utils/refFileImage';
 
-import CustomImageUploader from '../../Editable/UserImage';
-import { IoSettings } from 'react-icons/io5';
-import Link from 'next/link';
-import { LucideFile, LucideFilePen, LucideFilePlus2 } from 'lucide-react';
-
 export default function DoctorInfo({
   user,
   editInfoHandler,
@@ -30,18 +28,13 @@ export default function DoctorInfo({
   cvHandler: () => void;
   imagesHandler: () => void;
 }) {
-  const [file, setFile] = useState<File | null>(null);
+  const [file] = useState<File | null>(null);
   const [toggleModal, setToggleModal] = useState(false);
   const dispatch = useDispatch();
   const [generatePresignedUrlUserImage] =
     useGeneratePresignedUrlUserImageMutation();
 
   const [saveImageUserS3] = useSaveImageUserS3Mutation();
-
-  const handleChange = (FileUpload: File) => {
-    modalHandler();
-    setFile(FileUpload);
-  };
 
   const modalHandler = () => {
     setToggleModal(!toggleModal);
@@ -144,12 +137,12 @@ export default function DoctorInfo({
                 Perfil
               </span>
             </Link>
-            
+
             <button
               className="w-full sm:w-32 lg:w-40 h-14 hidden flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={cvHandler}
             >
-              <LucideFile  className="text-sm lg:text-2xl" />
+              <LucideFile className="text-sm lg:text-2xl" />
               <span className="leading-tight tracking-tight">
                 {/* {t('uploadCv')} */}
                 Doctor
@@ -160,7 +153,7 @@ export default function DoctorInfo({
               className="w-full sm:w-32 lg:w-40 h-14 hidden  flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
               onClick={editInfoHandler}
             >
-              <LucideFilePen className='text-sm lg:text-2xl' />
+              <LucideFilePen className="text-sm lg:text-2xl" />
               <span className="leading-tight tracking-tight">
                 {/* {t('editInfo')} */}
                 Doctor

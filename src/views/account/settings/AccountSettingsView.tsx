@@ -217,7 +217,6 @@ export default function AccountSettingsView() {
                             />
                           </div>
                         </>
-                
                       </div>
                     </>
                   </div>

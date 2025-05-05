@@ -1,61 +1,61 @@
 {
-    "discountCodeTitle": "Discount Code",
-    "discountCodeRequired": "Discount code required",
-    "discountTitle": "Discounts",
-    "discountCodeTitleInvalid": "Invalid discount code title",
-    "discountCodeDescriptionInvalid": "The entered discount code is not valid. Please try again.",
-    "userThanksMessage": "{{firstName}} {{lastName}}, thank you for choosing Dr. Cuotas!",
-    "billingCycleConfirm": "Confirm your billing cycle",
-    "surgeryNameTitle": "Surgery Name",
-    "surgeryNameValue": "{{surgeryName}} Surgery",
-    "surgeryDataTitle": "Surgery Data",
-    "descriptionTitle": "Description",
-    "noDescriptionMessage": "No description provided",
-    "surgeryTypeTitle": "Surgery Type",
-    "userCommentsTitle": "User Comments",
-    "noCommentsMessage": "No comments provided",
-    "billingCycleDatesTitle": "Billing Cycle Dates",
-    "billingCycleDatesValue": "From {{startDate}} to {{endDate}} each month",
-    "billingCycleTitle": "Billing Cycle",
-    "billingCycleValue": "Monthly",
-    "billingQuotesNumber": "Quotes Quantity",
-    "TotalTitle": "Total",
-    "discountCodeButton": "Apply discount code",
-    "paymentResumeTitle": "Purchase Summary",
-    "subtotalTitle": "Subtotal",
-    "totalPaymentTitle": "Total Purchase",
-    "startDatePlan": {
-        "descriptionOne": "Your plan starts today and will automatically renew",
-        "inputValue": "from {{startDate}} to {{endDate}} each month ",
-        "descriptionTwo": "until it is canceled."
-    },
-    "paymentCharge": {
-        "descriptionOne": "We will charge you the amount of",
-        "inputValue": " {{totalPayment}} ARS (taxes not included) ",
-        "descriptionTwo": "per month."
-    },
-    "termsAndConditions": {
-        "descriptionOne": "By clicking the button below, you agree to our",
-        "terms": "terms of service.",
-        "descriptionTwo": "To ensure service continuity, we will store and update your payment method. Learn more about",
-        "howToCancel": "how to cancel your subscription",
-        "descriptionThree": "and about our",
-        "privacyPolicy": "refund policy."
-    },
-    "confirmPaymentButton": "Confirm payment",
-    "frecuentQuestions": {
-        "title": "Frequently Asked Questions",
-        "questions": {
-            "questionOne": "What if I'm not satisfied with the service?",
-            "answerOne": "If you're not satisfied with the service, you can cancel your subscription at any time. There are no cancellation fees.",
-            "questionTwo": "Can I cancel my subscription at any time?",
-            "answerTwo": "Yes, you can cancel your subscription at any time. There are no cancellation fees.",
-            "questionThree": "How can I cancel my subscription?",
-            "answerThree": "You can cancel your subscription at any time. To do so, go to your account settings and click the cancel subscription button.",
-            "questionFour": "What if I can't pay for my subscription?",
-            "answerFour": "If you can't pay for your subscription, contact our support team for assistance. We will be happy to help you find a solution.",
-            "questionFive": "What if I have problems with my account?",
-            "answerFive": "If you have problems with your account, contact our support team for assistance. We will be happy to help you resolve any issues you may have."
-        }
+  "discountCodeTitle": "Discount Code",
+  "discountCodeRequired": "Discount code required",
+  "discountTitle": "Discounts",
+  "discountCodeTitleInvalid": "Invalid discount code title",
+  "discountCodeDescriptionInvalid": "The entered discount code is not valid. Please try again.",
+  "userThanksMessage": "{{firstName}} {{lastName}}, thank you for choosing Dr. Cuotas!",
+  "billingCycleConfirm": "Confirm your billing cycle",
+  "surgeryNameTitle": "Surgery Name",
+  "surgeryNameValue": "{{surgeryName}} Surgery",
+  "surgeryDataTitle": "Surgery Data",
+  "descriptionTitle": "Description",
+  "noDescriptionMessage": "No description provided",
+  "surgeryTypeTitle": "Surgery Type",
+  "userCommentsTitle": "User Comments",
+  "noCommentsMessage": "No comments provided",
+  "billingCycleDatesTitle": "Billing Cycle Dates",
+  "billingCycleDatesValue": "From {{startDate}} to {{endDate}} each month",
+  "billingCycleTitle": "Billing Cycle",
+  "billingCycleValue": "Monthly",
+  "billingQuotesNumber": "Quotes Quantity",
+  "TotalTitle": "Total",
+  "discountCodeButton": "Apply discount code",
+  "paymentResumeTitle": "Purchase Summary",
+  "subtotalTitle": "Subtotal",
+  "totalPaymentTitle": "Total Purchase",
+  "startDatePlan": {
+    "descriptionOne": "Your plan starts today and will automatically renew",
+    "inputValue": "from {{startDate}} to {{endDate}} each month ",
+    "descriptionTwo": "until it is canceled."
+  },
+  "paymentCharge": {
+    "descriptionOne": "We will charge you the amount of",
+    "inputValue": " {{totalPayment}} ARS (taxes not included) ",
+    "descriptionTwo": "per month."
+  },
+  "termsAndConditions": {
+    "descriptionOne": "By clicking the button below, you agree to our",
+    "terms": "terms of service.",
+    "descriptionTwo": "To ensure service continuity, we will store and update your payment method. Learn more about",
+    "howToCancel": "how to cancel your subscription",
+    "descriptionThree": "and about our",
+    "privacyPolicy": "refund policy."
+  },
+  "confirmPaymentButton": "Confirm payment",
+  "frecuentQuestions": {
+    "title": "Frequently Asked Questions",
+    "questions": {
+      "questionOne": "What if I'm not satisfied with the service?",
+      "answerOne": "If you're not satisfied with the service, you can cancel your subscription at any time. There are no cancellation fees.",
+      "questionTwo": "Can I cancel my subscription at any time?",
+      "answerTwo": "Yes, you can cancel your subscription at any time. There are no cancellation fees.",
+      "questionThree": "How can I cancel my subscription?",
+      "answerThree": "You can cancel your subscription at any time. To do so, go to your account settings and click the cancel subscription button.",
+      "questionFour": "What if I can't pay for my subscription?",
+      "answerFour": "If you can't pay for your subscription, contact our support team for assistance. We will be happy to help you find a solution.",
+      "questionFive": "What if I have problems with my account?",
+      "answerFive": "If you have problems with your account, contact our support team for assistance. We will be happy to help you resolve any issues you may have."
     }
+  }
 }

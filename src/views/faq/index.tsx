@@ -794,7 +794,6 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
   return (
     <>
       <div className="w-full h-80 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 ">
-
         <div className="w-full h-full flex flex-col justify-start">
           <Accordion
             type="single"
@@ -871,8 +870,6 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
             </p>
           </a>
         </div>
-
-
       </div>
     </>
   );

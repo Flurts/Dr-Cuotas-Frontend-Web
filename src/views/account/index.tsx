@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useFormik } from 'formik';
 import {
   LucideCalendar,
@@ -18,7 +19,6 @@ import * as Yup from 'yup';
 import CardCirugia from '@/components/common/Cards/CardCirugia';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
 import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
-import EvidenceCard from '@/components/common/ViewElements/cardEvidence';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import { toast } from '@/components/ui/use-toast';
 import settings from '@/settings';
@@ -43,14 +43,9 @@ export default function AccountView() {
 
   // -----> Ajusta la obtención de datos según tu estructura de usuario/doctores
   const doctorName = user?.first_name ?? 'Desconocido';
-  const specialty = user?.doctor?.specialty ?? 'Especialidad no especificada';
+  const specialty = user?.doctor?.profession ?? 'Especialidad no especificada';
   const router = useRouter();
   const defaultImage = '/images/elements/doctor.svg';
-  const [profilePicture, setProfilePicture] = useState(
-    user?.profile_image && user.profile_image !== ''
-      ? user.profile_image
-      : defaultImage,
-  );
 
   const [generatePresignedUrlUserImage] =
     useGeneratePresignedUrlUserImageMutation();
@@ -250,7 +245,7 @@ export default function AccountView() {
       }
     };
 
-    fetchUserData();
+    void fetchUserData();
   }, []);
 
   return (
@@ -421,11 +416,11 @@ export default function AccountView() {
       <div className="flex-col w-full h-full items-center p-10 ">
         {adjudicatedLoading ? (
           <div>Loading...</div>
-        ) : adjudicatedData?.getMyAdjudicated?.length > 0 ? (
-          adjudicatedData.getMyAdjudicated.map((adjudicated, index) => (
+        ) : adjudicatedData!.getMyAdjudicated?.length > 0 ? (
+          adjudicatedData!.getMyAdjudicated.map((adjudicated, index) => (
             <React.Fragment key={index}>
               {/* Ajusta el tipo si tu componente CardCirugia lo requiere */}
-              <CardCirugia adjudicated={adjudicated} />
+              <CardCirugia adjudicated={adjudicated as any} />
             </React.Fragment>
           ))
         ) : (
@@ -444,8 +439,9 @@ export default function AccountView() {
           file={file}
         />
       )}
-
-
     </>
   );
+}
+function setProfilePicture(arg0: string) {
+  throw new Error('Function not implemented.');
 }

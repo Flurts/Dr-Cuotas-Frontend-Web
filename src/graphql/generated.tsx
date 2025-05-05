@@ -60,7 +60,7 @@ export interface Doctor {
   status: Status;
   surgeries?: Maybe<Surgery[]>;
   updated_at?: Maybe<Scalars['DateTimeISO']>;
-  user?: Maybe<User>;
+  user?: Maybe<User>
 }
 
 export interface DoctorBasicData {
@@ -418,6 +418,8 @@ export enum Status {
 }
 
 export interface Surgery {
+  cost: number;
+
   __typename?: 'Surgery';
   adjudicateds?: Maybe<Adjudicated[]>;
   amount: Scalars['Float'];
@@ -430,6 +432,7 @@ export interface Surgery {
   doctors: Array<{
     id: string;
     doctor: {
+      id: string;
       provincia: string;
       user: {
         first_name: string;
