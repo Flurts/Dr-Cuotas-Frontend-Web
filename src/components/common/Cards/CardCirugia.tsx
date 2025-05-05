@@ -66,9 +66,9 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
 
   // Verificar si hay información adicional para expandir
   const hasDetails =
-    adjudicated.surgery ||
-    adjudicated.doctor ||
-    adjudicated.adjudicated_status ||
+    adjudicated.surgery ??
+    adjudicated.doctor ??
+    adjudicated.adjudicated_status ??
     adjudicated.date_surgery;
 
   const toggleAccordion = () => {
@@ -77,6 +77,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const cuotas: Array<{
     number: number;
     id: number;

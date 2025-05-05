@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,6 +17,7 @@ interface FormData {
 
 export default function DoctorSettingView() {
   const { t } = useTranslation(['common', 'form']);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const user = useSelector(getCurrentUser);
 
   const [formData, setFormData] = useState<FormData>({

@@ -57,16 +57,25 @@ export default function Cuotas({ className }: { className?: string }) {
             className={`w-80 h-96 p-4 rounded-xl border flex flex-col gap-4 
               ${plan.highlight ? 'bg-drcuotasPrimary-bg bg-opacity-20 text-white' : 'bg-white'}`}
           >
-            <h3 className="text-2xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">{plan.title}</h3>
-            <p className="text-md text-drcuotasTertiary-text leading-tight tracking-tight">{plan.subtitle}</p>
+            <h3 className="text-2xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+              {plan.title}
+            </h3>
+            <p className="text-md text-drcuotasTertiary-text leading-tight tracking-tight">
+              {plan.subtitle}
+            </p>
             <p className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">
               {plan.percentage}
-              <span className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">/cuota</span>
+              <span className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">
+                /cuota
+              </span>
             </p>
 
             <ul className="space-y-2">
               {plan.details.map((detail, i) => (
-                <li key={i} className="flex items-center text-xs text-drcuotasTertiary-text leading-tight tracking-tight">
+                <li
+                  key={i}
+                  className="flex items-center text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                >
                   ✅ {detail}
                 </li>
               ))}
@@ -74,7 +83,6 @@ export default function Cuotas({ className }: { className?: string }) {
           </div>
         ))}
       </div>
-
     </div>
   );
 }

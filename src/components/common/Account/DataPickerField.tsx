@@ -24,7 +24,10 @@ export const DatePickerField = ({ field, form }: any) => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <label htmlFor="dob" className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight">
+      <label
+        htmlFor="dob"
+        className="text-base font-semibold text-drcuotasTertiary-text leading-tight tracking-tight"
+      >
         {t('form:dateOfBirth')}
       </label>
       <span className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-4">

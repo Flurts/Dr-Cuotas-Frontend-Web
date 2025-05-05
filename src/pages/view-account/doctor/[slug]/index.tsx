@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Head } from '@/components/constants';
 import getServerSideSharedProps from '@/lib/next';
 import { getJwt } from '@/store';
-import { Doctor, File_Db, useGetDoctorLazyQuery } from '@/types';
+import { Doctor, useGetDoctorLazyQuery } from '@/types';
 import { DoctorView } from '@/views/doctor-view';
 
 export default function OurProfessionals() {
@@ -47,10 +47,7 @@ export default function OurProfessionals() {
   return (
     <>
       <Head title={`Dr.${responseData.doctor?.user?.first_name}`} />
-      <DoctorView
-        doctor={responseData.doctor as Doctor}
-        curriculum={responseData.curriculum as File_Db}
-      />
+      <DoctorView doctor={responseData.doctor as Doctor} />
     </>
   );
 }

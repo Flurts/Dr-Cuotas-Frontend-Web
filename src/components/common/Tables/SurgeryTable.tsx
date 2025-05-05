@@ -233,7 +233,10 @@ export function SurgeryTable({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-24 w-14 rounded-xl border text-drcuotasTertiary-text">
+              <Button
+                variant="ghost"
+                className="h-24 w-14 rounded-xl border text-drcuotasTertiary-text"
+              >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4 " />
               </Button>
@@ -332,7 +335,10 @@ export function SurgeryTable({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto tracking-tight leading-tight text-drcuotasTertiary-text">
+            <Button
+              variant="outline"
+              className="ml-auto tracking-tight leading-tight text-drcuotasTertiary-text"
+            >
               {t('constants:columns')} <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

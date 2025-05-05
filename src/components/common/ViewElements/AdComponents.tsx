@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { gql, useQuery } from '@apollo/client';
 import Link from 'next/link';
 import React from 'react';
@@ -23,7 +24,9 @@ const AdsCarousel: React.FC = () => {
     return <p className="text-center text-gray-500">Cargando anuncios...</p>;
   if (error)
     return (
-      <p className="text-center text-red-500 hidden">Error al cargar anuncios.</p>
+      <p className="text-center text-red-500 hidden">
+        Error al cargar anuncios.
+      </p>
     );
 
   return (
@@ -39,10 +42,7 @@ const AdsCarousel: React.FC = () => {
                 >
                   <Link href={ad.link}>
                     <div className="relative h-full overflow-hidden  transition-transform duration-300 p-20 flex justify-center items-center">
-                      <img
-                        src={ad.image}
-                        alt="Anuncio"
-                      />
+                      <img src={ad.image} alt="Anuncio" />
                     </div>
                   </Link>
                 </div>

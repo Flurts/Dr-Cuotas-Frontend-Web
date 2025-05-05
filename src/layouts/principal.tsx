@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { Box, Modal, Typography } from '@mui/material';
 import { LucideMessagesSquare } from 'lucide-react';
@@ -8,7 +9,7 @@ import { FiLogIn, FiMenu, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
-import { getCurrentUser, isLoggedIn } from '@/store';
+import { isLoggedIn } from '@/store';
 
 interface Props {
   children: JSX.Element;
@@ -26,7 +27,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasToken, setHasToken] = useState(false);
   const isLogged = useSelector(isLoggedIn);
-  const user = useSelector(getCurrentUser);
+
   const [sticky, setSticky] = useState(true);
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -52,14 +53,6 @@ const PrincipalLayout = ({ children, className }: Props) => {
     if (role === 'Admin') return '/admin';
     if (role === 'User') return '/account';
     return '/account'; // Default
-  };
-
-  const handleCartOpen = () => {
-    const storedCart = localStorage.getItem('cart');
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-    setCartOpen(true);
   };
 
   const handleCartClose = () => {
@@ -287,19 +280,13 @@ const PrincipalLayout = ({ children, className }: Props) => {
                 key={item.id}
                 className="flex items-center gap-4 mb-4 border-b pb-2"
               >
-                <span>{item.title}</span>
+                <span>{item.name}</span>
                 <div>
                   <Typography variant="body1">{item.name}</Typography>
                   <Typography variant="body2" className="text-gray-600">
                     ${item.price}
                   </Typography>
                 </div>
-                <button
-                  onClick={() => handleRemoveItem(item.id)}
-                  className="ml-auto text-red-500"
-                >
-                  <IoClose size={20} />
-                </button>
               </div>
             ))
           ) : (

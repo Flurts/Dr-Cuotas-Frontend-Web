@@ -69,7 +69,7 @@ export const EvidenceCard = () => {
       }
     };
 
-    fetchEvidences();
+    void fetchEvidences();
   }, [doctorId]);
 
   if (!doctorId)

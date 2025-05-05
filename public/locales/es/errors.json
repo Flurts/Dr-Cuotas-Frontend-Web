@@ -1,9 +1,9 @@
 {
-    "firstNameIsRequired": "Nombre es requerido",
-    "lastNameIsRequired": "Apellidos son requeridos",
-    "emailOrPhoneIsRequired": "Correo electrónico o teléfono son requeridos",
-    "passwordIsRequired": "Contraseña es requerida",
-    "dateOfBirthIsRequired": "Fecha de nacimiento es requerida",
-    "genderIsRequired": "Género es requerido",
-    "mustBe18OrOlder": "Debes ser mayor de 18 años"
+  "firstNameIsRequired": "Nombre es requerido",
+  "lastNameIsRequired": "Apellidos son requeridos",
+  "emailOrPhoneIsRequired": "Correo electrónico o teléfono son requeridos",
+  "passwordIsRequired": "Contraseña es requerida",
+  "dateOfBirthIsRequired": "Fecha de nacimiento es requerida",
+  "genderIsRequired": "Género es requerido",
+  "mustBe18OrOlder": "Debes ser mayor de 18 años"
 }

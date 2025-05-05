@@ -12,7 +12,7 @@ function PrincipalFooter({ children }: Props) {
   return (
     <>
       {children}
-      <FooterPrincipal />
+      <FooterPrincipal toggleDarkMode={() => {}} darkMode={false} />
     </>
   );
 }

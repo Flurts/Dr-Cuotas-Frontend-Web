@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { BiGroup } from 'react-icons/bi';
 import { FiZoomIn } from 'react-icons/fi';
 
 interface ServiceCardProps {
@@ -19,7 +18,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   return (
     <>
       <button className="w-auto h-auto min-w-[200px] min-h-[150px] lg:w-[320px] lg:h-[199px] flex flex-col  hover:z-50 hover:scale-105 transition-all duration-300 rounded-xl gap-4">
-        <Link href={link} className="relative w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full rounded-xl">
+        <Link
+          href={link}
+          className="relative w-40 h-40 min-w-[200px] min-h-[150px] lg:w-full lg:h-full rounded-xl"
+        >
           <Image
             src={imageSrc}
             alt="Service Image"
@@ -32,7 +34,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               {title}
             </h1>
             <p className="text-white font-bold w-full flex justify-center items-center line-clamp-2 text-center leading-tight tracking-tight z-50">
-            <FiZoomIn className='text-6xl'/>
+              <FiZoomIn className="text-6xl" />
             </p>
           </div>
         </Link>

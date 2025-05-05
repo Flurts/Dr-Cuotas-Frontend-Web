@@ -4,27 +4,11 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { FaListUl, FaThLarge } from 'react-icons/fa';
 
-import { useGetDoctorsByNameLazyQuery } from '@/types';
-interface DoctorProps {
-  doctor: {
-    id: string;
-    profession: string;
-    user: {
-      first_name: string;
-      last_name: string;
-      profile_picture?: string | null; // Asegurar que puede ser nulo o indefinido
-      social_media: Array<{
-        link: string;
-        status: string;
-        type: string;
-      }>;
-    };
-  };
-}
+import { Doctor, useGetDoctorsByNameLazyQuery } from '@/types';
 
-const ProfessionalView: React.FC<DoctorProps> = ({ doctor }) => {
+const ProfessionalView = () => {
   const [getDoctorsByName, { data, error }] = useGetDoctorsByNameLazyQuery();
-  const [doctorsList, setDoctorsList] = useState([]);
+  const [doctorsList, setDoctorsList] = useState<Doctor[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -45,7 +29,7 @@ const ProfessionalView: React.FC<DoctorProps> = ({ doctor }) => {
 
   useEffect(() => {
     if (data) {
-      setDoctorsList(data.getDoctorsByName || []);
+      setDoctorsList(data.getDoctorsByName as Doctor[]);
     } else if (error) {
       console.error(error);
       setDoctorsList([]);
@@ -103,12 +87,12 @@ const ProfessionalView: React.FC<DoctorProps> = ({ doctor }) => {
               <div className="w-40 h-40 flex items-center justify-center bg-gray-200">
                 <Image
                   src={
-                    doctor.user.profile_picture &&
-                    doctor.user.profile_picture.trim() !== ''
-                      ? doctor.user.profile_picture
+                    doctor.user!.profile_picture &&
+                    doctor.user!.profile_picture.trim() !== ''
+                      ? doctor.user!.profile_picture
                       : '/images/elements/doctor.svg'
                   }
-                  alt={doctor.user.first_name}
+                  alt={doctor.user!.first_name}
                   className="w-full h-full object-cover rounded-t-xl"
                   width={160}
                   height={160}
@@ -116,7 +100,7 @@ const ProfessionalView: React.FC<DoctorProps> = ({ doctor }) => {
               </div>
               <div className="p-4 flex flex-col justify-center">
                 <h3 className="text-drcuotasTertiary-text text-xs lg:text-base font-bold uppercase leading-tight tracking-tight">
-                  {doctor.user.first_name} {doctor.user.last_name}
+                  {doctor.user!.first_name} {doctor.user!.last_name}
                 </h3>
                 <p className="hidden lg:block text-xs text-drcuotasTertiary-text">
                   Cirujano

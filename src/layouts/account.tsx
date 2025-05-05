@@ -8,44 +8,19 @@ import { FiLogIn, FiMenu, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
-import { getCurrentUser, isLoggedIn } from '@/store';
+import { isLoggedIn } from '@/store';
 
 interface Props {
   children: JSX.Element;
   className?: string;
 }
 
-const MemoizedChildren = React.memo(function MemoizedChildren({
-  children,
-}: Props) {
-  return (
-    <Box sx={{ pb: '0px' }} position="relative">
-      {children}
-    </Box>
-  );
-});
-
-const MainContent = ({ children }: Props) => {
-  return (
-    <Box
-      sx={{
-        mt: '0px',
-        pb: '0px',
-        minHeight: '80vh',
-        width: '100%',
-      }}
-    >
-      <MemoizedChildren>{children}</MemoizedChildren>
-    </Box>
-  );
-};
-
 function AccountLayout({ children, className }: Props) {
   const [hasToken, setHasToken] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLogged = useSelector(isLoggedIn);
-  const user = useSelector(getCurrentUser);
-  const [sticky, setSticky] = useState(true);
+
+  const [sticky] = useState(true);
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(

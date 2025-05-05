@@ -1,3 +1,6 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 'use client';
 import { LucidePlus, LucideX } from 'lucide-react';
 import Link from 'next/link';
@@ -205,6 +208,7 @@ export default function DoctorView() {
               width={120}
               height={120}
               imageUrl={user.profile_picture ?? undefined}
+              onChange={handleImageUpload}
             />
           </div>
 

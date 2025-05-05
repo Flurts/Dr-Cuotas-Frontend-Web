@@ -1,7 +1,5 @@
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { IoChevronBack } from 'react-icons/io5';
 
 import { SidebarNav } from '@/components/sidebar-nav';
 import { Separator } from '@/components/ui/separator';

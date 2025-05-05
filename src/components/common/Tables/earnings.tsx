@@ -7,7 +7,7 @@ const Chart = dynamic(async () => await import('react-apexcharts'), {
 });
 
 const Earnings: React.FC = () => {
-  const [chartData, setChartData] = useState({
+  const [chartData] = useState({
     options: {
       chart: {
         id: 'basic-bar',

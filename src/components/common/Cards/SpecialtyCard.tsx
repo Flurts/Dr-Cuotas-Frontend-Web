@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { gql, GraphQLClient } from 'graphql-request';
 import { LucideX, LucideZoomIn } from 'lucide-react';
 import Image from 'next/image';
@@ -42,11 +43,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   const [selectedQuota, setSelectedQuota] = useState(cuotasOptions[0]); // Valor inicial
   console.log('Cuotas seleccionadas:', selectedQuota);
   console.log('doctors', doctors);
-  const handleAddToCart = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
-    const newItem = { imageUrl, rating, title, description, price };
-    localStorage.setItem('cart', JSON.stringify([...cart, newItem]));
-  };
 
   const getDatePlusDays = (days: number): string => {
     const date = new Date();
@@ -54,6 +50,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     return date.toISOString().split('T')[0]; // devuelve 'yyyy-mm-dd'
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedCuotas, setSelectedCuotas] = useState('');
   const [selectedDoctorId, setSelectedDoctorId] = useState(
     doctors && doctors.length > 0 ? doctors[0].id : '',
@@ -318,10 +315,18 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     };
 
     try {
-      const response = await client.request(CREATE_PAYMENT_MUTATION, variables);
+      interface CreatePaymentResponse {
+        createPaymentRequest: string;
+      }
+
+      const response = await client.request<CreatePaymentResponse>(
+        CREATE_PAYMENT_MUTATION,
+        variables,
+      );
 
       if (response?.createPaymentRequest) {
-        const checkoutUrl = response.createPaymentRequest;
+        const checkoutUrl = (response as { createPaymentRequest: string })
+          .createPaymentRequest;
         console.log('✅ URL de pago:', checkoutUrl);
 
         if (checkoutUrl.startsWith('http')) {
@@ -340,9 +345,6 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
   };
 
-  const planOptions = Array.isArray(doctors)
-    ? doctors.map((doctor) => `${doctor.id} - ${doctor.provincia}`)
-    : [];
   // Opciones de planes/nombres
 
   const images = [
@@ -477,7 +479,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                     {Array.isArray(doctors) && doctors.length > 0 ? (
                       <select
                         value={selectedDoctorId}
-                        onChange={(e) => setSelectedDoctorId(e.target.value)}
+                        onChange={(e) => {
+                          setSelectedDoctorId(e.target.value);
+                        }}
                         className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
                       >
                         {doctors.map((doctor) => (
@@ -500,7 +504,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
                     </label>
                     <select
                       value={selectedQuota}
-                      onChange={(e) => setSelectedQuota(Number(e.target.value))}
+                      onChange={(e) => {
+                        setSelectedQuota(Number(e.target.value));
+                      }}
                       className="text-xs text-drcuotasTertiary-text text-center leading-tight tracking-tight"
                     >
                       {cuotasOptions.map((quota) => (
@@ -519,7 +525,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
               <input
                 type="checkbox"
                 checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
+                onChange={(e) => {
+                  setTermsAccepted(e.target.checked);
+                }}
                 id="terms"
               />
               <label
@@ -621,7 +629,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
           <div className="w-full lg:w-auto h-full flex flex-row lg:flex-col gap-1">
             <button
               className="text-drcuotasPrimary hover:text-white bg-white hover:bg-red-500 font-black uppercase border-2 hover:border-red-500 border-drcuotasPrimary w-full lg:w-16 h-10 flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+              }}
             >
               <LucideX className="text-2xl" />
               <span className="font-black uppercase leading-tight tracking-tight text-xs lg:text-base block lg:hidden">

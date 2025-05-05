@@ -3,7 +3,6 @@ import { GetServerSideProps } from 'next';
 import { Head } from '@/components/constants';
 import getServerSideSharedProps from '@/lib/next';
 import ProfessionalView from '@/views/professional';
-import OurProfessionals from '@/components/common/ViewElements/OurProfessionals';
 
 export default function Professionals() {
   return (

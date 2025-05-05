@@ -219,7 +219,6 @@ const AdjudicatedCard = ({ adjudicated }: { adjudicated: Adjudicated[] }) => (
   </div>
 );
 
-
 const DrViewCard = () => {
   const [surgeries, setSurgeries] = useState<Surgery[]>([]);
   const [adjudicated, setAdjudicated] = useState<Adjudicated[]>([]);
