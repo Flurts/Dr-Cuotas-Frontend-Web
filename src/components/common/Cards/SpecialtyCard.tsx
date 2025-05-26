@@ -307,9 +307,12 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
         first_total: Math.round(price / selectedQuota),
         second_due_date: null,
         second_total: null,
-        back_url_success: 'http://localhost:3000/account',
-        back_url_pending: 'http://localhost:3000/',
-        back_url_rejected: 'http://localhost:3000/',
+        back_url_success:
+          'https://dr-cuotas-frontend-web-production.up.railway.app/account',
+        back_url_pending:
+          'https://dr-cuotas-frontend-web-production.up.railway.app/',
+        back_url_rejected:
+          'https://dr-cuotas-frontend-web-production.up.railway.app/',
         adjudicadosId: String(adjudicadosId),
       },
     };
