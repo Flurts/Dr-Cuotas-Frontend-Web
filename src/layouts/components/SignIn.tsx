@@ -1,11 +1,9 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import { FcGoogle } from 'react-icons/fc';
 import { ImSpinner9 } from 'react-icons/im';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
@@ -160,23 +158,6 @@ function SignIn() {
           </div>
         </Form>
       </FormikProvider>
-
-      <div className="flex flex-col gap-6 w-full justify-center items-center">
-        <span className="text-drcuotasTertiary-text text-xs w-full text-center leading-tight tracking-tight">
-          o continuar con
-        </span>
-        <div className="flex flex-row items-center justify-center w-full gap-2">
-          <button
-            type="button"
-            className=""
-            onClick={async () => {
-              await signIn('google');
-            }}
-          >
-            <FcGoogle className="w-7 h-7" />
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
