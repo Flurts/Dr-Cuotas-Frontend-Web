@@ -18,7 +18,6 @@ import * as Yup from 'yup';
 
 import CardCirugia from '@/components/common/Cards/CardCirugia';
 import CustomImageUploader from '@/components/common/Editable/UserImage';
-import CustomEditorImage from '@/components/common/Editable/UserImageEditor';
 import OurServices from '@/components/common/ViewElements/OurServices';
 import { toast } from '@/components/ui/use-toast';
 import settings from '@/settings';
@@ -39,6 +38,7 @@ export default function AccountView() {
   const [userData, setUserData] = useState<{
     first_name: string;
     last_name: string;
+    profile_picture: string;
   } | null>(null);
 
   // -----> Ajusta la obtención de datos según tu estructura de usuario/doctores
@@ -65,6 +65,131 @@ export default function AccountView() {
   const handleChange = (fileUpload: File) => {
     modalHandler();
     setFile(fileUpload);
+  };
+
+  // Función para convertir archivo a base64 (copiada de DoctorView)
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const convertToBase64 = async (file: File): Promise<string> => {
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  // Función para manejar la subida de imagen de perfil (copiada y adaptada de DoctorView)
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const handleImageUpload = async (file: File) => {
+    try {
+      // Validar que sea una imagen
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Solo se permiten archivos JPG, JPEG, PNG o WebP',
+        });
+        return;
+      }
+
+      // Validar tamaño (5MB máximo)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'La imagen es muy grande. Máximo 5MB.',
+        });
+        return;
+      }
+
+      // Convertir a base64
+      const base64 = await convertToBase64(file);
+
+      // Mutación GraphQL para actualizar la foto de perfil
+      const updateProfileImageMutation = `
+        mutation UpdateUserProfileImage($profileImage: String!) {
+          updateUserProfileImage(profile_image: $profileImage) {
+            profile_picture
+          }
+        }
+      `;
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: updateProfileImageMutation,
+          variables: {
+            profileImage: base64,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.errors) {
+        throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
+      }
+
+      if (data.data?.updateUserProfileImage?.profile_picture) {
+        toast({
+          variant: 'success',
+          title: 'Éxito',
+          description: 'Imagen de perfil actualizada correctamente',
+        });
+
+        // Actualizar el estado local
+        setUserData((prev) =>
+          prev
+            ? {
+                ...prev,
+                profile_picture:
+                  data.data.updateUserProfileImage.profile_picture,
+              }
+            : null,
+        );
+
+        // Actualizar localStorage si es necesario
+        localStorage.setItem(
+          'profile_picture',
+          data.data.updateUserProfileImage.profile_picture,
+        );
+
+        // Actualizar Redux si tienes una acción para ello
+        dispatch(
+          updateProfileImage({
+            profileImage: data.data.updateUserProfileImage.profile_picture,
+          }),
+        );
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'No se pudo actualizar la imagen',
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Ocurrió un error al subir la imagen',
+      });
+    }
   };
 
   const EditImageAndUpload = async (editorRef: any) => {
@@ -125,13 +250,6 @@ export default function AccountView() {
           ),
         },
       });
-
-      // Actualizar la vista con la nueva imagen
-      setProfilePicture(
-        createS3Url(
-          presignedUrlUserImage.data.generatePresignedUrlUserImage.key,
-        ),
-      );
 
       toast({
         variant: 'success',
@@ -205,6 +323,7 @@ export default function AccountView() {
           user {
             first_name
             last_name
+            profile_picture
           }
         }
       }
@@ -228,7 +347,13 @@ export default function AccountView() {
       if (data.errors)
         throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
 
-      console.log('Datos del usuario:', data.data.getUserData.user);
+      const profilePicture = data.data.getUserData.user.profile_picture;
+      console.log('imagen del usuario:', profilePicture);
+
+      // Guardar en localStorage
+      if (profilePicture) {
+        localStorage.setItem('profile_picture', profilePicture);
+      }
       return data.data.getUserData.user;
     } catch (error) {
       console.error('Error al obtener los datos del usuario:', error);
@@ -265,8 +390,10 @@ export default function AccountView() {
                 <CustomImageUploader
                   width={120}
                   height={120}
-                  imageUrl={user.profile_picture ?? undefined}
-                  onChange={handleChange}
+                  imageUrl={
+                    userData?.profile_picture ?? '/images/default_profile.svg'
+                  }
+                  onChange={handleImageUpload} // Cambiado: ahora usa la función copiada de DoctorView
                 />
               </div>
 
@@ -429,19 +556,6 @@ export default function AccountView() {
           </div>
         )}
       </div>
-
-      {/* Modal de edición de imagen */}
-      {file && (
-        <CustomEditorImage
-          toggleModal={toggleModal}
-          modalHandler={modalHandler}
-          handleChange={EditImageAndUpload}
-          file={file}
-        />
-      )}
     </>
   );
-}
-function setProfilePicture(arg0: string) {
-  throw new Error('Function not implemented.');
 }

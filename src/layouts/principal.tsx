@@ -86,7 +86,6 @@ const PrincipalLayout = ({ children, className }: Props) => {
   useEffect(() => {
     setHasToken(!!localStorage.getItem('accessToken'));
     // Now you can safely log it
-    console.log('accessToken:', localStorage.getItem('accessToken'));
   }, []);
 
   return (

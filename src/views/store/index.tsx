@@ -40,6 +40,7 @@ export default function StoreView() {
     }
     return 0;
   });
+  console.log('Sorted Surgeries:', data);
 
   return (
     <>
