@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 
 interface ImageUploaderProps {
@@ -18,14 +18,20 @@ const CustomImageUploader: React.FC<ImageUploaderProps> = ({
   style = 'color',
   onChange,
 }) => {
+  const [imageUrl2, setImageUrl2] = useState('/images/default_profile.svg');
   const handleFileChange = (file: File) => {
     onChange(file);
   };
+  useEffect(() => {
+    // Este bloque solo corre en el cliente
+    const savedProfilePicture = localStorage.getItem('profile_picture');
+    if (savedProfilePicture) {
+      setImageUrl2(savedProfilePicture);
+    }
+  }, []);
 
   const image =
-    imageUrl !== undefined && imageUrl !== ''
-      ? imageUrl
-      : '/images/elements/girl_footer.svg';
+    imageUrl !== undefined && imageUrl !== '' ? imageUrl : imageUrl2;
 
   return (
     <>
@@ -36,12 +42,11 @@ const CustomImageUploader: React.FC<ImageUploaderProps> = ({
           types={fileTypes}
           className=""
         >
-          <Image
+          <img
             src={image}
             alt="avatar"
             width={width}
             height={height}
-            quality={80}
             className="w-full h-full rounded-full"
           />
           {/* <span
@@ -51,12 +56,11 @@ const CustomImageUploader: React.FC<ImageUploaderProps> = ({
             </span> */}
         </FileUploader>
       </div>
-      <Image
+      <img
         src={image}
         alt="avatar"
         width={width}
         height={height}
-        quality={80}
         className="rounded-xl shadow-2xl md:hidden"
       />
     </>

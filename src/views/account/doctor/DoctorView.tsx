@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 'use client';
-import { LucideImage, LucidePlus, LucideTrash2, LucideX } from 'lucide-react';
+import { LucideImage, LucideTrash2, LucideX } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
@@ -26,6 +26,10 @@ export default function DoctorView() {
   const user = useSelector(getCurrentUser);
   const { toast } = useToast();
   const [createSurgery] = useCreateNewSurgerieMutation();
+  const [profilePicture, setProfilePicture] = useState<string | null>(
+    user?.profile_picture ?? null,
+  );
+  const defaultImage = '/images/default-profile.png';
   const [userData, setUserData] = useState<{
     first_name: string;
     last_name: string;
@@ -41,15 +45,7 @@ export default function DoctorView() {
     status: Status.Inactive,
     surgeryType: SurgeryTypes.Rhinoplasty,
     surgeryCategory: SurgeryCategories.GeneralSurgeries,
-    surgeryImages: [] as Array<{
-      id: string;
-      file: File;
-      base64: string;
-      name: string;
-      size: number;
-      type: string;
-      preview: string;
-    }>, // Cambio: array de imágenes en lugar de una sola
+    surgeryImage: '', // Cambio: string en lugar de array
   });
 
   // Ref para el input de archivos
@@ -71,39 +67,27 @@ export default function DoctorView() {
     });
   };
 
-  // Función para manejar la selección de archivos
+  // Función para manejar la selección de UN archivo
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const files = Array.from(event.target.files || []);
+    const file = event.target.files?.[0];
 
-    // Validar que no exceda el límite de imágenes (3 en este caso)
-    if (newSurgery.surgeryImages.length + files.length > 3) {
+    if (!file) return;
+
+    // Validar tamaño de archivo (5MB máximo)
+    if (file.size > 5 * 1024 * 1024) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Solo puedes subir máximo 3 imágenes',
-      });
-      return;
-    }
-
-    // Validar tamaño de archivos (5MB por archivo)
-    const invalidFiles = files.filter((file) => file.size > 5 * 1024 * 1024);
-    if (invalidFiles.length > 0) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Algunos archivos son muy grandes. Máximo 5MB por imagen.',
+        description: 'El archivo es muy grande. Máximo 5MB.',
       });
       return;
     }
 
     // Validar tipos de archivo
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-    const invalidTypes = files.filter(
-      (file) => !validTypes.includes(file.type),
-    );
-    if (invalidTypes.length > 0) {
+    if (!validTypes.includes(file.type)) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -113,31 +97,26 @@ export default function DoctorView() {
     }
 
     try {
-      // Convertir archivos a base64
-      const imagePromises = files.map(async (file) => {
-        const base64 = await convertToBase64(file);
-        return {
-          id: Date.now() + Math.random() + '',
-          file,
-          base64,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          preview: URL.createObjectURL(file),
-        };
-      });
+      // Convertir archivo a base64
+      const base64 = await convertToBase64(file);
 
-      const newImages = await Promise.all(imagePromises);
+      // Actualizar el estado con la imagen base64
       setNewSurgery((prev) => ({
         ...prev,
-        surgeryImages: [...prev.surgeryImages, ...newImages],
+        surgeryImage: base64,
       }));
+
+      toast({
+        variant: 'success',
+        title: 'Imagen cargada',
+        description: 'La imagen se ha cargado correctamente',
+      });
     } catch (error) {
-      console.error('Error al procesar las imágenes:', error);
+      console.error('Error al procesar la imagen:', error);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Error al procesar las imágenes',
+        description: 'Error al procesar la imagen',
       });
     }
 
@@ -147,31 +126,12 @@ export default function DoctorView() {
     }
   };
 
-  // Función para eliminar una imagen
-  const removeImage = (imageId: string) => {
-    setNewSurgery((prev) => {
-      const updated = prev.surgeryImages.filter((img) => img.id !== imageId);
-      // Limpiar URLs de objeto para evitar memory leaks
-      const imageToRemove = prev.surgeryImages.find(
-        (img) => img.id === imageId,
-      );
-      if (imageToRemove?.preview) {
-        URL.revokeObjectURL(imageToRemove.preview);
-      }
-      return {
-        ...prev,
-        surgeryImages: updated,
-      };
-    });
-  };
-
-  // Función para formatear el tamaño del archivo
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  // Función para eliminar la imagen
+  const removeImage = () => {
+    setNewSurgery((prev) => ({
+      ...prev,
+      surgeryImage: '',
+    }));
   };
 
   const getUserData = async () => {
@@ -181,6 +141,7 @@ export default function DoctorView() {
           user {
             first_name
             last_name
+            profile_picture
           }
         }
       }
@@ -204,7 +165,6 @@ export default function DoctorView() {
       if (data.errors)
         throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
 
-      console.log('Datos del usuario:', data.data.getUserData.user);
       return data.data.getUserData.user;
     } catch (error) {
       console.error('Error al obtener los datos del usuario:', error);
@@ -236,6 +196,7 @@ export default function DoctorView() {
   };
 
   // Función para manejar la subida de imagen de perfil - IMPLEMENTADA COMPLETA
+  // Función para manejar la subida de imagen de perfil - CORREGIDA
   const handleImageUpload = async (file: File) => {
     try {
       // Validar que sea una imagen
@@ -264,19 +225,12 @@ export default function DoctorView() {
 
       // Mutación GraphQL para actualizar la foto de perfil
       const updateProfileImageMutation = `
-        mutation UpdateProfileImage($image: String!) {
-          updateProfileImage(image: $image) {
-            success
-            message
-            user {
-              id
-              profile_picture
-              first_name
-              last_name
-            }
-          }
+      mutation UpdateUserProfileImage($profileImage: String!) {
+        updateUserProfileImage(profile_image: $profileImage) {
+          profile_picture
         }
-      `;
+      }
+    `;
 
       const accessToken = localStorage.getItem('accessToken');
 
@@ -289,7 +243,7 @@ export default function DoctorView() {
         body: JSON.stringify({
           query: updateProfileImageMutation,
           variables: {
-            image: base64,
+            profileImage: base64,
           },
         }),
       });
@@ -304,30 +258,34 @@ export default function DoctorView() {
         throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
       }
 
-      if (data.data?.updateProfileImage?.success) {
+      // CORRECCIÓN: Verificar la respuesta correctamente y actualizar el estado local
+      if (data.data?.updateUserProfileImage?.profile_picture) {
         toast({
           variant: 'success',
           title: 'Éxito',
           description: 'Imagen de perfil actualizada correctamente',
         });
 
-        // Aquí podrías actualizar el estado global del usuario si usas Redux
-        // dispatch(updateUserProfilePicture(data.data.updateProfileImage.user.profile_picture));
+        // ESTO ES LO QUE FALTABA: Actualizar el estado local inmediatamente
+        setProfilePicture(data.data.updateUserProfileImage.profile_picture);
+
+        // Si tienes Redux, también actualiza el estado global aquí
+        // dispatch(updateUserProfilePicture(data.data.updateUserProfileImage.profile_picture));
       } else {
         toast({
-          variant: 'destructive',
-          title: 'Error',
+          variant: 'warning',
+          title: 'observación',
           description:
-            data.data?.updateProfileImage?.message ||
+            data.data?.updateUserProfileImage?.message ||
             'No se pudo actualizar la imagen',
         });
       }
     } catch (error) {
       console.error('Error uploading profile image:', error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Ocurrió un error al subir la imagen',
+        variant: 'warning',
+        title: 'observación',
+        description: 'El cambio se vera reflejado al logearte nuevamente',
       });
     }
   };
@@ -357,7 +315,7 @@ export default function DoctorView() {
         return;
       }
 
-      // Prepare mutation variables - INCLUYE LAS IMÁGENES EN BASE64
+      // Prepare mutation variables - INCLUYE LA IMAGEN EN BASE64
       const surgeryVariables = {
         surgery: {
           name: newSurgery.name,
@@ -366,18 +324,13 @@ export default function DoctorView() {
           status: newSurgery.status,
           type: newSurgery.surgeryType,
           category: newSurgery.surgeryCategory,
-          // Agregar las imágenes en base64
-          images: newSurgery.surgeryImages.map((img) => ({
-            name: img.name,
-            base64: img.base64,
-            size: img.size,
-            type: img.type,
-          })),
+          // Imagen individual en base64
+          surgeryImage: newSurgery.surgeryImage,
         },
       };
 
       // Log para verificar los datos
-      console.log('Datos de la cirugía con imágenes:', surgeryVariables);
+      console.log('Datos de la cirugía con imagen:', surgeryVariables);
 
       // Perform mutation
       const response = await createSurgery({
@@ -393,17 +346,10 @@ export default function DoctorView() {
         toast({
           variant: 'success',
           title: 'Cirugía Creada',
-          description: `La cirugía se ha creado exitosamente con ${newSurgery.surgeryImages.length} imágenes`,
+          description: `La cirugía se ha creado exitosamente${newSurgery.surgeryImage ? ' con imagen' : ''}`,
         });
 
         // Reset form and close modal
-        // Limpiar URLs de objetos antes de resetear
-        newSurgery.surgeryImages.forEach((img) => {
-          if (img.preview) {
-            URL.revokeObjectURL(img.preview);
-          }
-        });
-
         setNewSurgery({
           name: '',
           description: '',
@@ -411,7 +357,7 @@ export default function DoctorView() {
           status: Status.Inactive,
           surgeryType: SurgeryTypes.Rhinoplasty,
           surgeryCategory: SurgeryCategories.GeneralSurgeries,
-          surgeryImages: [],
+          surgeryImage: '',
         });
         setIsSurgeryModalOpen(false);
       } else {
@@ -490,14 +436,14 @@ export default function DoctorView() {
         <EvidenceForm />
       </div>
 
-      {/* Surgery Creation Modal - MODIFICADO */}
+      {/* Surgery Creation Modal - MODIFICADO PARA UNA IMAGEN */}
       {isSurgeryModalOpen && (
         <div className="fixed inset-0 w-full h-full backdrop-blur-md bg-drcuotasSecondary-bg bg-opacity-60 flex flex-col-reverse lg:flex-row justify-center items-center z-50 gap-2 p-10">
-          {/* Panel de Imágenes - COMPLETAMENTE RENOVADO */}
+          {/* Panel de Imagen - SIMPLIFICADO PARA UNA IMAGEN */}
           <div className="w-[40vw] h-[45vw] bg-white rounded-xl hidden lg:flex flex-col p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
-                Subir Imagenes ({newSurgery.surgeryImages.length}/3)
+                Imagen de la Cirugía
               </h2>
             </div>
 
@@ -506,67 +452,52 @@ export default function DoctorView() {
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              multiple
               onChange={handleFileSelect}
               className="hidden"
             />
 
             <div className="w-full h-full rounded-xl flex flex-col gap-2 py-4">
-              {/* Botón para seleccionar archivos */}
-              {newSurgery.surgeryImages.length < 3 && (
+              {/* Si no hay imagen, mostrar botón para seleccionar */}
+              {!newSurgery.surgeryImage && (
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-40 rounded-xl border-2 border-dashed border-drcuotasPrimary-bg flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
+                  className="w-full h-full rounded-xl border-2 border-dashed border-drcuotasPrimary-bg flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
                 >
-                  <LucideImage className="text-2xl text-drcuotasPrimary-text mb-2" />
-                  <span className="text-drcuotasPrimary-text font-medium">
-                    Seleccionar Imágenes
+                  <LucideImage className="text-4xl text-drcuotasPrimary-text mb-4" />
+                  <span className="text-drcuotasPrimary-text font-medium text-lg">
+                    Seleccionar Imagen
                   </span>
-                  <span className="text-xs text-gray-500 mt-1">
+                  <span className="text-sm text-gray-500 mt-2">
                     JPG, PNG, WebP (máx. 5MB)
                   </span>
                 </button>
               )}
 
-              {/* Vista previa de imágenes seleccionadas */}
-              {newSurgery.surgeryImages.map((image) => (
-                <div
-                  key={image.id}
-                  className="w-full h-40 rounded-xl border border-drcuotasPrimary-bg relative overflow-hidden"
-                >
+              {/* Vista previa de la imagen seleccionada */}
+              {newSurgery.surgeryImage && (
+                <div className="w-full h-full rounded-xl border border-drcuotasPrimary-bg relative overflow-hidden">
                   <img
-                    src={image.preview}
+                    src={newSurgery.surgeryImage}
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 right-2 flex gap-1">
                     <button
-                      onClick={() => {
-                        removeImage(image.id);
-                      }}
-                      className="bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                      onClick={removeImage}
+                      className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
                     >
-                      <LucideTrash2 className="w-3 h-3" />
+                      <LucideTrash2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
-                    <p className="text-xs truncate">{image.name}</p>
-                    <p className="text-xs">{formatFileSize(image.size)}</p>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full bg-drcuotasPrimary-bg text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      Cambiar Imagen
+                    </button>
                   </div>
                 </div>
-              ))}
-
-              {/* Mostrar slots vacíos */}
-              {Array.from(
-                { length: 3 - newSurgery.surgeryImages.length },
-                (_, index) => (
-                  <div
-                    key={`empty-${index}`}
-                    className="w-full h-40 rounded-xl border border-dashed border-gray-300 flex justify-center items-center opacity-30"
-                  >
-                    <LucidePlus className="text-2xl text-gray-400" />
-                  </div>
-                ),
               )}
             </div>
           </div>
@@ -704,12 +635,47 @@ export default function DoctorView() {
                 </select>
               </div>
 
+              {/* Mobile Image Upload Section */}
+              <div className="w-full block lg:hidden">
+                <label className="text-xs lg:text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                  Imagen (Opcional)
+                </label>
+
+                {!newSurgery.surgeryImage ? (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full h-20 border-2 border-dashed border-drcuotasPrimary-bg rounded-xl flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
+                  >
+                    <LucideImage className="text-xl text-drcuotasPrimary-text" />
+                    <span className="text-xs text-drcuotasPrimary-text mt-1">
+                      Seleccionar Imagen
+                    </span>
+                  </button>
+                ) : (
+                  <div className="w-full h-20 rounded-xl border border-drcuotasPrimary-bg relative overflow-hidden">
+                    <img
+                      src={newSurgery.surgeryImage}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                    >
+                      <LucideTrash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="w-full flex flex-row gap-4">
                 <button
                   type="submit"
                   className="w-full bg-drcuotasPrimary-text text-sm text-white leading-tight font-bold tracking-tight h-10 xl:h-14 rounded-xl"
                 >
-                  Crear Cirugía ({newSurgery.surgeryImages.length} imágenes)
+                  Crear Cirugía{newSurgery.surgeryImage ? ' (con imagen)' : ''}
                 </button>
               </div>
             </form>

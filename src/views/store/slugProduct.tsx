@@ -42,19 +42,12 @@ interface SurgerieData {
   description: string;
   name: string;
   amount: number;
+  file_banner: {
+    file_link: string;
+  };
 }
 
 export default function ProductPage() {
-  // Array de imágenes de ejemplo; reemplázalas por tus URLs reales
-  const images = [
-    '/images/surgerys/girl_chest.svg',
-    '/images/elements/girl_footer.svg',
-    '/images/surgerys/chest_body.svg',
-    '/images/surgerys/girl_sculpture.svg',
-  ];
-
-  // Imagen seleccionada inicialmente (la primera del array)
-  const [selectedImage, setSelectedImage] = useState(images[0]);
   const router = useRouter();
   const { isReady, query } = router;
   const [adjudicatedData, setAdjudicatedData] =
@@ -110,6 +103,9 @@ export default function ProductPage() {
                 description
                 name
                 amount
+                file_banner {
+                  file_link
+                }
               }
             }
           `,
@@ -217,12 +213,9 @@ export default function ProductPage() {
         first_total: adjudicatedData.quota_price,
         second_due_date: null,
         second_total: null,
-        back_url_success:
-          'https://dr-cuotas-frontend-web-production.up.railway.app/account',
-        back_url_pending:
-          'https://dr-cuotas-frontend-web-production.up.railway.app/',
-        back_url_rejected:
-          'https://dr-cuotas-frontend-web-production.up.railway.app/',
+        back_url_success: 'https://www.drcuotas.com/account',
+        back_url_pending: 'https://www.drcuotas.com/',
+        back_url_rejected: 'https://www.drcuotas.com/',
         adjudicadosId: String(query.adjudicatedId), // Convertir a string
       },
     };
@@ -272,7 +265,10 @@ export default function ProductPage() {
           {/* Área principal de imagen del producto */}
           <div className="bg-white border-2 w-full h-full flex justify-center items-center">
             <Image
-              src={selectedImage}
+              src={
+                surgerieData?.file_banner?.file_link ??
+                '/images/default-product.jpg'
+              }
               alt="Imagen del Producto"
               width={500}
               height={500}
@@ -356,31 +352,6 @@ export default function ProductPage() {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Galería de miniaturas */}
-        <div className="w-full h-auto flex flex-row gap-2 justify-start items-center p-4">
-          {images.map((img, idx) => (
-            <div
-              key={idx}
-              className={`w-20 h-20 border cursor-pointer ${
-                selectedImage === img
-                  ? 'border-drcuotasPrimary-bg '
-                  : 'border-transparent'
-              }`}
-              onClick={() => {
-                setSelectedImage(img);
-              }}
-            >
-              <Image
-                src={img}
-                alt={`Producto ${idx + 1}`}
-                width={192}
-                height={160}
-                className="object-cover w-full h-full border"
-              />
-            </div>
-          ))}
         </div>
       </div>
     </>

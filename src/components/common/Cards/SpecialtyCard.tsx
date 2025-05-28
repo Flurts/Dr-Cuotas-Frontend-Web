@@ -307,12 +307,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
         first_total: Math.round(price / selectedQuota),
         second_due_date: null,
         second_total: null,
-        back_url_success:
-          'https://dr-cuotas-frontend-web-production.up.railway.app/account',
-        back_url_pending:
-          'https://dr-cuotas-frontend-web-production.up.railway.app/',
-        back_url_rejected:
-          'https://dr-cuotas-frontend-web-production.up.railway.app/',
+        back_url_success: 'https://www.drcuotas.com/account',
+        back_url_pending: 'https://www.drcuotas.com/',
+        back_url_rejected: 'https://www.drcuotas.com/',
         adjudicadosId: String(adjudicadosId),
       },
     };
@@ -348,30 +345,19 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     }
   };
 
-  // Opciones de planes/nombres
-
-  const images = [
-    '/images/banners/banner_full_body.svg',
-    '/images/surgerys/chest_body.svg',
-    '/images/surgerys/girl_chest.svg',
-    '/images/surgerys/girl_face.svg',
-  ];
-
-  const [selectedImage, setSelectedImage] = useState(images[0]);
-
   return (
     <>
       <div
-        className="flex flex-col w-60 lg:w-80 h-full rounded-xl bg-white cursor-pointer border"
+        className="flex flex-col  w-60 lg:w-80 h-[470px] rounded-xl bg-white cursor-pointer border"
         onClick={() => {
           setIsOpen(true);
         }}
       >
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center h-[330px]  items-center">
           <Image
-            src="/images/elements/girl_footer.svg"
+            src={imageUrl || '/images/elements/girl_footer.svg'}
             alt=""
-            className="w-full h-full object-cover rounded-xl p-4"
+            className="w-full h-full object-scale-down rounded-xl p-4"
             width={238}
             height={224}
           />
@@ -398,33 +384,16 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
       {isOpen && (
         <div className="fixed inset-0 w-full h-full backdrop-blur-md bg-drcuotasSecondary-bg bg-opacity-60 flex flex-col-reverse lg:flex-row justify-center items-center z-50 gap-2 p-14 lg:p-10">
           {/* Miniaturas */}
-          <div className="w-auto h-full hidden lg:flex flex-col gap-1">
-            {images.map((img, index) => (
-              <Image
-                key={index}
-                src={img}
-                alt={`Miniatura ${index}`}
-                width={100}
-                height={100}
-                className={`w-24 h-14 cursor-pointer bg-white border-2 transition-all ${
-                  selectedImage === img
-                    ? 'border-drcuotasPrimary-bg bg-drcuotasPrimary-bg'
-                    : 'border-gray-300'
-                }`}
-                onClick={() => {
-                  setSelectedImage(img);
-                }}
-              />
-            ))}
-          </div>
+
           {/* Información de Cirugía */}
           <div className="bg-white w-[80vw] lg:w-full h-full p-6 shadow-xl rounded-xl hidden lg:flex flex-col items-center gap-4">
             {/* Imagen Principal */}
             <div className="w-full h-full flex justify-center">
               <Image
-                src={selectedImage}
+                src={imageUrl}
                 alt="Imagen Principal"
                 className="rounded-xl border w-screen object-cover"
+                quality={80}
                 width={300}
                 height={300}
               />
