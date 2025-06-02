@@ -40,9 +40,9 @@ const OurSpecialties = () => {
     <div className="w-full h-full flex flex-col justify-center items-center lg:p-20">
       <div className="hidden lg:block">
         <TitleElements
-          primaryText="Puedes pagar en Pequeñas Cuotas"
+          primaryText="Paga a Cuotas"
           secondaryText="Cirugias disponibles"
-          descriptionText="Consigue tu cirugia con nuestros planes de Financiamiento."
+          descriptionText=""
         />
       </div>
 

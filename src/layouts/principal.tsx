@@ -146,7 +146,13 @@ const PrincipalLayout = ({ children, className }: Props) => {
                 href="/faq"
                 className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
-                Soporte
+                Preguntas
+              </Link>
+              <Link
+                href="/contact"
+                className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
+              >
+                Contacto
               </Link>
             </ul>
           </div>
@@ -162,7 +168,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
                   <FiUser />
                 </Link>
                 <Link
-                  href="/register"
+                  href="/store"
                   className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
                   <FiShoppingCart />
@@ -178,9 +184,15 @@ const PrincipalLayout = ({ children, className }: Props) => {
                 </Link>
                 <Link
                   href={getAccountUrl()}
-                  className="text-drcuotasPrimary hover:text-white hover:bg-green-500 font-black uppercase border-2 border-drcuotasPrimary hover:border-green-500 w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  className="text-xl text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
                   <LucideMessagesSquare className="text-2xl" />
+                </Link>
+                <Link
+                  href="/store"
+                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
+                >
+                  <FiShoppingCart />
                 </Link>
               </>
             )}

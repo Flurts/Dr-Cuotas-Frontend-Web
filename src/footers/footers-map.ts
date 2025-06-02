@@ -3,17 +3,18 @@ import PrincipalFooter from './principal';
 
 const footersMap: Record<string, React.FC<{ children: JSX.Element }>> = {
   '/': PrincipalFooter,
-  '/_error': NothingFooter,
+  '/_error': PrincipalFooter,
   '/login': NothingFooter,
   '/forgotYourPassword': NothingFooter,
   '/forgotYourPassword/OTP': NothingFooter,
   '/forgotYourPassword/newPassword': NothingFooter,
   '/terms-and-conditions': NothingFooter,
   '/account': NothingFooter,
-  '/faq': NothingFooter,
+  '/faq': PrincipalFooter,
   '/admin': PrincipalFooter,
-  '/professionals': NothingFooter,
-  '/store': NothingFooter,
+  '/professionals': PrincipalFooter,
+  '/store': PrincipalFooter,
+  '/contact': PrincipalFooter,
   '/account/settings': NothingFooter,
   '/account/settings/account': NothingFooter,
 };
