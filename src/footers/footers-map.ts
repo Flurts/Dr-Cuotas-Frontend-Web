@@ -5,6 +5,7 @@ const footersMap: Record<string, React.FC<{ children: JSX.Element }>> = {
   '/': PrincipalFooter,
   '/_error': PrincipalFooter,
   '/login': NothingFooter,
+  '/register': NothingFooter,
   '/forgotYourPassword': NothingFooter,
   '/forgotYourPassword/OTP': NothingFooter,
   '/forgotYourPassword/newPassword': NothingFooter,

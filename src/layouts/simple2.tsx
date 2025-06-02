@@ -23,7 +23,7 @@ interface Product {
   image: string;
 }
 
-const PrincipalLayout = ({ children, className }: Props) => {
+const SimpleLayoutTwo = ({ children, className }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasToken, setHasToken] = useState(false);
   const isLogged = useSelector(isLoggedIn);
@@ -168,8 +168,8 @@ const PrincipalLayout = ({ children, className }: Props) => {
                   <FiUser />
                 </Link>
                 <Link
-                  href="/store"
-                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
+                  href="/"
+                  className="text-xl text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
                   <FiShoppingCart />
                 </Link>
@@ -321,4 +321,4 @@ const PrincipalLayout = ({ children, className }: Props) => {
   );
 };
 
-export default PrincipalLayout;
+export default SimpleLayoutTwo;

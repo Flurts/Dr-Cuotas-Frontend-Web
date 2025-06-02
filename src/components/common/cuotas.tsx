@@ -43,9 +43,7 @@ const plans = [
 
 export default function Cuotas({ className }: { className?: string }) {
   return (
-    <div
-      className={`hidden lg:flex flex-col items-center justify-center w-full h-screen mb-40 bg-white p-8 ${className || ''}`}
-    >
+    <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen mb-40 bg-white p-8">
       <TitleElements
         primaryText=""
         secondaryText="TU PLAN DE FINANCIAMIENTO"
@@ -58,7 +56,7 @@ export default function Cuotas({ className }: { className?: string }) {
             key={index}
             className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden shadow-2xl border-2 ${
               plan.highlight
-                ? 'border-white bg-gradient-to-b from-black to-blue-100'
+                ? 'border-white bg-gradient-to-b from-purple-400 to-blue-500'
                 : 'border bg-white'
             }`}
           >

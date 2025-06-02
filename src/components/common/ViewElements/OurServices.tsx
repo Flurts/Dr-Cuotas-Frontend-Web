@@ -8,19 +8,19 @@ function OurServices() {
   const services = [
     {
       imageSrc: '/images/surgerys/girl_face.svg',
-      link: '/services',
+      link: '/store',
       title: 'Rostro',
       description: '',
     },
     {
       imageSrc: '/images/surgerys/girl_sculpture.svg',
-      link: '/services',
+      link: '/store',
       title: 'Cuerpo',
       description: '',
     },
     {
       imageSrc: '/images/surgerys/girl_chest.svg',
-      link: '/services',
+      link: '/store',
       title: 'Mamarios',
       description: '',
     },

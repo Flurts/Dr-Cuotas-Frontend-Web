@@ -105,7 +105,7 @@ function SignIn() {
             <input
               type="text"
               placeholder="Correo electrónico o teléfono"
-              className="border border-gray-300 rounded-md p-3 leading-tight tracking-tight"
+              className="border border-black p-3 leading-tight tracking-tight"
               {...formik.getFieldProps('emailPhone')}
             />
             <div className="flex flex-col gap-3">
@@ -114,7 +114,7 @@ function SignIn() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Contraseña"
-                    className="border border-gray-300 rounded-md p-3 pr-10 w-full leading-tight tracking-tight" // Añade espacio a la derecha para el icono
+                    className="border border-black p-3 pr-10 w-full leading-tight tracking-tight" // Añade espacio a la derecha para el icono
                     {...formik.getFieldProps('password')}
                   />
                   {/* Ícono para alternar la visibilidad de la contraseña */}
@@ -147,7 +147,7 @@ function SignIn() {
             </div>
             <button
               type="submit"
-              className="bg-drcuotasPrimary-bg text-white leading-tight tracking-tight uppercase h-12 w-full rounded-md justify-center items-center  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
+              className="bg-drcuotasPrimary-bg text-white leading-tight tracking-tight uppercase h-12 w-full  justify-center items-center  hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5]  hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
             >
               {formik.isSubmitting ? (
                 <ImSpinner9 className="animate-spin h-6 text-white w-full" />

@@ -52,7 +52,7 @@
     "embla-carousel-react": "^8.1.7",
     "eslint-config-next": "13.1.2",
     "formik": "^2.4.5",
-    "framer-motion": "^12.4.1",
+    "framer-motion": "^12.15.0",
     "geist": "^1.2.1",
     "graphql-sse": "^2.5.2",
     "i18next": "^23.7.16",

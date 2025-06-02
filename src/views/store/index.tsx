@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FaListUl, FaThLarge } from 'react-icons/fa'; // Para el toggle de vista
 
 import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
-import AdComponents from '@/components/common/ViewElements/AdComponents';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 export default function StoreView() {
@@ -12,7 +11,7 @@ export default function StoreView() {
 
   const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('destacado'); // Ejemplo
+  const [sortOption] = useState('destacado'); // Ejemplo
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   useEffect(() => {
@@ -44,166 +43,108 @@ export default function StoreView() {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col justify-between items-center p-10">
-        {/* Contenedor principal: Filtros + Contenido */}
-        <div className=" w-full h-full flex flex-col lg:flex-row gap-2">
-          {/* Panel lateral de filtros */}
-          <aside className="w-full lg:w-64 h-auto border rounded-xl p-4 flex-shrink-0">
-            <div className="mb-4">
-              <h2 className="text-lg mb-2 text-drcuotasTertiary-text font-black uppercase leading-tight tracking-tight">
-                Filtros
-              </h2>
-              <button className="text-sm text-drcuotasPrimary-text hover:underline">
-                Limpiar filtros
-              </button>
+      <div className="w-full h-screen flex flex-row justify-center items-center gap-4 p-10">
+        {/* Barra lateral - Filtros  */}
+        <>
+          <div className="w-80 h-full border border-black flex flex-col p-4 gap-4">
+            <h1 className="text-xl  leading-tight tracking-tight">Filtros</h1>
+
+            {/* Tipo de cirugía */}
+            <div>
+              <label className="text-sm leading-tight tracking-tight">
+                Tipo de cirugía
+              </label>
+              <select className="w-full p-2 border border-black text-xs">
+                <option value="">Todas</option>
+                <option value="facial">Facial</option>
+                <option value="corporal">Corporal</option>
+                <option value="mamaria">Mamaria</option>
+              </select>
             </div>
 
-            {/* Categorías (ejemplo) */}
-            <div className="mb-6">
-              <h3 className="text-sm mb-2 text-drcuotasTertiary-text font-bold uppercase leading-tight tracking-tight">
-                Categorías
-              </h3>
-              <ul className="space-y-1 text-sm text-gray-700">
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2 " />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Todos
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Rostro
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Cuerpo
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Mamarios
-                    </span>
-                  </label>
-                </li>
-              </ul>
-            </div>
-
-            {/* Precio (ejemplo con rango) */}
-            <div className="mb-6">
-              <h3 className="text-sm font-bold mb-2 text-drcuotasTertiary-text  uppercase leading-tight tracking-tight">
-                Precio
-              </h3>
-              <input type="range" min="0" max="2000" className="w-full" />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>0</span>
-                <span>2000</span>
-              </div>
-            </div>
-
-            {/* Estado (ejemplo) */}
-            <div className="mb-6">
-              <h3 className="text-sm font-bold mb-2 uppercase leading-tight tracking-tight text-drcuotasTertiary-text">
-                Estado
-              </h3>
-              <ul className="space-y-1 text-sm text-gray-700">
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Ofertas
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Novedades
-                    </span>
-                  </label>
-                </li>
-              </ul>
-            </div>
-          </aside>
-
-          {/* Contenido principal */}
-          <div className="flex-1 flex flex-col">
-            {/* Barra de búsqueda y opciones */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
-              {/* Búsqueda */}
-              <div className="flex items-center w-full md:w-1/2 border rounded-md px-2 py-1">
+            {/* Rango de precio */}
+            <div>
+              <label className="text-sm leading-tight tracking-tight">
+                Rango de precio
+              </label>
+              <div className="flex items-center gap-2 text-xs">
                 <input
-                  type="text"
-                  placeholder="Buscar productos..."
-                  className="flex-1 outline-none leading-tight tracking-tight text-drcuotasTertiary-text p-1 w-full"
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                  }}
+                  type="number"
+                  placeholder="$ Max"
+                  className="w-full p-2 border border-black"
                 />
               </div>
+            </div>
 
-              {/* Selector de orden y vista */}
-              <div className="flex items-center gap-4">
-                <select
-                  className="border rounded-md px-2 py-1 text-sm"
-                  value={sortOption}
-                  onChange={(e) => {
-                    setSortOption(e.target.value);
-                  }}
-                >
-                  <option
-                    value="destacado"
-                    className="leading-tight tracking-tight"
-                  >
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Destacados
-                    </span>
-                  </option>
-                  <option value="precio">Precio</option>
-                  {/* Agrega más opciones según tus necesidades */}
-                </select>
+            {/* Popularidad o puntuación */}
+            <div>
+              <label className="text-sm leading-tight tracking-tight">
+                Ordenar por
+              </label>
+              <select className="w-full p-2  border border-black text-xs">
+                <option value="populares">Más populares</option>
+                <option value="mejor_valoradas">Mejor valoradas</option>
+                <option value="precio_menor">Precio más bajo</option>
+                <option value="precio_mayor">Precio más alto</option>
+              </select>
+            </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      setViewMode('grid');
+            {/* Botón aplicar filtros */}
+            <button className="w-full bg-black text-white p-2 hover:bg-gray-800 transition">
+              Aplicar filtros
+            </button>
+          </div>
+        </>
+        {/* Mostrario de Productos  */}
+        <>
+          <div className="w-full h-full flex flex-col border border-black gap-20 p-10">
+            {/* Barra de búsqueda y opciones */}
+            <>
+              <div className="flex flex-col md:flex-row items-center md:items-center justify-between gap-4">
+                {/* Búsqueda */}
+                <div className="flex items-center w-full md:w-1/2 border border-black px-2 py-2">
+                  <input
+                    type="text"
+                    placeholder="Buscar productos..."
+                    className="flex-1 outline-none leading-tight tracking-tight w-full text-black"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
                     }}
-                    className={`p-1 rounded ${
-                      viewMode === 'grid' ? 'bg-gray-300' : ''
-                    }`}
-                  >
-                    <FaThLarge />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setViewMode('list');
-                    }}
-                    className={`p-1 rounded ${
-                      viewMode === 'list' ? 'bg-gray-300' : ''
-                    }`}
-                  >
-                    <FaListUl />
-                  </button>
+                  />
+                </div>
+
+                {/* Selector de orden y vista */}
+                <div className="w-2/2 flex items-center gap-4">
+                  <div className="text-xs leading-tight tracking-tight ">
+                    {sortedSurgeries.length} encontrados
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setViewMode('grid');
+                      }}
+                      className={`p-2 ${
+                        viewMode === 'grid' ? 'bg-gray-300' : ''
+                      }`}
+                    >
+                      <FaThLarge />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setViewMode('list');
+                      }}
+                      className={`p-2  ${
+                        viewMode === 'list' ? 'bg-gray-300' : ''
+                      }`}
+                    >
+                      <FaListUl />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Cantidad de productos encontrados */}
-            <div className="mb-4 text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-              {sortedSurgeries.length} productos encontrados
-            </div>
+            </>
 
             {/* Grilla o lista de productos */}
             {sortedSurgeries.length > 0 ? (
@@ -244,14 +185,15 @@ export default function StoreView() {
                 ))}
               </div>
             ) : (
-              <span className="text-drcuotasTertiary-text text-center text-lg">
-                No hay cirugías disponibles.
-              </span>
+              <div className="w-full h-full flex justify-center items-center">
+                <span className="text-xs leading-tight tracking-tight">
+                  No hay cirugías disponibles.
+                </span>
+              </div>
             )}
           </div>
-        </div>
+        </>
       </div>
-      <AdComponents />
     </>
   );
 }
