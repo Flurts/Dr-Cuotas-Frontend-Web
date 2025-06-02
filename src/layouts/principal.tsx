@@ -5,7 +5,7 @@ import { LucideMessagesSquare } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { FiLogIn, FiMenu, FiUser } from 'react-icons/fi';
+import { FiMenu, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
@@ -93,12 +93,13 @@ const PrincipalLayout = ({ children, className }: Props) => {
       <nav
         className={`${
           sticky ? 'sticky top-0' : 'relative'
-        } z-50 flex w-full h-24  justify-center lg:justify-end items-center p-2  bg-white  backdrop-blur-3xl shadow-2xl shadow-white  transition-transform duration-500  ${
+        } z-50 flex w-full h-24  justify-center lg:justify-end items-center  bg-white shadow-md shadow-white  transition-transform duration-500  ${
           hidden ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
+        {/* Imagen */}
         <>
-          <div className="flex w-full items-end justify-start xl:px-20">
+          <div className="flex w-full items-end justify-center">
             <Link
               href="/"
               className="font-extrabold uppercase leading-tight tracking-wide text-xs w-auto"
@@ -113,36 +114,37 @@ const PrincipalLayout = ({ children, className }: Props) => {
             </Link>
           </div>
         </>
+        {/* Paginado  */}
         <>
-          <div className="hidden lg:flex w-full items-center justify-center gap-80">
+          <div className="hidden lg:flex w-full items-center justify-center">
             <ul className="flex flex-row justify-center items-center w-auto h-auto gap-4">
               <Link
                 href="/"
-                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+                className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
                 Inicio
               </Link>
               <Link
                 href="/store"
-                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+                className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
                 Tienda
               </Link>
               <Link
                 href="/financing"
-                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+                className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
                 Cuotas
               </Link>
               <Link
                 href="/professionals"
-                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+                className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
                 Doctores
               </Link>
               <Link
                 href="/faq"
-                className="uppercase leading-tight tracking-tight font-black text-sm text-[#737373] hover:text-drcuotasPrimary"
+                className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
                 Soporte
               </Link>
@@ -150,28 +152,27 @@ const PrincipalLayout = ({ children, className }: Props) => {
           </div>
         </>
         <>
-          <div className="flex w-20 lg:w-full items-center justify-center gap-2">
+          <div className="flex w-20 lg:w-full items-center justify-center gap-4">
             {!isLogged && !hasToken ? (
               <>
                 <Link
                   href="/login"
-                  className="text-[#737373] hover:text-white bg-white hover:bg-drcuotasPrimary-bg hover:border-drcuotasPrimary-bg font-black uppercase border-2 border-[#737373] w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
-                  <span className="text-sm">Login</span>
-                  <FiLogIn className="uppercase leading-tight tracking-tight font-black text-xl" />
+                  <FiUser />
                 </Link>
                 <Link
-                  href="/login"
-                  className="bg-[#737373] hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-[#737373] hover:border-drcuotasPrimary w-40 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  href="/register"
+                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
-                  <span className="text-sm">Register</span>
+                  <FiShoppingCart />
                 </Link>
               </>
             ) : (
               <>
                 <Link
                   href={getAccountUrl()}
-                  className="bg-drcuotasPrimary hover:bg-white text-white hover:text-drcuotasPrimary font-black uppercase border-2 border-drcuotasPrimary w-20 h-10 hidden lg:flex items-center justify-center rounded-xl transition-all duration-300 gap-2"
+                  className="text-xl text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
                   <FiUser className="text-2xl" />
                 </Link>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 
-import Cuotas from '@/components/common/cuotas';
 import AdComponents from '@/components/common/ViewElements/AdComponents';
 import CarouselHome from '@/components/common/ViewElements/Corousel';
 import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
@@ -39,7 +38,7 @@ export default function HomeView() {
         <div className="absolute inset-0 bg-drcuotasPrimary-bg bg-opacity-0"></div>
         <div className="relative">
           <OurSpecialties />
-          <Cuotas />
+          {/* <Cuotas /> */}
           <KnowOurProfessionals />
           <div className="w-full h-full hidden lg:flex flex-col justify-center items-center bg-white p-20">
             <OurServices />

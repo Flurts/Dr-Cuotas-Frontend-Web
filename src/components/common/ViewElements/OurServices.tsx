@@ -7,53 +7,53 @@ import TitleElements from './TitleElements';
 function OurServices() {
   const services = [
     {
-      imageSrc: '/images/elements/specialty.svg',
+      imageSrc: '/images/surgerys/girl_face.svg',
       link: '/services',
-      title: 'Cirugía General',
-      description:
-        'Procedimientos quirúrgicos en órganos internos y tejidos blandos.',
+      title: 'Rostro',
+      description: '',
     },
     {
-      imageSrc: '/images/elements/specialty.svg',
+      imageSrc: '/images/surgerys/girl_sculpture.svg',
       link: '/services',
-      title: 'Plástica y Estética',
-      description:
-        'Intervenciones para mejorar la apariencia o corregir defectos físicos.',
+      title: 'Cuerpo',
+      description: '',
     },
     {
-      imageSrc: '/images/elements/specialty.svg',
+      imageSrc: '/images/surgerys/girl_chest.svg',
       link: '/services',
-      title: 'Ortopédica',
-      description: 'Tratamiento de fracturas, lesiones óseas y articulares.',
+      title: 'Mamarios',
+      description: '',
     },
   ];
 
   return (
-    <div className="w-full h-full hidden lg:flex flex-col justify-center items-centerlg:p-20">
-      <TitleElements
-        primaryText="Nuestra Categorias"
-        secondaryText="nuestras especialidades"
-        descriptionText="Descubre nuestras especialidades en cirugía estética."
-      />
+    <div className="w-full h-screen hidden lg:flex flex-col justify-center items-center px-4">
+      <div className="w-full">
+        <TitleElements
+          primaryText="Nuestras mejores Categorias"
+          secondaryText="nuestras especialidades"
+          descriptionText=" "
+        />
 
-      <div className="w-full flex flex-row justify-center items-center gap-4">
-        {services.length > 0 ? (
-          services.map((service, index) => (
-            <ServiceCard
-              key={index}
-              imageSrc={service.imageSrc}
-              link={service.link}
-              title={service.title}
-              description={service.description}
-            />
-          ))
-        ) : (
-          <div className="flex flex-row items-center justify-center w-full h-full">
-            <span className="text-drcuotasTertiary-text leading-tight tracking-tight">
-              No hay especialidades disponibles
-            </span>
-          </div>
-        )}
+        <div className="w-full flex flex-row justify-center items-center gap-4 mt-6">
+          {services.length > 0 ? (
+            services.map((service, index) => (
+              <ServiceCard
+                key={index}
+                imageSrc={service.imageSrc}
+                link={service.link}
+                title={service.title}
+                description={service.description}
+              />
+            ))
+          ) : (
+            <div className="flex flex-row items-center justify-center w-full h-full">
+              <span className="text-drcuotasTertiary-text leading-tight tracking-tight">
+                No hay especialidades disponibles
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
