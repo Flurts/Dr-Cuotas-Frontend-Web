@@ -43,7 +43,7 @@ export default function OurProfessionals() {
       first_name: 'Juan',
       last_name: 'Pérez',
       email: 'juan.perez@hospital.com',
-      profile_picture: 'https://example.com/profile.jpg',
+      profile_picture: '/images/elements/doctor.svg',
       created_at: new Date('2022-01-15T08:00:00Z'),
       updated_at: new Date('2024-12-10T10:30:00Z'),
       password: '', // Puedes dejarla vacía o enmascarada si no se usa
