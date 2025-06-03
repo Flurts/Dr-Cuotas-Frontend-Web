@@ -4,7 +4,7 @@
 import { gql, GraphQLClient } from 'graphql-request';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import settings from '@/settings';
@@ -16,6 +16,8 @@ interface ProductPageProps {
 
 const ProductPage = ({ surgeryId }: ProductPageProps) => {
   const router = useRouter();
+  const params = useParams();
+  const currentSurgeryId = params?.id as string;
 
   // Estados para manejar la información
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -32,26 +34,58 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
     variables: { limit: 10, offset: 0 },
   });
 
+  localStorage.getItem('selectedSurgeryId');
+  console.log('🔍 Cirugía ID desde localStorage:', surgeryId);
+
+  console.log('🔍 ID de cirugía desde URL:', currentSurgeryId);
+
   useEffect(() => {
     if (data && !error) {
       const surgeries = data.getAllSurgeriesWithValues as Surgery[];
       setSurgeriesList(surgeries);
 
-      // Si se proporciona un ID específico, buscar esa cirugía
-      if (surgeryId) {
-        const surgery = surgeries.find((s) => s.id === surgeryId);
+      // Obtener el ID del localStorage (solo en cliente)
+      const surgeryIdLocal =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('selectedSurgeryId')
+          : null;
+
+      console.log('🔍 Cirugía ID desde localStorage:', surgeryIdLocal);
+      console.log('🔍 ID buscado:', currentSurgeryId);
+      console.log(
+        '📋 Lista de cirugías disponibles:',
+        surgeries.map((s) => ({ id: s.id, name: s.name })),
+      );
+
+      // Determinar qué ID usar (prioridad: currentSurgeryId > localStorage > primera cirugía)
+      const idToUse = currentSurgeryId || surgeryIdLocal;
+
+      if (idToUse) {
+        const surgery = surgeries.find((s) => s.id === idToUse);
         if (surgery) {
+          console.log('✅ Cirugía encontrada:', surgery);
           setSelectedSurgery(surgery);
+        } else {
+          console.log('❌ No se encontró cirugía con ID:', idToUse);
+          // Si no se encuentra, usar la primera disponible
+          if (surgeries.length > 0) {
+            console.log('🔄 Usando primera cirugía disponible:', surgeries[0]);
+            setSelectedSurgery(surgeries[0]);
+          }
         }
       } else if (surgeries.length > 0) {
-        // Si no se proporciona ID, usar la primera cirugía
+        // Si no hay ningún ID, usar la primera cirugía
+        console.log(
+          '📝 Sin ID específico, usando primera cirugía:',
+          surgeries[0],
+        );
         setSelectedSurgery(surgeries[0]);
       }
     } else if (error) {
       console.error('Error fetching surgeries:', error);
       setSurgeriesList([]);
     }
-  }, [data, error, surgeryId]);
+  }, [data, error, currentSurgeryId]);
 
   // Actualizar selectedCuotas cuando cambia selectedQuota
   useEffect(() => {
@@ -313,9 +347,9 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
 
   const imageUrl = file_banner?.file_link ?? '/images/elements/specialty.svg';
 
-  console.log('Selected surgery:', selectedSurgery);
-  console.log('Available provinces:', availableProvinces);
-  console.log('Filtered doctors:', filteredDoctors);
+  console.log('🎯 Selected surgery:', selectedSurgery);
+  console.log('🌍 Available provinces:', availableProvinces);
+  console.log('👨‍⚕️ Filtered doctors:', filteredDoctors);
 
   return (
     <>
