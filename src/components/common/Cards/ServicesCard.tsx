@@ -23,7 +23,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           layout="fill"
           objectFit="cover"
           className="z-0"
-          loading='lazy'
+          loading="lazy"
         />
         {/* Overlay oscuro */}
         <div className="absolute inset-0 bg-white backdrop-blur-sm bg-opacity-20 z-10"></div>

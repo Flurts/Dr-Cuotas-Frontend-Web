@@ -9,11 +9,11 @@ import { appWithTranslation } from 'next-i18next';
 import { Provider } from 'react-redux';
 
 import useApolloClient from '@/api/use_apollo_client';
+import AdsModal from '@/components/common/ViewElements/AdComponents';
 import { Toaster } from '@/components/ui/toaster';
 import FooterWrapper from '@/footers';
 import LayoutWrapper from '@/layouts';
 import { wrapper } from '@/store/wrapper';
-import AdsModal from '@/components/common/ViewElements/AdComponents';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -36,11 +36,11 @@ const App = ({
           <FooterWrapper>
             <>
               <SessionProvider session={session}>
-                  <main className={poppins.className}>
-                    {/* Botón flotante del carrito principal */}
-                    <AdsModal />
-                    <Component {...pageProps} />
-                  </main>
+                <main className={poppins.className}>
+                  {/* Botón flotante del carrito principal */}
+                  <AdsModal />
+                  <Component {...pageProps} />
+                </main>
               </SessionProvider>
               <Toaster />
             </>

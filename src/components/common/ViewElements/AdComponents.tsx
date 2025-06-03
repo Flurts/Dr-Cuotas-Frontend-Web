@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { gql, useQuery } from '@apollo/client';
-import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 
 const GET_ADS = gql`
   query GetAdsQuery {
@@ -37,11 +37,11 @@ const AdsModal: React.FC = () => {
     const checkAndShowModal = () => {
       const now = Date.now();
       const thirtyMinutes = 30 * 60 * 1000; // 30 minutos en milisegundos
-      
+
       if (now - lastShownTime >= thirtyMinutes) {
         setIsModalOpen(true);
         setLastShownTime(now);
-        
+
         // Rotar al siguiente anuncio
         setCurrentAdIndex((prevIndex) => (prevIndex + 1) % ads.length);
       }
@@ -75,7 +75,7 @@ const AdsModal: React.FC = () => {
     }
   };
 
-  if (loading || error || ads.length === 0) {
+  if (loading ?? error ?? ads.length === 0) {
     return null;
   }
 
@@ -101,7 +101,11 @@ const AdsModal: React.FC = () => {
             {/* Contenido del anuncio */}
             <div className="relative">
               {currentAd.link ? (
-                <Link href={currentAd.link} target="_blank" rel="noopener noreferrer">
+                <Link
+                  href={currentAd.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <div className="cursor-pointer group">
                     <img
                       src={currentAd.image}

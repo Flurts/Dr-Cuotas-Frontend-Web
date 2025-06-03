@@ -200,7 +200,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
                   onClick={HandleLogOut}
                   className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
-                  <RxExit  />
+                  <RxExit />
                 </button>
                 <Link
                   href="/store"

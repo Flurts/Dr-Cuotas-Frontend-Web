@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { Box, Modal, Typography } from '@mui/material';
-import { LucideMessagesSquare } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { FiMenu, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
+import { RxExit } from 'react-icons/rx';
 import { useSelector } from 'react-redux';
 
 import { isLoggedIn } from '@/store';
-import { useRouter } from 'next/router';
-import { RxExit } from 'react-icons/rx';
 
 interface Props {
   children: JSX.Element;
@@ -85,23 +84,23 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
     };
   }, [lastScrollY, scrollTimeout]);
 
-    useEffect(() => {
-      setHasToken(!!localStorage.getItem('accessToken'));
-      // Now you can safely log it
-    }, []);
-  
-    const router = useRouter(); // Inicializa el router
-  
-    const HandleLogOut = () => {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('role');
-      localStorage.removeItem('nextauth.message');
-      console.log('LogOut');
-      // Redirigir a la página principal y luego recargar
-      void router.push('/').then(() => {
-        window.location.reload();
-      });
-    };
+  useEffect(() => {
+    setHasToken(!!localStorage.getItem('accessToken'));
+    // Now you can safely log it
+  }, []);
+
+  const router = useRouter(); // Inicializa el router
+
+  const HandleLogOut = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('nextauth.message');
+    console.log('LogOut');
+    // Redirigir a la página principal y luego recargar
+    void router.push('/').then(() => {
+      window.location.reload();
+    });
+  };
 
   return (
     <div className={`${className}`}>
@@ -201,7 +200,7 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
                   onClick={HandleLogOut}
                   className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
-                  <RxExit  />
+                  <RxExit />
                 </button>
                 <Link
                   href="/store"
