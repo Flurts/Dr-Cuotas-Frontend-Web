@@ -15,7 +15,6 @@ import {
   LucideStar,
   LucideTwitter,
 } from 'lucide-react';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 
@@ -110,7 +109,7 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
             <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
               {/* Imagen del Doctor */}
               <div className="h-32 w-32 border-4 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
-                <Image
+                <img
                   src={profilePicture}
                   alt={`Foto de ${doctorName}`}
                   width={128}

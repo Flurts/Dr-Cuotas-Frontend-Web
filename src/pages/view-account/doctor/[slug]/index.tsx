@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -6,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { Head } from '@/components/constants';
 import getServerSideSharedProps from '@/lib/next';
 import { getJwt } from '@/store';
-import { Doctor, useGetDoctorLazyQuery } from '@/types';
+import { Doctor, Gender, Role, Status, useGetDoctorLazyQuery } from '@/types';
 import { DoctorView } from '@/views/doctor-view';
 
 export default function OurProfessionals() {
@@ -30,23 +31,36 @@ export default function OurProfessionals() {
     }
   }, [slug, jwt, getDoctor]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!data?.getDoctor || !data.getDoctor.status) {
-    return <div>No doctor found.</div>;
-  }
+  // Datos de ejemplo para usar mientras carga o no hay data real
+  const exampleDoctor: Doctor = {
+    id: 'doc-123456',
+    user: {
+      id: 'user-78910',
+      first_name: 'Juan',
+      last_name: 'Pérez',
+      email: 'juan.perez@hospital.com',
+      profile_picture: 'https://example.com/profile.jpg',
+      created_at: new Date('2022-01-15T08:00:00Z'),
+      updated_at: new Date('2024-12-10T10:30:00Z'),
+      password: '', // Puedes dejarla vacía o enmascarada si no se usa
+      status: Status.Active,
+      gender: Gender.Male, // or 'female', or whatever type is expected
+      role: Role.Doctor, // or the appropriate role string or enum value
+    },
+    doctor: undefined,
+    adjudicateds: [],
+    status: Status.Active,
+  };
 
-  const responseData = data.getDoctor;
+  const responseData = data?.getDoctor ?? { doctor: exampleDoctor };
 
   return (
     <>
-      <Head title={`Dr.${responseData.doctor?.user?.first_name}`} />
+      <Head title={`Dr. ${responseData.doctor?.user?.first_name}`} />
       <DoctorView doctor={responseData.doctor as Doctor} />
     </>
   );

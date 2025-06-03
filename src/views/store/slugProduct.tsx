@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-shadow */
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { gql, GraphQLClient } from 'graphql-request';
-import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import settings from '@/settings';
+import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
 interface ProductPageProps {
   surgeryId?: string; // Para obtener una cirugía específica
@@ -13,15 +16,16 @@ interface ProductPageProps {
 
 const ProductPage = ({ surgeryId }: ProductPageProps) => {
   const router = useRouter();
-  
+
   // Estados para manejar la información
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
   const [selectedSurgery, setSelectedSurgery] = useState<Surgery | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<string>('');
   const [selectedDoctorId, setSelectedDoctorId] = useState<string>('');
   const [selectedQuota, setSelectedQuota] = useState<number>(1);
   const [selectedCuotas, setSelectedCuotas] = useState<number>(1);
   const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
-  
 
   // Query para obtener las cirugías
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
@@ -32,23 +36,16 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
     if (data && !error) {
       const surgeries = data.getAllSurgeriesWithValues as Surgery[];
       setSurgeriesList(surgeries);
-      
+
       // Si se proporciona un ID específico, buscar esa cirugía
       if (surgeryId) {
-        const surgery = surgeries.find(s => s.id === surgeryId);
+        const surgery = surgeries.find((s) => s.id === surgeryId);
         if (surgery) {
           setSelectedSurgery(surgery);
-          // Seleccionar el primer doctor disponible por defecto
-          if (surgery.doctors && surgery.doctors.length > 0) {
-            setSelectedDoctorId(surgery.doctors[0].doctor?.id || '');
-          }
         }
       } else if (surgeries.length > 0) {
         // Si no se proporciona ID, usar la primera cirugía
         setSelectedSurgery(surgeries[0]);
-        if (surgeries[0].doctors && surgeries[0].doctors.length > 0) {
-          setSelectedDoctorId(surgeries[0].doctors[0].doctor?.id || '');
-        }
       }
     } else if (error) {
       console.error('Error fetching surgeries:', error);
@@ -61,8 +58,13 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
     setSelectedCuotas(selectedQuota);
   }, [selectedQuota]);
 
+  // Resetear doctor seleccionado cuando cambia la provincia
+  useEffect(() => {
+    setSelectedDoctorId('');
+  }, [selectedProvince]);
+
   // Opciones de cuotas disponibles
-  const cuotasOptions = [4,8,16];
+  const cuotasOptions = [4, 8, 16];
 
   // Función para obtener fecha futura
   const getDatePlusDays = (days: number): string => {
@@ -78,6 +80,36 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
     }
   `;
 
+  // Extraer información de la cirugía seleccionada
+  const doctors = selectedSurgery?.doctors ?? [];
+
+  // Formatear doctores para el select
+  const formattedDoctors = doctors.map((d) => ({
+    id: d.doctor?.id || '',
+    first_name: d.doctor?.user?.first_name || 'Sin nombre',
+    last_name: d.doctor?.user?.last_name || 'Sin apellido',
+    provincia: d.doctor?.provincia || 'Sin provincia',
+  }));
+
+  // Obtener provincias únicas de los doctores
+  const availableProvinces = useMemo(() => {
+    const provinces = formattedDoctors
+      .map((doctor) => doctor.provincia)
+      .filter((provincia) => provincia && provincia !== 'Sin provincia');
+
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+    return Array.from(new Set(provinces)).sort();
+  }, [formattedDoctors]);
+
+  // Filtrar doctores por provincia seleccionada
+  const filteredDoctors = useMemo(() => {
+    if (!selectedProvince) return [];
+
+    return formattedDoctors.filter(
+      (doctor) => doctor.provincia === selectedProvince,
+    );
+  }, [formattedDoctors, selectedProvince]);
+
   // Función para suscribirse a la cirugía y procesar pago por pasarela
   const subscribeSurgerie = async () => {
     if (!termsAccepted) {
@@ -89,6 +121,9 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
       alert('Por favor complete todos los campos requeridos.');
       return;
     }
+
+    localStorage.setItem('isRegister', '1');
+    localStorage.setItem('surgeryId', selectedSurgery.id);
 
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
@@ -161,7 +196,9 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
       return adjudicadosId;
     } catch (error) {
       console.error('🚨 Error en subscribeSurgerie:', error);
-      alert('Hubo un error al procesar la suscripción. Por favor intente nuevamente.');
+      alert(
+        'Hubo un error al procesar la suscripción. Por favor intente nuevamente.',
+      );
     }
   };
 
@@ -236,14 +273,14 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
       alert('Por favor complete todos los campos y acepte los términos');
       return;
     }
-    
+
     console.log('Procesando pago directo:', {
       surgery: selectedSurgery,
       doctor: selectedDoctorId,
       cuotas: selectedQuota,
-      amount: selectedSurgery.amount / selectedQuota
+      amount: selectedSurgery.amount / selectedQuota,
     });
-    
+
     // Aquí iría la lógica para el pago directo
   };
 
@@ -265,203 +302,245 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
     );
   }
 
-  // Extraer información de la cirugía seleccionada
   const {
     name: title,
     amount: price,
     category,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     description,
-    doctors = [],
-    file_banner
+    file_banner,
   } = selectedSurgery;
 
-  const imageUrl = file_banner?.file_link || '/images/elements/specialty.svg';
-
-  // Formatear doctores para el select
-  const formattedDoctors = doctors.map(d => ({
-    id: d.doctor?.id || '',
-    first_name: d.doctor?.user?.first_name || 'Sin nombre',
-    last_name: d.doctor?.user?.last_name || 'Sin apellido',
-    provincia: d.doctor?.provincia || 'Sin provincia'
-  }));
+  const imageUrl = file_banner?.file_link ?? '/images/elements/specialty.svg';
 
   console.log('Selected surgery:', selectedSurgery);
-  console.log('Formatted doctors:', formattedDoctors);
+  console.log('Available provinces:', availableProvinces);
+  console.log('Filtered doctors:', filteredDoctors);
 
   return (
     <>
-      <div className="w-full min-h-screen  flex flex-col lg:flex-row justify-center items-stretch p-10 gap-2 ">  
-          {/* Imagen Principal */}
-          <div className="w-1/2 hidden lg:flex justify-center items-center border border-black">
-              <Image
-                src={imageUrl}
-                alt={`Imagen de ${title}`}
-                className="w-full h-full object-cover "
-                quality={80}
-                width={300}
-                height={300}
-              />
-          </div>
+      <div className="w-full min-h-screen  flex flex-col lg:flex-row justify-center items-stretch p-10 gap-2 ">
+        {/* Imagen Principal */}
+        <div className="w-1/2 hidden lg:flex justify-center items-center border border-black">
+          <Image
+            src={imageUrl}
+            alt={`Imagen de ${title}`}
+            className="w-full h-full object-cover "
+            quality={80}
+            width={300}
+            height={300}
+          />
+        </div>
 
-          {/* Panel de Pago */}
-          <div className="w-full  bg-white border border-black overflow-hidden">
-            <div className="p-10 h-full flex flex-col">
-              {/* Header */}
-              <div className="mb-6">
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">
-                  Cirugía {title}
-                </h2>
-                
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4  border-l-4 border-blue-400">
-                  <p className="text-sm text-gray-700">
-                    {selectedCuotas
-                      ? `${selectedCuotas} cuotas de $${(price / selectedCuotas).toFixed(0)}`
-                      : 'Seleccione cuotas'}
+        {/* Panel de Pago */}
+        <div className="w-full  bg-white border border-black overflow-hidden">
+          <div className="p-10 h-full flex flex-col">
+            {/* Header */}
+            <div className="mb-6">
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">
+                Cirugía {title}
+              </h2>
+
+              <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4  border-l-4 border-blue-400">
+                <p className="text-sm text-gray-700">
+                  {selectedCuotas
+                    ? `${selectedCuotas} cuotas de $${(price / selectedCuotas).toFixed(0)}`
+                    : 'Seleccione cuotas'}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Valor total:{' '}
+                  <span className="text-2xl font-bold text-green-600">
+                    ${price?.toFixed(0)}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Formulario de Pago */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              className="flex-1"
+            >
+              {/* Información de Categoría y Precio (Desktop) */}
+              <div className="hidden lg:grid grid-cols-2 gap-6 mb-6 p-4 bg-gray-50 rounded-2xl">
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Categoría
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Valor total: <span className='text-2xl font-bold text-green-600'>${price?.toFixed(0)}</span>
+                  <p className="text-sm font-medium text-gray-800">
+                    {category || 'Sin categoría'}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Precio por Cuota
+                  </p>
+                  <p className="text-sm font-medium text-gray-800">
+                    $
+                    {selectedQuota
+                      ? (price / selectedQuota).toFixed(0)
+                      : 'Calculando...'}
                   </p>
                 </div>
               </div>
 
-              {/* Formulario de Pago */}
-              <form onSubmit={(e) => e.preventDefault()} className="flex-1">
-                {/* Información de Categoría y Precio (Desktop) */}
-                <div className="hidden lg:grid grid-cols-2 gap-6 mb-6 p-4 bg-gray-50 rounded-2xl">
-                  <div className="space-y-1">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Categoría
-                    </p>
-                    <p className="text-sm font-medium text-gray-800">
-                      {category || 'Sin categoría'}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Precio por Cuota
-                    </p>
-                    <p className="text-sm font-medium text-gray-800">
-                      ${selectedQuota ? (price / selectedQuota).toFixed(0) : 'Calculando...'}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Campos de Selección */}
-                <div className="space-y-6 mb-6">
-                  {/* Selección de doctor */}
-
-                  <div >
-                    <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                      Doctor
-                    </label>
-                    {formattedDoctors.length > 0 ? (
-                      <select
-                        value={selectedDoctorId}
-                        onChange={(e) => setSelectedDoctorId(e.target.value)}
-                        className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
-                        required
-                      >
-                        <option value="">Seleccionar doctor</option>
-                        {formattedDoctors.map((doctor) => (
-                          <option key={doctor.id} value={doctor.id}>
-                            {doctor.first_name} {doctor.last_name} - {doctor.provincia}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
-                        <p className="text-sm text-yellow-700">
-                          No hay doctores disponibles
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Selección de cuotas */}
-                  <div>
-                    
-                    <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                      Cuotas
-                    </label>
+              {/* Campos de Selección */}
+              <div className="space-y-6 mb-6">
+                {/* Selección de provincia */}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                    Provincia
+                  </label>
+                  {availableProvinces.length > 0 ? (
                     <select
-                      value={selectedQuota}
-                      onChange={(e) => setSelectedQuota(Number(e.target.value))}
+                      value={selectedProvince}
+                      onChange={(e) => {
+                        setSelectedProvince(e.target.value);
+                      }}
                       className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
                       required
                     >
-                      {cuotasOptions.map((quota) => (
-                        <option key={quota} value={quota}>
-                          {quota} cuota{quota > 1 ? 's' : ''}
+                      <option value="">Seleccionar provincia</option>
+                      {availableProvinces.map((province) => (
+                        <option key={province} value={province}>
+                          {province}
                         </option>
                       ))}
                     </select>
-                  </div>
+                  ) : (
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                      <p className="text-sm text-yellow-700">
+                        No hay provincias disponibles
+                      </p>
+                    </div>
+                  )}
                 </div>
-              </form>
 
-              {/* Checkbox de Términos y Condiciones */}
-              <div className="flex items-start gap-3 mb-6 p-4 bg-gray-50 ">
-                <input
-                  type="checkbox"
-                  checked={termsAccepted}
-                  onChange={(e) => setTermsAccepted(e.target.checked)}
-                  id="terms"
-                  className="mt-1 w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500"
-                  required
-                />
-                <label
-                  htmlFor="terms"
-                  className="text-sm text-gray-700 cursor-pointer leading-relaxed"
-                >
-                  <Link
-                    href="/faq"
-                    className="text-blue-600 hover:text-blue-800 font-medium underline decoration-2 underline-offset-2"
+                {/* Selección de doctor */}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                    Doctor
+                  </label>
+                  {!selectedProvince ? (
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
+                      <p className="text-sm text-blue-700">
+                        Primero selecciona una provincia
+                      </p>
+                    </div>
+                  ) : filteredDoctors.length > 0 ? (
+                    <select
+                      value={selectedDoctorId}
+                      onChange={(e) => {
+                        setSelectedDoctorId(e.target.value);
+                      }}
+                      className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
+                      required
+                    >
+                      <option value="">Seleccionar doctor</option>
+                      {filteredDoctors.map((doctor) => (
+                        <option key={doctor.id} value={doctor.id}>
+                          {doctor.first_name} {doctor.last_name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                      <p className="text-sm text-yellow-700">
+                        No hay doctores disponibles en {selectedProvince}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Selección de cuotas */}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                    Cuotas
+                  </label>
+                  <select
+                    value={selectedQuota}
+                    onChange={(e) => {
+                      setSelectedQuota(Number(e.target.value));
+                    }}
+                    className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
+                    required
                   >
-                    Acepto Términos y Condiciones
-                  </Link>
-                </label>
+                    {cuotasOptions.map((quota) => (
+                      <option key={quota} value={quota}>
+                        {quota} cuota{quota > 1 ? 's' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+            </form>
 
-              {/* Sección de Botones */}
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">
-                  Pagar por:
-                </h3>
+            {/* Checkbox de Términos y Condiciones */}
+            <div className="flex items-start gap-3 mb-6 p-4 bg-gray-50 ">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => {
+                  setTermsAccepted(e.target.checked);
+                }}
+                id="terms"
+                className="mt-1 w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500"
+                required
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm text-gray-700 cursor-pointer leading-relaxed"
+              >
+                <Link
+                  href="/faq"
+                  className="text-blue-600 hover:text-blue-800 font-medium underline decoration-2 underline-offset-2"
+                >
+                  Acepto Términos y Condiciones
+                </Link>
+              </label>
+            </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  <button
-                    onClick={subscribeSurgerie}
-                    type="button"
-                    disabled={!termsAccepted || !selectedDoctorId}
-                    className={`group relative h-14 font-bold text-sm uppercase tracking-wider transition-all duration-200 overflow-hidden ${
-                      termsAccepted && selectedDoctorId
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <span className="relative">Pasarela de Pago</span>
-                  </button>
-                  
-                  <button
-                    onClick={subscribeSurgerieDirect}
-                    type="button"
-                    disabled={!termsAccepted || !selectedDoctorId}
-                    className={`group relative h-14 font-bold text-sm uppercase tracking-wider transition-all duration-200 overflow-hidden ${
-                      termsAccepted && selectedDoctorId
-                        ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <span className="relative">Cuenta Bancaria</span>
-                  </button>
-                </div>
+            {/* Sección de Botones */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">
+                Pagar por:
+              </h3>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <button
+                  onClick={subscribeSurgerie}
+                  type="button"
+                  disabled={!termsAccepted || !selectedDoctorId}
+                  className={`group relative h-14 font-bold text-sm uppercase tracking-wider transition-all duration-200 overflow-hidden ${
+                    termsAccepted && selectedDoctorId
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <span className="relative">Pasarela de Pago</span>
+                </button>
+
+                <button
+                  onClick={subscribeSurgerieDirect}
+                  type="button"
+                  disabled={!termsAccepted || !selectedDoctorId}
+                  className={`group relative h-14 font-bold text-sm uppercase tracking-wider transition-all duration-200 overflow-hidden ${
+                    termsAccepted && selectedDoctorId
+                      ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <span className="relative">Cuenta Bancaria</span>
+                </button>
               </div>
             </div>
           </div>
+        </div>
       </div>
-   
     </>
   );
 };

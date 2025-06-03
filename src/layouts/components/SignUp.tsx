@@ -152,8 +152,20 @@ export default function RegisterModal() {
           description: '¡Bienvenido a la comunidad!',
         });
 
+        const Id = localStorage.getItem('surgeryId');
+
         // Redirigir según el rol
-        const destination = user.role === 'Admin' ? '/admin' : '/';
+        const destination =
+          localStorage.getItem('isRegister') === '1'
+            ? `/store/${Id}`
+            : localStorage.getItem('isRegister') === ''
+              ? '/'
+              : '/';
+
+        localStorage.removeItem('isRegister'); // Limpiar el estado de registro
+
+        // Redirigir al destino
+
         await router.push(destination);
       }
     } catch (error) {
@@ -265,7 +277,9 @@ export default function RegisterModal() {
                 />
               </div>
             </div>
-
+            <span className="w-full text-xs text-black ">
+              fecha de nacimiento
+            </span>
             <div className="w-full flex flex-col justify-center">
               <p className="text-sm hidden">{t('form:dateOfBirth')}</p>
               <div className="flex flex-row gap-4 w-full">
@@ -307,6 +321,7 @@ export default function RegisterModal() {
                 )}
               />
             </div>
+            <span className="w-full text-xs text-black ">Genero</span>
 
             <div className="w-full flex flex-col justify-center">
               <p className="text-sm hidden">{t('form:gender')}</p>
