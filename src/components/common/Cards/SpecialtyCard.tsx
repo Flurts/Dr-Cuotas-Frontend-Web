@@ -69,7 +69,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
     <div className="absolute inset-0 bg-white backdrop-blur-sm bg-opacity-20 z-10"></div>
 
     {/* Contenido sobre la imagen */}
-    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-4">
+    <div className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center px-4">
       <h1 className="text-white text-xl font-bold uppercase tracking-wide">
         {title}
       </h1>
