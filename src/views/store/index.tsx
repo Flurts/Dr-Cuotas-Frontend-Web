@@ -1,257 +1,353 @@
-import React, { useEffect, useState } from 'react';
-import { FaListUl, FaThLarge } from 'react-icons/fa'; // Para el toggle de vista
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 
-import SpecialtyCard from '@/components/common/Cards/SpecialtyCard';
-import AdComponents from '@/components/common/ViewElements/AdComponents';
 import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
+
+export enum SurgeryCategories {
+  FacialSurgeries = 'FacialSurgeries',
+  BreastSurgeries = 'BreastSurgeries',
+  BodySurgeries = 'BodySurgeries',
+  ReconstructiveSurgeries = 'ReconstructiveSurgeries',
+  GeneralSurgeries = 'GeneralSurgeries',
+  CosmeticSurgeries = 'CosmeticSurgeries',
+  OrthopedicSurgeries = 'OrthopedicSurgeries',
+  NeurologicalSurgeries = 'NeurologicalSurgeries',
+  OphthalmicSurgeries = 'OphthalmicSurgeries',
+  PediatricSurgeries = 'PediatricSurgeries',
+  UrologicSurgeries = 'UrologicSurgeries',
+  GynecologicSurgeries = 'GynecologicSurgeries',
+  ThoracicSurgeries = 'ThoracicSurgeries',
+  TransplantSurgeries = 'TransplantSurgeries',
+  ENTSurgeries = 'ENTSurgeries',
+  DentalSurgeries = 'DentalSurgeries',
+}
+
+// Mapeo de categorías para mostrar nombres amigables
+const categoryLabels = {
+  [SurgeryCategories.FacialSurgeries]: 'Cirugías Faciales',
+  [SurgeryCategories.BreastSurgeries]: 'Cirugías Mamarias',
+  [SurgeryCategories.BodySurgeries]: 'Cirugías Corporales',
+  [SurgeryCategories.ReconstructiveSurgeries]: 'Cirugías Reconstructivas',
+  [SurgeryCategories.GeneralSurgeries]: 'Cirugías Generales',
+  [SurgeryCategories.CosmeticSurgeries]: 'Cirugías Cosméticas',
+  [SurgeryCategories.OrthopedicSurgeries]: 'Cirugías Ortopédicas',
+  [SurgeryCategories.NeurologicalSurgeries]: 'Cirugías Neurológicas',
+  [SurgeryCategories.OphthalmicSurgeries]: 'Cirugías Oftálmicas',
+  [SurgeryCategories.PediatricSurgeries]: 'Cirugías Pediátricas',
+  [SurgeryCategories.UrologicSurgeries]: 'Cirugías Urológicas',
+  [SurgeryCategories.GynecologicSurgeries]: 'Cirugías Ginecológicas',
+  [SurgeryCategories.ThoracicSurgeries]: 'Cirugías Torácicas',
+  [SurgeryCategories.TransplantSurgeries]: 'Cirugías de Trasplante',
+  [SurgeryCategories.ENTSurgeries]: 'Cirugías ORL',
+  [SurgeryCategories.DentalSurgeries]: 'Cirugías Dentales',
+};
+
+interface Filters {
+  category: string;
+  minPrice: number | null;
+  maxPrice: number | null;
+  minRating: number | null;
+  sortBy: 'name' | 'price-asc' | 'price-desc' | 'rating' | 'popular';
+}
 
 export default function StoreView() {
   const { data, error } = useGetAllSurgeriesWithValuesQuery({
-    variables: { limit: 20, offset: 0 },
+    variables: { limit: 100, offset: 0 },
   });
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('destacado'); // Ejemplo
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showFilters, setShowFilters] = useState(true);
+
+  const [filters, setFilters] = useState<Filters>({
+    category: '',
+    minPrice: null,
+    maxPrice: null,
+    minRating: null,
+    sortBy: 'popular',
+  });
+
+  // Efecto para leer parámetros de la URL y aplicar filtros
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (
+      categoryFromUrl &&
+      Object.values(SurgeryCategories).includes(
+        categoryFromUrl as SurgeryCategories,
+      )
+    ) {
+      setFilters((prev) => ({
+        ...prev,
+        category: categoryFromUrl,
+      }));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (data && !error) {
       setSurgeriesList(data.getAllSurgeriesWithValues as Surgery[]);
     } else if (error) {
-      console.error(error);
+      console.error('Error fetching surgeries:', error);
       setSurgeriesList([]);
     }
   }, [data, error]);
 
-  // Filtrado básico por nombre (ejemplo)
-  const filteredSurgeries = surgeriesList.filter((surgery) =>
-    surgery.name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  // Filtrado y ordenamiento con useMemo para optimización
+  const filteredAndSortedSurgeries = useMemo(() => {
+    let result = [...surgeriesList];
 
-  // Ordenar (ejemplo simplificado)
-  const sortedSurgeries = [...filteredSurgeries].sort((a, b) => {
-    if (sortOption === 'destacado') {
-      // Podrías ordenar por rating, por ejemplo
-      return (b.rating ?? 0) - (a.rating ?? 0);
-    } else if (sortOption === 'precio') {
-      // Si tuvieras un campo "price" o "cost" en Surgery, podrías usarlo
-      return (a.cost ?? 0) - (b.cost ?? 0);
+    // Filtro por búsqueda
+    if (searchTerm) {
+      result = result.filter((surgery) =>
+        surgery.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
     }
-    return 0;
-  });
-  console.log('Sorted Surgeries:', data);
+
+    // Filtro por categoría
+    if (filters.category) {
+      result = result.filter(
+        (surgery) => surgery.category === filters.category,
+      );
+    }
+
+    // Filtro por precio
+    if (filters.minPrice !== null) {
+      result = result.filter(
+        (surgery) => (surgery.amount ?? 0) >= filters.minPrice!,
+      );
+    }
+    if (filters.maxPrice !== null) {
+      result = result.filter(
+        (surgery) => (surgery.amount ?? 0) <= filters.maxPrice!,
+      );
+    }
+
+    // Filtro por rating
+    if (filters.minRating !== null) {
+      result = result.filter(
+        (surgery) => (surgery.rating ?? 0) >= filters.minRating!,
+      );
+    }
+
+    // Ordenamiento
+    result.sort((a, b) => {
+      switch (filters.sortBy) {
+        case 'name':
+          return (a.name ?? '').localeCompare(b.name ?? '');
+        case 'price-asc':
+          return (a.amount ?? 0) - (b.amount ?? 0);
+        case 'price-desc':
+          return (b.amount ?? 0) - (a.amount ?? 0);
+        case 'rating':
+          return (b.rating ?? 0) - (a.rating ?? 0);
+        case 'popular':
+        default:
+          // Podrías usar un campo de popularidad o rating como proxy
+          return (b.rating ?? 0) - (a.rating ?? 0);
+      }
+    });
+
+    return result;
+  }, [surgeriesList, searchTerm, filters]);
+
+  const handleFilterChange = (filterType: keyof Filters, value: any) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterType]: value,
+    }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category: '',
+      minPrice: null,
+      maxPrice: null,
+      minRating: null,
+      sortBy: 'popular',
+    });
+    setSearchTerm('');
+    // Limpiar también la URL
+    router.push('/store');
+  };
+
+  // Función para manejar el click y redirigir
+  const handleCardClick = (surgeryId: string) => {
+    router.push(`/store/${surgeryId}`);
+  };
 
   return (
-    <>
-      <div className="w-full h-full flex flex-col justify-between items-center p-10">
-        {/* Contenedor principal: Filtros + Contenido */}
-        <div className=" w-full h-full flex flex-col lg:flex-row gap-2">
-          {/* Panel lateral de filtros */}
-          <aside className="w-full lg:w-64 h-auto border rounded-xl p-4 flex-shrink-0">
-            <div className="mb-4">
-              <h2 className="text-lg mb-2 text-drcuotasTertiary-text font-black uppercase leading-tight tracking-tight">
-                Filtros
-              </h2>
-              <button className="text-sm text-drcuotasPrimary-text hover:underline">
-                Limpiar filtros
+    <div className="w-full min-h-screen p-10">
+      <div className="flex flex-col xl:flex-row gap-2">
+        {/* Sidebar - Filtros */}
+        <div
+          className={`${showFilters ? 'block' : 'hidden'} xl:block xl:w-80 xl:flex-shrink-0`}
+        >
+          <div className="bg-white w-full h-screen border border-black p-4 flex flex-col gap-4">
+            <div className="flex items-center justify-between mb-4 lg:mb-6">
+              <h2 className="text-sm ">Filtros</h2>
+              <button onClick={clearFilters} className="text-sm text-blue-600 ">
+                Limpiar
               </button>
             </div>
 
-            {/* Categorías (ejemplo) */}
-            <div className="mb-6">
-              <h3 className="text-sm mb-2 text-drcuotasTertiary-text font-bold uppercase leading-tight tracking-tight">
-                Categorías
-              </h3>
-              <ul className="space-y-1 text-sm text-gray-700">
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2 " />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Todos
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Rostro
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Cuerpo
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Mamarios
-                    </span>
-                  </label>
-                </li>
-              </ul>
+            {/* Categoría */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Tipo de cirugía
+              </label>
+              <select
+                value={filters.category}
+                onChange={(e) => {
+                  handleFilterChange('category', e.target.value);
+                }}
+                className="w-full p-2.5 lg:p-3 text-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Todas las categorías</option>
+                {Object.entries(categoryLabels).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* Precio (ejemplo con rango) */}
-            <div className="mb-6">
-              <h3 className="text-sm font-bold mb-2 text-drcuotasTertiary-text  uppercase leading-tight tracking-tight">
-                Precio
-              </h3>
-              <input type="range" min="0" max="2000" className="w-full" />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>0</span>
-                <span>2000</span>
+            {/* Rango de precio */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rango de precio
+              </label>
+              <div className="grid grid-cols-2 gap-2 lg:gap-3">
+                <input
+                  type="number"
+                  placeholder="Precio mín."
+                  value={filters.minPrice ?? ''}
+                  onChange={(e) => {
+                    handleFilterChange(
+                      'minPrice',
+                      e.target.value ? Number(e.target.value) : null,
+                    );
+                  }}
+                  className="p-2.5 lg:p-3 text-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <input
+                  type="number"
+                  placeholder="Precio máx."
+                  value={filters.maxPrice ?? ''}
+                  onChange={(e) => {
+                    handleFilterChange(
+                      'maxPrice',
+                      e.target.value ? Number(e.target.value) : null,
+                    );
+                  }}
+                  className="p-2.5 lg:p-3 text-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Estado (ejemplo) */}
-            <div className="mb-6">
-              <h3 className="text-sm font-bold mb-2 uppercase leading-tight tracking-tight text-drcuotasTertiary-text">
-                Estado
-              </h3>
-              <ul className="space-y-1 text-sm text-gray-700">
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Ofertas
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" className="mr-2" />
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Novedades
-                    </span>
-                  </label>
-                </li>
-              </ul>
-            </div>
-          </aside>
-
-          {/* Contenido principal */}
-          <div className="flex-1 flex flex-col">
-            {/* Barra de búsqueda y opciones */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
+        {/* Contenido principal */}
+        <div className="w-full border border-black p-10">
+          {/* Barra de búsqueda y controles */}
+          <div className="bg-white mb-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
               {/* Búsqueda */}
-              <div className="flex items-center w-full md:w-1/2 border rounded-md px-2 py-1">
+              <div className="relative flex-1 max-w-full sm:max-w-md">
+                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
                 <input
                   type="text"
-                  placeholder="Buscar productos..."
-                  className="flex-1 outline-none leading-tight tracking-tight text-drcuotasTertiary-text p-1 w-full"
+                  placeholder="Buscar cirugías..."
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                   }}
+                  className="w-full pl-10 pr-4 py-2.5 lg:py-3 text-sm border border-black focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
-              {/* Selector de orden y vista */}
-              <div className="flex items-center gap-4">
-                <select
-                  className="border rounded-md px-2 py-1 text-sm"
-                  value={sortOption}
-                  onChange={(e) => {
-                    setSortOption(e.target.value);
-                  }}
-                >
-                  <option
-                    value="destacado"
-                    className="leading-tight tracking-tight"
-                  >
-                    <span className="leading-tight tracking-tight text-drcuotasTertiary-text">
-                      Destacados
-                    </span>
-                  </option>
-                  <option value="precio">Precio</option>
-                  {/* Agrega más opciones según tus necesidades */}
-                </select>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      setViewMode('grid');
-                    }}
-                    className={`p-1 rounded ${
-                      viewMode === 'grid' ? 'bg-gray-300' : ''
-                    }`}
-                  >
-                    <FaThLarge />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setViewMode('list');
-                    }}
-                    className={`p-1 rounded ${
-                      viewMode === 'list' ? 'bg-gray-300' : ''
-                    }`}
-                  >
-                    <FaListUl />
-                  </button>
-                </div>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                {/* Contador de resultados */}
+                <span className="text-sm text-gray-600 text-center sm:text-left whitespace-nowrap">
+                  {filteredAndSortedSurgeries.length} resultado
+                  {filteredAndSortedSurgeries.length !== 1 ? 's' : ''}
+                </span>
               </div>
             </div>
+          </div>
 
-            {/* Cantidad de productos encontrados */}
-            <div className="mb-4 text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-              {sortedSurgeries.length} productos encontrados
-            </div>
-
-            {/* Grilla o lista de productos */}
-            {sortedSurgeries.length > 0 ? (
-              <div
-                className={
-                  viewMode === 'grid'
-                    ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-60 '
-                    : 'flex flex-col gap-4'
-                }
-              >
-                {sortedSurgeries.map((surgery) => (
-                  <div
-                    key={surgery.id}
-                    className="bg-white w-80 border  rounded-xl overflow-hidden flex flex-col items-center"
-                  >
-                    {/* Card principal (imagen, título, descripción, etc.) */}
-                    <SpecialtyCard
-                      title={surgery.name}
-                      id={surgery.id}
-                      price={surgery.amount}
-                      category={surgery.category}
-                      description={
-                        surgery.description ?? 'Descripción no disponible'
-                      }
-                      rating={surgery.rating}
-                      doctors={(surgery.doctors ?? []).map((d) => ({
-                        id: d.doctor?.id ?? '',
-                        provincia: d.doctor?.provincia ?? 'Sin provincia',
-                        first_name: d.doctor?.user?.first_name ?? 'Sin nombre',
-                        last_name: d.doctor?.user?.last_name ?? 'Sin apellido',
-                      }))}
-                      imageUrl={
+          {/* Lista de cirugías */}
+          {filteredAndSortedSurgeries.length > 0 ? (
+            <div className="space-y-4">
+              {filteredAndSortedSurgeries.map((surgery) => (
+                //  Producto Tienda
+                <div
+                  key={surgery.id}
+                  onClick={() => {
+                    handleCardClick(surgery.id);
+                  }}
+                  className="w-full max-w-md mx-auto sm:max-w-full sm:h-52  overflow-hidden border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col sm:flex-row bg-white cursor-pointer"
+                >
+                  {/* Imagen más grande y bien centrada */}
+                  <div className="w-full sm:w-48 h-48 sm:h-full relative">
+                    <img
+                      src={
                         surgery.file_banner?.file_link ??
                         '/images/elements/specialty.svg'
                       }
+                      alt={surgery.name || 'Cirugía'}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                ))}
+
+                  {/* Contenido */}
+                  <div className="flex-1 p-4 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2 truncate">
+                        {surgery.name}
+                      </h3>
+                      <span className="text-sm text-gray-500">
+                        {categoryLabels[
+                          surgery.category as SurgeryCategories
+                        ] || 'General'}
+                      </span>
+                    </div>
+
+                    {surgery.amount && (
+                      <span className="mt-4 text-2xl font-bold text-green-600">
+                        ${surgery.amount.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white shadow-sm border p-8 lg:p-12 text-center">
+              <div className="text-gray-400 mb-4">
+                <FaSearch size={48} className="mx-auto" />
               </div>
-            ) : (
-              <span className="text-drcuotasTertiary-text text-center text-lg">
-                No hay cirugías disponibles.
-              </span>
-            )}
-          </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No se encontraron cirugías
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm lg:text-base">
+                Intenta ajustar tus filtros o términos de búsqueda
+              </p>
+              <button
+                onClick={clearFilters}
+                className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm lg:text-base"
+              >
+                Limpiar filtros
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <AdComponents />
-    </>
+    </div>
   );
 }

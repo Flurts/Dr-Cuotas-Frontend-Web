@@ -7,7 +7,7 @@ import LoginView from '@/views/login';
 export default function Login() {
   return (
     <>
-      <Head title="Login" />
+      <Head title="Hola!" />
       <LoginView />
     </>
   );

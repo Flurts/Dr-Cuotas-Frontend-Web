@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import settings from '@/settings';
+
 interface Evidence {
   type: 'YOUTUBE' | 'MEDIA';
   link: string;
@@ -15,7 +16,16 @@ export const EvidenceCard = () => {
   const [evidences, setEvidences] = useState<Evidence[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const accessToken = localStorage.getItem('accessToken');
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  // Obtener accessToken solo en el cliente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      setAccessToken(token);
+    }
+  }, []);
+
   // Extraemos doctorId correctamente
   useEffect(() => {
     if (router.isReady) {
@@ -34,7 +44,7 @@ export const EvidenceCard = () => {
   }, [router.isReady, router.query]);
 
   useEffect(() => {
-    if (!doctorId) return;
+    if (!doctorId || !accessToken) return;
 
     const fetchEvidences = async () => {
       try {
@@ -70,7 +80,7 @@ export const EvidenceCard = () => {
     };
 
     void fetchEvidences();
-  }, [doctorId]);
+  }, [doctorId, accessToken]);
 
   if (!doctorId)
     return <p className="text-center text-gray-500">Cargando doctor...</p>;

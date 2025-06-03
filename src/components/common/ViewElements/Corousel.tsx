@@ -29,7 +29,7 @@ const CarouselHome = () => {
             wrapper="p"
             speed={50}
             repeat={Infinity}
-            className="text-xs sm:text-2xl text-[#737373] text-center tracking-tight leading-tight  hidden lg:block"
+            className="text-center tracking-tight leading-tight  hidden lg:block"
           />
         </div>
       </>

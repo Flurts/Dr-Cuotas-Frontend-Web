@@ -15,11 +15,6 @@ function KnowOurProfessionals() {
               <h1 className="text-lg sm:text-2xl text-drcuotasPrimary lg:text-7xl font-black uppercase leading-tight tracking-tight text-center lg:text-start">
                 Nuestros Profesionales
               </h1>
-              <p className="text-xs  text-[#737373]  text-center lg:text-start tracking-tight leading-tightt hidden lg:block">
-                Con los mejores expertos en estética de la ciudad, te ofrecemos
-                tratamientos personalizados para realzar tu belleza. ¡Transforma
-                tu look con los mejores en el área!{' '}
-              </p>
 
               <Link
                 href="/professionals"

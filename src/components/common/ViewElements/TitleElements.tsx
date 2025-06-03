@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 interface TitleElementsProps {
@@ -15,25 +16,29 @@ const TitleElements: React.FC<TitleElementsProps> = ({
     <>
       <div className="w-screen sm:w-full h-40 flex flex-col items-center justify-center">
         <>
-          <div className="w-full h-auto text-center ">
-            <span className="text-xs sm:text-sm font-bold text-[#737373] uppercase tracking-tight leading-tight">
-              {primaryText}
-            </span>
-          </div>
+          <span className="text-xs font-bold  uppercase tracking-tight leading-tight">
+            {primaryText}
+          </span>
         </>
         <>
-          <div className="w-full h-auto text-center ">
-            <span className="text-lg sm:text-2xl lg:text-4xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
-              {secondaryText}
-            </span>
-          </div>
+          <span className="text-lg sm:text-2xl  text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
+            {secondaryText}
+          </span>
         </>
+
+        <div className="flex justify-center">
+          <Image
+            src="/images/banners/TitleBanner.svg"
+            alt="Service Banner"
+            width={200}
+            height={200}
+            className="object-contain"
+          />
+        </div>
         <>
-          <div className="w-8/12 h-auto text-center flex justify-center">
-            <span className="text-[10px] sm:text-sm  tracking-tight leading-tight text-[#737373]">
-              {descriptionText}
-            </span>
-          </div>
+          <span className="text-[10px] sm:text-sm  tracking-tight leading-tight ">
+            {descriptionText}
+          </span>
         </>
       </div>
     </>

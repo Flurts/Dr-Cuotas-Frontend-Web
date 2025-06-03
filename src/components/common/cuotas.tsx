@@ -25,7 +25,7 @@ const plans = [
       'Ideal para compras de valor medio',
       'Documentación simplificada',
     ],
-    highlight: true, // Resalta esta tarjeta con un fondo oscuro
+    highlight: true,
   },
   {
     title: '16 Cuotas',
@@ -45,41 +45,81 @@ export default function Cuotas({ className }: { className?: string }) {
   return (
     <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen mb-40 bg-white p-8">
       <TitleElements
-        primaryText="FINANCIA TU CIRUGÍA Y LLEVA EL CONTROL DE TUS PAGOS"
+        primaryText=""
         secondaryText="TU PLAN DE FINANCIAMIENTO"
         descriptionText=""
       />
 
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="w-full flex flex-row justify-center items-center gap-4">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`w-80 h-96 p-4 rounded-xl border flex flex-col gap-4 
-              ${plan.highlight ? 'bg-drcuotasPrimary-bg bg-opacity-20 text-white' : 'bg-white'}`}
+            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden shadow-2xl border-2  hover:shadow-md transition-shadow duration-300 ${
+              plan.highlight
+                ? 'border-white bg-gradient-to-b from-purple-400 to-blue-500'
+                : 'border bg-white'
+            }`}
           >
-            <h3 className="text-2xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
-              {plan.title}
-            </h3>
-            <p className="text-md text-drcuotasTertiary-text leading-tight tracking-tight">
-              {plan.subtitle}
-            </p>
-            <p className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">
-              {plan.percentage}
-              <span className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">
-                /cuota
-              </span>
-            </p>
-
-            <ul className="space-y-2">
-              {plan.details.map((detail, i) => (
-                <li
-                  key={i}
-                  className="flex items-center text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+            {/* Contenido de la tarjeta */}
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-between p-6">
+              {/* Header */}
+              <div className="text-center">
+                <h2
+                  className={`text-2xl font-black uppercase leading-tight tracking-tight ${
+                    plan.highlight ? 'text-white' : 'text-gray-800'
+                  }`}
                 >
-                  ✅ {detail}
-                </li>
-              ))}
-            </ul>
+                  {plan.title}
+                </h2>
+                <p
+                  className={`text-sm mb-4 ${
+                    plan.highlight ? 'text-blue-100' : 'text-gray-600'
+                  }`}
+                >
+                  {plan.subtitle}
+                </p>
+
+                {/* Porcentaje destacado */}
+                <div
+                  className={`text-4xl font-bold mb-6 ${
+                    plan.highlight ? 'text-white' : 'text-blue-600'
+                  }`}
+                >
+                  {plan.percentage}
+                </div>
+              </div>
+
+              {/* Detalles */}
+              <div className="flex-1 w-full">
+                <ul className="space-y-3">
+                  {plan.details.map((detail, detailIndex) => (
+                    <li key={detailIndex} className="flex items-start">
+                      <span
+                        className={`mr-2 ${
+                          plan.highlight ? 'text-blue-200' : 'text-blue-500'
+                        }`}
+                      >
+                        ✓
+                      </span>
+                      <span
+                        className={`text-sm ${
+                          plan.highlight ? 'text-white' : 'text-gray-700'
+                        }`}
+                      >
+                        {detail}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Badge para plan popular */}
+            {plan.highlight && (
+              <div className="absolute top-4 right-4 bg-yellow-400 px-3 py-1  text-xs font-bold">
+                POPULAR
+              </div>
+            )}
           </div>
         ))}
       </div>

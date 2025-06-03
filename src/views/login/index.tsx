@@ -2,13 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { toast } from '@/components/ui/use-toast';
 import SignIn from '@/layouts/components/SignIn';
-import RegisterModal from '@/layouts/components/SignUp';
 import { chargeUser } from '@/store';
 import { useLoginWithGoogleTokenMutation } from '@/types';
 
@@ -19,8 +17,6 @@ export default function LoginView() {
   const dispatch = useDispatch();
 
   // Verifica si hay un query parameter para determinar la vista inicial
-  const initialTab = router.query.view === 'register' ? 'register' : 'login';
-  const [tab, setTab] = useState(initialTab);
 
   useEffect(() => {
     const handleGoogleSignInUp = async () => {
@@ -70,69 +66,35 @@ export default function LoginView() {
     void handleGoogleSignInUp();
   }, [session, loginWithGoogleToken, router]);
 
-  const handleChangeTab = (value: string) => {
-    setTab(value);
-  };
-
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-20 p-20">
-      <div className="flex flex-col justify-center items-start gap-8">
-        <Link href="/" className="w-auto h-auto">
-          <Image
-            src="/images/logo/logo-1.svg"
-            alt="Logo"
-            width={190}
-            height={190}
-          />
-        </Link>
-        <span className="w-full flex flex-col justify-center items-center line-clamp-2  text-xs leading-tight tracking-tight">
-          {tab === 'login' ? (
+      {/* Texto e Imagen principal  */}
+      <>
+        <div className="flex flex-col justify-center items-start gap-8">
+          <Link href="/" className="w-auto h-auto">
+            <Image
+              src="/images/logo/logo-1.svg"
+              alt="Logo"
+              width={190}
+              height={190}
+            />
+          </Link>
+          <span className="w-full flex flex-col justify-center items-center text-xs leading-tight tracking-tight">
             <>
               Si no tienes una cuenta, puedes{' '}
-              <button
-                onClick={() => {
-                  handleChangeTab('register');
-                }}
-                className="text-drcuotasPrimary-text font-semibold leading-tight tracking-tight"
+              <Link
+                href="/register"
+                className="text-drcuotasPrimary-text font-semibold uppercase leading-tight tracking-tight"
               >
-                Registrarte aquí!
-              </button>
+                Registrarte aquí
+              </Link>
             </>
-          ) : (
-            <>
-              Si ya tienes una cuenta, puedes{' '}
-              <button
-                onClick={() => {
-                  handleChangeTab('login');
-                }}
-                className="text-drcuotasPrimary-text font-semibold leading-tight tracking-tight"
-              >
-                Iniciar sesión aquí!
-              </button>
-            </>
-          )}
-        </span>
-      </div>
-
-      <Tabs
-        defaultValue="login"
-        value={tab}
-        onValueChange={(value) => {
-          setTab(value);
-        }}
-        className="w-full h-full justify-center items-center flex flex-col"
-      >
-        <TabsContent value="login">
-          <div className="flex flex-col justify-center items-start gap-4">
-            <SignIn />
-          </div>
-        </TabsContent>
-        <TabsContent value="register">
-          <div className="flex flex-col justify-center items-start gap-4">
-            <RegisterModal />
-          </div>
-        </TabsContent>
-      </Tabs>
+          </span>
+        </div>
+      </>
+      <>
+        <SignIn />
+      </>
     </div>
   );
 }

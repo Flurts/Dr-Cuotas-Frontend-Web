@@ -13,6 +13,7 @@ interface Doctor {
       ratings: Array<{
         rating: number;
       }>;
+      profile_picture: string;
     };
     surgeries: Array<{
       id: string;
@@ -60,6 +61,7 @@ export default function useDoctorDetails() {
                   ratings {
                     rating
                   }
+                  profile_picture
                 }
                 surgeries {
                   id

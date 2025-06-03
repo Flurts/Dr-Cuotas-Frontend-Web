@@ -1,8 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
-  LucideCalendar,
   LucideDownload,
   LucideFacebook,
   LucideGlobe,
@@ -15,7 +15,6 @@ import {
   LucideStar,
   LucideTwitter,
 } from 'lucide-react';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 
@@ -110,7 +109,7 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
             <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
               {/* Imagen del Doctor */}
               <div className="h-32 w-32 border-4 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
-                <Image
+                <img
                   src={profilePicture}
                   alt={`Foto de ${doctorName}`}
                   width={128}
@@ -171,7 +170,7 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
                 <div className="w-full h-full flex flex-col justify-start gap-4">
                   {/* Sección de sobre mi */}
                   <>
-                    <div className="w-full h-80 border rounded-xl p-10 border-drcuotasPrimary-bg text-center md:text-left hidden sm:flex flex-col justify-between items-start">
+                    <div className="w-full h-52 border rounded-xl p-10 border-drcuotasPrimary-bg text-center md:text-left hidden sm:flex flex-col justify-between items-start">
                       <>
                         <div>
                           <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
@@ -188,7 +187,7 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
                       </>
                       <>
                         <div>
-                          <div className="w-full flex flex-row items-center gap-8 p-4">
+                          <div className="w-full flex flex-row items-center gap-4 ">
                             <>
                               <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
                                 <LucideMap className="w-4 h-4 text-drcuotasTertiary-text" />
@@ -206,36 +205,8 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
                                 </span>
                               </button>
                             </>
-                            <>
-                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
-                                <LucideCalendar className="w-4 h-4 text-drcuotasTertiary-text" />
-                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                  Se unió en Marzo 2022
-                                </span>
-                              </button>
-                            </>
+                            <></>
                           </div>
-
-                          {/* etiquetas de tipos de cirugias */}
-                          <>
-                            <div className="w-full h-8 flex flex-row items-center gap-2">
-                              <>
-                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
-                                  Cirugía General
-                                </button>
-                              </>
-                              <>
-                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
-                                  Plastica / Estetica
-                                </button>
-                              </>
-                              <>
-                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
-                                  Ortopedica
-                                </button>
-                              </>
-                            </div>
-                          </>
                         </div>
                       </>
                     </div>

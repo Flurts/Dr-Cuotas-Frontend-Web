@@ -1,144 +1,142 @@
-/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-shadow */
+'use client';
 import { gql, GraphQLClient } from 'graphql-request';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { FiChevronLeft } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import settings from '@/settings';
+import { Surgery, useGetAllSurgeriesWithValuesQuery } from '@/types';
 
-// Define TypeScript interface for adjudicated data
-interface AdjudicatedData {
-  quota_price: number;
-  quotas_number: number;
-  surgery: {
-    name: string;
-    description: string;
-  };
+interface ProductPageProps {
+  surgeryId?: string; // Para obtener una cirugía específica
 }
 
-const GET_ADJUDICATED_BY_ID = gql`
-  query GetAdjudicatedById($adjudicatedId: String!) {
-    getAdjudicatedById(adjudicatedId: $adjudicatedId) {
-      quota_price
-      quotas_number
-      surgery {
-        name
-        description
-      }
-    }
-  }
-`;
-
-const CREATE_PAYMENT_MUTATION = gql`
-  mutation CreatePaymentRequest($data: PaymentInput!) {
-    createPaymentRequest(data: $data)
-  }
-`;
-
-// Define TypeScript interface for surgerie data
-interface SurgerieData {
-  description: string;
-  name: string;
-  amount: number;
-  file_banner: {
-    file_link: string;
-  };
-}
-
-export default function ProductPage() {
+const ProductPage = ({ surgeryId }: ProductPageProps) => {
   const router = useRouter();
-  const { isReady, query } = router;
-  const [adjudicatedData, setAdjudicatedData] =
-    useState<AdjudicatedData | null>(null);
-  const [surgerieData, setSurgerieData] = useState<SurgerieData | null>(null);
 
+  // Estados para manejar la información
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [surgeriesList, setSurgeriesList] = useState<Surgery[]>([]);
+  const [selectedSurgery, setSelectedSurgery] = useState<Surgery | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<string>('');
+  const [selectedDoctorId, setSelectedDoctorId] = useState<string>('');
+  const [selectedQuota, setSelectedQuota] = useState<number>(1);
+  const [selectedCuotas, setSelectedCuotas] = useState<number>(1);
+  const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
+
+  // Query para obtener las cirugías
+  const { data, error } = useGetAllSurgeriesWithValuesQuery({
+    variables: { limit: 10, offset: 0 },
+  });
+
+  useEffect(() => {
+    if (data && !error) {
+      const surgeries = data.getAllSurgeriesWithValues as Surgery[];
+      setSurgeriesList(surgeries);
+
+      // Si se proporciona un ID específico, buscar esa cirugía
+      if (surgeryId) {
+        const surgery = surgeries.find((s) => s.id === surgeryId);
+        if (surgery) {
+          setSelectedSurgery(surgery);
+        }
+      } else if (surgeries.length > 0) {
+        // Si no se proporciona ID, usar la primera cirugía
+        setSelectedSurgery(surgeries[0]);
+      }
+    } else if (error) {
+      console.error('Error fetching surgeries:', error);
+      setSurgeriesList([]);
+    }
+  }, [data, error, surgeryId]);
+
+  // Actualizar selectedCuotas cuando cambia selectedQuota
+  useEffect(() => {
+    setSelectedCuotas(selectedQuota);
+  }, [selectedQuota]);
+
+  // Resetear doctor seleccionado cuando cambia la provincia
+  useEffect(() => {
+    setSelectedDoctorId('');
+  }, [selectedProvince]);
+
+  // Opciones de cuotas disponibles
+  const cuotasOptions = [4, 8, 16];
+
+  // Función para obtener fecha futura
   const getDatePlusDays = (days: number): string => {
     const date = new Date();
     date.setDate(date.getDate() + days);
     return date.toISOString().split('T')[0]; // devuelve 'yyyy-mm-dd'
   };
-  useEffect(() => {
-    if (!isReady) return; // Solo verificamos isReady
 
-    const fetchData = async () => {
-      try {
-        // 1° Intento: Fetch AdjudicatedData (si existe adjudicatedId)
-        if (query.adjudicatedId) {
-          console.log('Intentando fetchAdjudicatedData...');
-          const token = localStorage.getItem('accessToken');
-          const client = new GraphQLClient(`${settings.API_URL}/graphql`, {
-            headers: { Authorization: `${token}` },
-          });
+  // Mutation para crear el pago
+  const CREATE_PAYMENT_MUTATION = gql`
+    mutation CreatePaymentRequest($data: PaymentInput!) {
+      createPaymentRequest(data: $data)
+    }
+  `;
 
-          const response = await client.request(GET_ADJUDICATED_BY_ID, {
-            adjudicatedId: query.adjudicatedId,
-          });
+  // Extraer información de la cirugía seleccionada
+  const doctors = selectedSurgery?.doctors ?? [];
 
-          const data = response as { getAdjudicatedById: AdjudicatedData };
-          setAdjudicatedData(data.getAdjudicatedById);
-          return; // Si tiene éxito, terminamos aquí
-        }
-      } catch (error) {
-        console.error('Error en fetchAdjudicatedData:', error);
-        // Si falla, continuamos con fetchSurgerieData
-      }
+  // Formatear doctores para el select
+  const formattedDoctors = doctors.map((d) => ({
+    id: d.doctor?.id || '',
+    first_name: d.doctor?.user?.first_name || 'Sin nombre',
+    last_name: d.doctor?.user?.last_name || 'Sin apellido',
+    provincia: d.doctor?.provincia || 'Sin provincia',
+  }));
 
-      // 2° Intento: Fetch SurgerieData (si no hay adjudicatedId o si falló el primero)
-      try {
-        console.log('Intentando fetchSurgerieData...');
-        const surgerieId = query.adjudicatedId ?? extraerIdDeURL(); // Fallback a URL
-        if (!surgerieId) throw new Error('No hay ID disponible');
+  // Obtener provincias únicas de los doctores
+  const availableProvinces = useMemo(() => {
+    const provinces = formattedDoctors
+      .map((doctor) => doctor.provincia)
+      .filter((provincia) => provincia && provincia !== 'Sin provincia');
 
-        const token = localStorage.getItem('accessToken');
-        const client = new GraphQLClient(`${settings.API_URL}/graphql`, {
-          headers: { Authorization: `${token}` },
-        });
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+    return Array.from(new Set(provinces)).sort();
+  }, [formattedDoctors]);
 
-        const response = await client.request(
-          gql`
-            query GetSurgerieById($id: String!) {
-              getSurgerieById(id: $id) {
-                description
-                name
-                amount
-                file_banner {
-                  file_link
-                }
-              }
-            }
-          `,
-          { id: surgerieId },
-        );
+  // Filtrar doctores por provincia seleccionada
+  const filteredDoctors = useMemo(() => {
+    if (!selectedProvince) return [];
 
-        const data = response as { getSurgerieById: SurgerieData };
-        setSurgerieData(data.getSurgerieById);
-        console.log('Datos de cirugía recibidos:', data);
-      } catch (error) {
-        console.error('Error en fetchSurgerieData:', error);
-        // Aquí puedes manejar el error final (ej: mostrar un toast)
-      }
-    };
+    return formattedDoctors.filter(
+      (doctor) => doctor.provincia === selectedProvince,
+    );
+  }, [formattedDoctors, selectedProvince]);
 
-    void fetchData();
-  }, [isReady, query.adjudicatedId]); // query.adjudicatedId sigue en dependencias
+  // Función para suscribirse a la cirugía y procesar pago por pasarela
+  const subscribeSurgerie = async () => {
+    if (!termsAccepted) {
+      alert('Debes aceptar los términos y condiciones para continuar.');
+      return;
+    }
 
-  // Función auxiliar para extraer ID de la URL si no viene en query
-  const extraerIdDeURL = () => {
-    const path = window.location.pathname.split('/');
-    return path[path.length - 1]; // Último segmento de la URL
-  };
+    if (!selectedSurgery || !selectedDoctorId) {
+      alert('Por favor complete todos los campos requeridos.');
+      return;
+    }
 
-  const createTransaction = async () => {
+    localStorage.setItem('isRegister', '1');
+    localStorage.setItem('surgeryId', selectedSurgery.id);
+
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-      void router.push('/login');
+      router.push('/login');
       console.error('No access token found');
       return;
     }
 
-    console.log('📌 ID adjudicado enviado:', query.adjudicatedId);
+    const { id, amount: price } = selectedSurgery;
+    console.log('ID enviado:', id);
+    console.log('Precio total:', price);
+    console.log('Número de cuotas:', selectedQuota);
+    console.log('Precio por cuota:', price / selectedQuota);
 
     try {
       const response = await fetch(`${settings.API_URL}/graphql`, {
@@ -149,14 +147,24 @@ export default function ProductPage() {
         },
         body: JSON.stringify({
           query: `
-            mutation CreateTransaction($adjudicatedId: String!) {
-              createTransaction(adjudicatedId: $adjudicatedId) {
-                AdjudicadosId
+            mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $quotaPrice: Float!, $totalPrice: Float!, $quotasNumber: Int!, $documentIdentification: String!, $lastName: String!, $firstName: String!, $doctorId: String) {
+              subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, quotaPrice: $quotaPrice, totalPrice: $totalPrice, quotasNumber: $quotasNumber, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName, doctorId: $doctorId) {
+                adjudicated_status
+                id
               }
             }
           `,
           variables: {
-            adjudicatedId: query.adjudicatedId,
+            surgerieId: id,
+            phone: '5551234567',
+            email: 'example@email.com',
+            documentIdentification: 'A123456789',
+            lastName: 'Doe',
+            firstName: 'John',
+            quotaPrice: Math.floor(price / selectedQuota),
+            totalPrice: price,
+            quotasNumber: selectedQuota,
+            doctorId: selectedDoctorId,
           },
         }),
       });
@@ -164,68 +172,83 @@ export default function ProductPage() {
       const result = await response.json();
       console.log('📌 Respuesta completa de la API:', result);
 
-      if (!response.ok || result.errors) {
-        console.error('❌ GraphQL Error:', result.errors);
+      if (!response.ok) {
+        console.error('GraphQL Error:', result.errors);
         throw new Error(result.errors?.[0]?.message || 'Error en la API');
       }
 
-      if (!result.data?.createTransaction) {
-        console.error('❌ Datos inválidos:', result);
-        throw new Error('No se recibió ID de createTransaction');
+      if (result.errors) {
+        console.error('❌ GraphQL Errors:', result.errors);
+        throw new Error(
+          result.errors[0]?.message || 'Error desconocido en GraphQL',
+        );
       }
 
-      const adjudicadosId = result.data.createTransaction.AdjudicadosId;
+      if (!result.data?.subscribeSurgerie) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de subscribeSurgerie');
+      }
+
+      const adjudicadosId = result.data.subscribeSurgerie.id;
       console.log('✅ ID adjudicado:', adjudicadosId);
-      alert('Transacción creada exitosamente.');
+
+      await handlePayment(adjudicadosId);
       return adjudicadosId;
     } catch (error) {
-      console.error('🚨 Error en createTransaction:', error);
+      console.error('🚨 Error en subscribeSurgerie:', error);
+      alert(
+        'Hubo un error al procesar la suscripción. Por favor intente nuevamente.',
+      );
     }
   };
 
-  const handlePayment = async () => {
-    if (!query.adjudicatedId) {
+  // Función para manejar el pago por pasarela
+  const handlePayment = async (adjudicadosId: string) => {
+    if (!adjudicadosId || !selectedSurgery) {
       alert('El ID de adjudicación es inválido.');
       return;
     }
 
     const token = localStorage.getItem('accessToken');
     if (!token) {
+      router.push('/login');
       alert('No se encontró el token de autenticación.');
       return;
     }
 
     const client = new GraphQLClient(`${settings.API_URL}/graphql`, {
       headers: {
-        Authorization: `${token}`, // Added 'Bearer' prefix
+        Authorization: `${token}`,
       },
     });
-
-    if (!adjudicatedData) {
-      alert('No se encontraron datos de la adjudicación.');
-      return;
-    }
 
     const variables = {
       data: {
         description: 'Pago de servicio',
         first_due_date: getDatePlusDays(2),
-        first_total: adjudicatedData.quota_price,
+        first_total: Math.round(selectedSurgery.amount / selectedQuota),
         second_due_date: null,
         second_total: null,
         back_url_success: 'https://www.drcuotas.com/account',
         back_url_pending: 'https://www.drcuotas.com/',
         back_url_rejected: 'https://www.drcuotas.com/',
-        adjudicadosId: String(query.adjudicatedId), // Convertir a string
+        adjudicadosId: String(adjudicadosId),
       },
     };
 
     try {
-      const response = await client.request(CREATE_PAYMENT_MUTATION, variables);
-      const paymentResponse = response as { createPaymentRequest: string };
+      interface CreatePaymentResponse {
+        createPaymentRequest: string;
+      }
 
-      if (paymentResponse?.createPaymentRequest) {
-        const checkoutUrl = paymentResponse.createPaymentRequest;
+      const response = await client.request<CreatePaymentResponse>(
+        CREATE_PAYMENT_MUTATION,
+        variables,
+      );
+
+      if (response?.createPaymentRequest) {
+        const checkoutUrl = (response as { createPaymentRequest: string })
+          .createPaymentRequest;
         console.log('✅ URL de pago:', checkoutUrl);
 
         if (checkoutUrl.startsWith('http')) {
@@ -244,116 +267,282 @@ export default function ProductPage() {
     }
   };
 
+  // Función para pago directo (sin cambios)
+  const subscribeSurgerieDirect = () => {
+    if (!selectedSurgery || !selectedDoctorId || !termsAccepted) {
+      alert('Por favor complete todos los campos y acepte los términos');
+      return;
+    }
+
+    console.log('Procesando pago directo:', {
+      surgery: selectedSurgery,
+      doctor: selectedDoctorId,
+      cuotas: selectedQuota,
+      amount: selectedSurgery.amount / selectedQuota,
+    });
+
+    // Aquí iría la lógica para el pago directo
+  };
+
+  // Mostrar error si hay problemas
+  if (error) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <p className="text-lg text-red-500">Error al cargar la información</p>
+      </div>
+    );
+  }
+
+  // Si no hay cirugía seleccionada
+  if (!selectedSurgery) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <p className="text-lg">No se encontró información de la cirugía</p>
+      </div>
+    );
+  }
+
+  const {
+    name: title,
+    amount: price,
+    category,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    description,
+    file_banner,
+  } = selectedSurgery;
+
+  const imageUrl = file_banner?.file_link ?? '/images/elements/specialty.svg';
+
+  console.log('Selected surgery:', selectedSurgery);
+  console.log('Available provinces:', availableProvinces);
+  console.log('Filtered doctors:', filteredDoctors);
+
   return (
     <>
-      <div className="w-full h-full flex flex-col p-4 mb-40">
-        {/* Volver para atras */}
-        <div className="w-full h-10 flex justify-start items-center p-4">
-          <Link
-            href="/account"
-            className="w-auto h-auto flex flex-row justify-center items-center gap-2"
-          >
-            <FiChevronLeft className="text-drcuotasTertiary-text" />
-            <span className="text-sm text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
-              Volver a mi cuenta
-            </span>
-          </Link>
+      <div className="w-full min-h-screen  flex flex-col lg:flex-row justify-center items-stretch p-10 gap-2 ">
+        {/* Imagen Principal */}
+        <div className="w-1/2 hidden lg:flex justify-center items-center border border-black">
+          <Image
+            src={imageUrl}
+            alt={`Imagen de ${title}`}
+            className="w-full h-full object-cover "
+            quality={80}
+            width={300}
+            height={300}
+          />
         </div>
 
-        {/* Información del Producto */}
-        <div className="w-full h-full  flex flex-row justify-start  gap-4 p-4">
-          {/* Área principal de imagen del producto */}
-          <div className="bg-white border-2 w-full h-full flex justify-center items-center">
-            <Image
-              src={
-                surgerieData?.file_banner?.file_link ??
-                '/images/default-product.jpg'
-              }
-              alt="Imagen del Producto"
-              width={500}
-              height={500}
-              className="object-cover h-[30vw]"
-            />
-          </div>
-          {/* Información del Producto */}
-          <div className="bg-white border-2  w-[40vw] h-96 flex flex-col justify-start items-center gap-4 p-4">
-            {/* Título del Producto */}
-            <div className="w-full h-auto flex flex-col">
-              <span className="text-2xl text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-black">
-                {adjudicatedData?.surgery.name ??
-                  surgerieData?.name ??
-                  'Nombre del Producto'}
-              </span>
-              <span className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight">
-                {adjudicatedData?.surgery.description ??
-                  surgerieData?.description ??
-                  'Descripción del Producto'}
-              </span>
+        {/* Panel de Pago */}
+        <div className="w-full  bg-white border border-black overflow-hidden">
+          <div className="p-10 h-full flex flex-col">
+            {/* Header */}
+            <div className="mb-6">
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">
+                Cirugía {title}
+              </h2>
+
+              <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4  border-l-4 border-blue-400">
+                <p className="text-sm text-gray-700">
+                  {selectedCuotas
+                    ? `${selectedCuotas} cuotas de $${(price / selectedCuotas).toFixed(0)}`
+                    : 'Seleccione cuotas'}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Valor total:{' '}
+                  <span className="text-2xl font-bold text-green-600">
+                    ${price?.toFixed(0)}
+                  </span>
+                </p>
+              </div>
             </div>
-            {/* Precio del Producto */}
-            <div className="w-full h-auto flex flex-row justify-start items-center gap-4">
-              <span className="text-2xl text-drcuotasTertiary-text leading-tight tracking-tight">
-                Cuotas ${adjudicatedData?.quota_price ?? 'comodas'}
-              </span>
-              <span className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight">
-                ( Valor Total $
-                {adjudicatedData
-                  ? adjudicatedData.quota_price * adjudicatedData.quotas_number
-                  : surgerieData?.amount}{' '}
-                )
-              </span>
+
+            {/* Formulario de Pago */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              className="flex-1"
+            >
+              {/* Información de Categoría y Precio (Desktop) */}
+              <div className="hidden lg:grid grid-cols-2 gap-6 mb-6 p-4 bg-gray-50 rounded-2xl">
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Categoría
+                  </p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {category || 'Sin categoría'}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Precio por Cuota
+                  </p>
+                  <p className="text-sm font-medium text-gray-800">
+                    $
+                    {selectedQuota
+                      ? (price / selectedQuota).toFixed(0)
+                      : 'Calculando...'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Campos de Selección */}
+              <div className="space-y-6 mb-6">
+                {/* Selección de provincia */}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                    Provincia
+                  </label>
+                  {availableProvinces.length > 0 ? (
+                    <select
+                      value={selectedProvince}
+                      onChange={(e) => {
+                        setSelectedProvince(e.target.value);
+                      }}
+                      className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
+                      required
+                    >
+                      <option value="">Seleccionar provincia</option>
+                      {availableProvinces.map((province) => (
+                        <option key={province} value={province}>
+                          {province}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                      <p className="text-sm text-yellow-700">
+                        No hay provincias disponibles
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Selección de doctor */}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                    Doctor
+                  </label>
+                  {!selectedProvince ? (
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
+                      <p className="text-sm text-blue-700">
+                        Primero selecciona una provincia
+                      </p>
+                    </div>
+                  ) : filteredDoctors.length > 0 ? (
+                    <select
+                      value={selectedDoctorId}
+                      onChange={(e) => {
+                        setSelectedDoctorId(e.target.value);
+                      }}
+                      className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
+                      required
+                    >
+                      <option value="">Seleccionar doctor</option>
+                      {filteredDoctors.map((doctor) => (
+                        <option key={doctor.id} value={doctor.id}>
+                          {doctor.first_name} {doctor.last_name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                      <p className="text-sm text-yellow-700">
+                        No hay doctores disponibles en {selectedProvince}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Selección de cuotas */}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                    Cuotas
+                  </label>
+                  <select
+                    value={selectedQuota}
+                    onChange={(e) => {
+                      setSelectedQuota(Number(e.target.value));
+                    }}
+                    className="w-full p-4 text-xs border border-black focus:border-blue-400 focus:ring-0 transition-colors bg-white"
+                    required
+                  >
+                    {cuotasOptions.map((quota) => (
+                      <option key={quota} value={quota}>
+                        {quota} cuota{quota > 1 ? 's' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </form>
+
+            {/* Checkbox de Términos y Condiciones */}
+            <div className="flex items-start gap-3 mb-6 p-4 bg-gray-50 ">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => {
+                  setTermsAccepted(e.target.checked);
+                }}
+                id="terms"
+                className="mt-1 w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500"
+                required
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm text-gray-700 cursor-pointer leading-relaxed"
+              >
+                <Link
+                  href="/faq"
+                  className="text-blue-600 hover:text-blue-800 font-medium underline decoration-2 underline-offset-2"
+                >
+                  Acepto Términos y Condiciones
+                </Link>
+              </label>
             </div>
-            {/* Separador */}
-            <div className="w-full h-1 bg-drcuotasPrimary-bg"></div>
-            {/* Términos y Condiciones */}
-            <div className="w-full h-40 flex flex-col justify-start gap-2">
-              <span className="text-lg text-drcuotasTertiary-text uppercase leading-tight tracking-tight">
-                Términos y Condiciones
-              </span>
-              <span className="text-xs text-drcuotasTertiary-text leading-tight tracking-tight">
-                A continuación se describen los Términos y Condiciones Generales
-                (en adelante las "Condiciones Generales") aplicables a la
-                utilización de los servicios y contenidos suministrados por el
-                Sitio de Internet www.drcuotas.com (en adelante, la "LA
-                APLICACIÓN Y/O SITIO WEB") que Dr. Cuotas S.A. (en adelante "DR.
-                CUOTAS") pone a disposición de los Usuarios en general. Los
-                presentes Términos y Condiciones Generales abarcan a las
-                “CONDICIONES DE UTILIZACIÓN DE LA APLICACIÓN Y/O SITIO WEB” y a
-                la “POLÍTICA DE PRIVACIDAD
-              </span>
-              <Link href="/faq">
-                <button className="text-xs text-drcuotasPrimary-bg uppercase leading-tight tracking-tight">
-                  Ver más
+
+            {/* Sección de Botones */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">
+                Pagar por:
+              </h3>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <button
+                  onClick={subscribeSurgerie}
+                  type="button"
+                  disabled={!termsAccepted || !selectedDoctorId}
+                  className={`group relative h-14 font-bold text-sm uppercase tracking-wider transition-all duration-200 overflow-hidden ${
+                    termsAccepted && selectedDoctorId
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <span className="relative">Pasarela de Pago</span>
                 </button>
-              </Link>
-            </div>
-            {/* Botones para pagar */}
-            <div className="w-full h-40 flex flex-row justify-center items-center gap-2">
-              <button
-                className="border border-drcuotasPrimary-bg p-1"
-                onClick={handlePayment}
-              >
-                <span className="text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-bold">
-                  Pagar Cuota Pasarela
-                </span>
-              </button>
-              <button
-                className="border border-drcuotasPrimary-bg p-1"
-                onClick={createTransaction}
-              >
-                <span className="text-sm text-drcuotasPrimary-text uppercase leading-tight tracking-tight font-bold">
-                  Pagar Cuota Transaccion
-                </span>
-              </button>
-              <button className="bg-drcuotasPrimary-bg p-1">
-                <span className="text-sm text-white uppercase leading-tight tracking-tight font-bold">
-                  Completar Cuotas
-                </span>
-              </button>
+
+                <button
+                  onClick={subscribeSurgerieDirect}
+                  type="button"
+                  disabled={!termsAccepted || !selectedDoctorId}
+                  className={`group relative h-14 font-bold text-sm uppercase tracking-wider transition-all duration-200 overflow-hidden ${
+                    termsAccepted && selectedDoctorId
+                      ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <span className="relative">Cuenta Bancaria</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </>
   );
-}
+};
+
+export default ProductPage;

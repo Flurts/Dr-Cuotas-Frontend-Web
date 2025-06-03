@@ -152,8 +152,20 @@ export default function RegisterModal() {
           description: '¡Bienvenido a la comunidad!',
         });
 
+        const Id = localStorage.getItem('surgeryId');
+
         // Redirigir según el rol
-        const destination = user.role === 'Admin' ? '/admin' : '/';
+        const destination =
+          localStorage.getItem('isRegister') === '1'
+            ? `/store/${Id}`
+            : localStorage.getItem('isRegister') === ''
+              ? '/'
+              : '/';
+
+        localStorage.removeItem('isRegister'); // Limpiar el estado de registro
+
+        // Redirigir al destino
+
         await router.push(destination);
       }
     } catch (error) {
@@ -187,7 +199,7 @@ export default function RegisterModal() {
                   id="first_name"
                   name="first_name"
                   placeholder={t('form:firstName')}
-                  className="bg-white border rounded-md text-[#737373]  tracking-tight leading-tight w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border border-black  tracking-tight leading-tight w-full h-8 xl:h-[40px]  px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="first_name"
@@ -207,7 +219,7 @@ export default function RegisterModal() {
                   id="last_name"
                   name="last_name"
                   placeholder={t('form:lastName')}
-                  className="bg-white border rounded-md text-slate-800 w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border border-black w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="last_name"
@@ -229,7 +241,7 @@ export default function RegisterModal() {
                   id="phone_email"
                   name="phone_email"
                   placeholder={t('form:emailOrPhone')}
-                  className="bg-white border rounded-md text-[#737373]  tracking-tight leading-tight w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border border-black tracking-tight leading-tight w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="phone_email"
@@ -251,7 +263,7 @@ export default function RegisterModal() {
                   id="password"
                   name="password"
                   placeholder={t('form:newPassword')}
-                  className="bg-white border rounded-md text-[#737373]  tracking-tight leading-tight w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="bg-white border border-black tracking-tight leading-tight w-full h-8 xl:h-[40px] px-2 focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 />
                 <ErrorMessage
                   name="password"
@@ -265,7 +277,9 @@ export default function RegisterModal() {
                 />
               </div>
             </div>
-
+            <span className="w-full text-xs text-black ">
+              fecha de nacimiento
+            </span>
             <div className="w-full flex flex-col justify-center">
               <p className="text-sm hidden">{t('form:dateOfBirth')}</p>
               <div className="flex flex-row gap-4 w-full">
@@ -273,7 +287,7 @@ export default function RegisterModal() {
                   as="select"
                   id="date_birth.day"
                   name="date_birth.day"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-[#737373]  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="w-full h-8 xl:h-[40px] px-2 bg-white border border-black  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 >
                   {dias}
                 </Field>
@@ -282,7 +296,7 @@ export default function RegisterModal() {
                   as="select"
                   id="date_birth.month"
                   name="date_birth.month"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-[#737373]  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="w-full h-8 xl:h-[40px] px-2 bg-white border border-black  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 >
                   {meses}
                 </Field>
@@ -291,7 +305,7 @@ export default function RegisterModal() {
                   as="select"
                   id="date_birth.year"
                   name="date_birth.year"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border rounded-md text-[#737373]  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
+                  className="w-full h-8 xl:h-[40px] px-2 bg-white border border-black  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
                 >
                   {anios}
                 </Field>
@@ -307,22 +321,23 @@ export default function RegisterModal() {
                 )}
               />
             </div>
+            <span className="w-full text-xs text-black ">Genero</span>
 
             <div className="w-full flex flex-col justify-center">
               <p className="text-sm hidden">{t('form:gender')}</p>
 
               <div className="w-full flex justify-center items-center gap-4 ">
-                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-[#737373] tracking-tight leading-tight text-xs p-2 flex justify-between items-center">
+                <label className="w-full h-8 xl:h-[40px] bg-white border border-black tracking-tight leading-tight text-xs p-2 flex justify-between items-center">
                   {t('constants:woman')}
                   <Field type="radio" name="gender" value="Female" />
                 </label>
 
-                <label className="w-full h-8 xl:h-[40px] bg-white border rounded-md text-[#737373] tracking-tight leading-tight text-xs p-2 flex justify-between items-center">
+                <label className="w-full h-8 xl:h-[40px] bg-white border border-black tracking-tight leading-tight text-xs p-2 flex justify-between items-center">
                   {t('constants:man')}
                   <Field type="radio" name="gender" value="Male" />
                 </label>
 
-                <label className="w-full h-8 hidden xl:h-[40px] bg-white border rounded-md text-[#737373] tracking-tight leading-tight text-xs p-2  justify-between items-center">
+                <label className="w-full h-8 hidden xl:h-[40px] bg-white border border-black tracking-tight leading-tight text-xs p-2  justify-between items-center">
                   {t('constants:preferNotSay')}
                   <Field type="radio" name="gender" value="PreferNotToSay" />
                 </label>
@@ -345,7 +360,7 @@ export default function RegisterModal() {
 
             <button
               type="submit"
-              className="bg-drcuotasPrimary-bg text-white h-12 w-full rounded-lg flex justify-center items-center leading-tight tracking-tight uppercase hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5] hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
+              className="bg-drcuotasPrimary-bg text-white h-12 w-full  flex justify-center items-center leading-tight tracking-tight uppercase hover:scale-100 transition-all duration-300 hover:shadow-2xl hover:shadow-[#B398F5] hover:bg-white hover:border hover:text-[#6636E2] hover:border-[#6636E2]"
               disabled={formik.isSubmitting}
             >
               {formik.isSubmitting ? (

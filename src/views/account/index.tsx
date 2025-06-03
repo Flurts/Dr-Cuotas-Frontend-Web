@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useFormik } from 'formik';
 import {
-  LucideCalendar,
-  LucideMap,
-  LucideMapPinned,
   LucideMessagesSquare,
   LucidePartyPopper,
   LucideShieldCheck,
@@ -39,6 +36,7 @@ export default function AccountView() {
     first_name: string;
     last_name: string;
     profile_picture: string;
+    adjudicated?: Array<{ id: string }>;
   } | null>(null);
 
   // -----> Ajusta la obtención de datos según tu estructura de usuario/doctores
@@ -324,6 +322,9 @@ export default function AccountView() {
             first_name
             last_name
             profile_picture
+            adjudicated {
+              id
+            }
           }
         }
       }
@@ -354,6 +355,7 @@ export default function AccountView() {
       if (profilePicture) {
         localStorage.setItem('profile_picture', profilePicture);
       }
+      console.log('Datos del usuario obtenidos:', data.data.getUserData.user);
       return data.data.getUserData.user;
     } catch (error) {
       console.error('Error al obtener los datos del usuario:', error);
@@ -456,57 +458,7 @@ export default function AccountView() {
                           </>
                         </div>
                       </>
-                      <>
-                        <div>
-                          <div className="w-full flex flex-row items-center gap-8 p-4">
-                            <>
-                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
-                                <LucideMap className="w-4 h-4 text-drcuotasTertiary-text" />
-                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                  Argentina
-                                </span>
-                              </button>
-                            </>
-                            <>
-                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
-                                <LucideMapPinned className="w-4 h-4 text-drcuotasTertiary-text" />
-                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                  Corrientes - Goya
-                                </span>
-                              </button>
-                            </>
-                            <>
-                              <button className="w-auto h-auto flex flex-row justify-center items-center gap-2">
-                                <LucideCalendar className="w-4 h-4 text-drcuotasTertiary-text" />
-                                <span className="text-sm leading-tight tracking-tight text-drcuotasTertiary-text">
-                                  Se unió en Marzo 2022
-                                </span>
-                              </button>
-                            </>
-                          </div>
-
-                          {/* etiquetas de tipos de cirugias  */}
-                          <>
-                            <div className="w-full h-8 flex flex-row  items-center gap-2">
-                              <>
-                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
-                                  Cirugía General
-                                </button>
-                              </>
-                              <>
-                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
-                                  Plastica / Estetica
-                                </button>
-                              </>
-                              <>
-                                <button className="w-40 h-8 bg-drcuotasPrimary-bg border border-white text-white rounded-xl text-sm">
-                                  Ortopedica
-                                </button>
-                              </>
-                            </div>
-                          </>
-                        </div>
-                      </>
+                      <></>
                     </div>
                   </>
                 </div>
@@ -522,8 +474,8 @@ export default function AccountView() {
                         Conexiones
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-2 flex flex-row items-center justify-center sm:justify-start gap-2">
-                        <LucidePartyPopper className="w-4 h-4" /> 245 Cirugias
-                        Compradas
+                        <LucidePartyPopper className="w-4 h-4" />{' '}
+                        {userData?.adjudicated?.length ?? 1} Cirugias Compradas
                       </p>
                     </div>
                   </>
