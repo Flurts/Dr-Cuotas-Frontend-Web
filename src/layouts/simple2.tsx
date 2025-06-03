@@ -10,6 +10,8 @@ import { IoClose } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
 import { isLoggedIn } from '@/store';
+import { useRouter } from 'next/router';
+import { RxExit } from 'react-icons/rx';
 
 interface Props {
   children: JSX.Element;
@@ -83,10 +85,23 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
     };
   }, [lastScrollY, scrollTimeout]);
 
-  useEffect(() => {
-    setHasToken(!!localStorage.getItem('accessToken'));
-    // Now you can safely log it
-  }, []);
+    useEffect(() => {
+      setHasToken(!!localStorage.getItem('accessToken'));
+      // Now you can safely log it
+    }, []);
+  
+    const router = useRouter(); // Inicializa el router
+  
+    const HandleLogOut = () => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('role');
+      localStorage.removeItem('nextauth.message');
+      console.log('LogOut');
+      // Redirigir a la página principal y luego recargar
+      void router.push('/').then(() => {
+        window.location.reload();
+      });
+    };
 
   return (
     <div className={`${className}`}>
@@ -168,8 +183,8 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
                   <FiUser />
                 </Link>
                 <Link
-                  href="/"
-                  className="text-xl text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
+                  href="/store"
+                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
                   <FiShoppingCart />
                 </Link>
@@ -178,16 +193,16 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
               <>
                 <Link
                   href={getAccountUrl()}
-                  className="text-xl text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
+                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
-                  <FiUser className="text-2xl" />
+                  <FiUser />
                 </Link>
-                <Link
-                  href={getAccountUrl()}
-                  className="text-xl text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
+                <button
+                  onClick={HandleLogOut}
+                  className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"
                 >
-                  <LucideMessagesSquare className="text-2xl" />
-                </Link>
+                  <RxExit  />
+                </button>
                 <Link
                   href="/store"
                   className="text-xl hover:text-drcuotasPrimary transition-all durations-500 hidden lg:flex"

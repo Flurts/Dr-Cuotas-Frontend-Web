@@ -15,7 +15,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   description,
 }) => {
   return (
-    <div className="w-[400px] h-[500px] relative overflow-hidden shadow-2xl border-2 border-white">
+    <div className="w-[400px] h-[500px] relative overflow-hidden shadow-2xl border-2 border-white  hover:shadow-md transition-shadow duration-300">
       <Link href={link} className="block w-full h-full relative">
         <Image
           src={imageSrc}
@@ -23,6 +23,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           layout="fill"
           objectFit="cover"
           className="z-0"
+          loading='lazy'
         />
         {/* Overlay oscuro */}
         <div className="absolute inset-0 bg-white backdrop-blur-sm bg-opacity-20 z-10"></div>

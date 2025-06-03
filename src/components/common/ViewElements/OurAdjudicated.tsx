@@ -40,20 +40,6 @@ function OurAdjudicated() {
           </>
         </div>
       </div>
-
-      {/* <div className="flex flex-col items-center justify-center w-full h-full gap-0 sm:gap-4 p-20 ">
-        <div>
-          <TitleElements
-            primaryText="Adjudicados"
-            secondaryText="Proximo Sorteo"
-            descriptionText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-          />
-        </div>
-        <div className="w-full flex flex-row justify-center items-center gap-4 lg:gap-8">
-          <CardAdjudicated />
-          <CardAdjudicated />
-        </div>
-      </div> */}
     </>
   );
 }

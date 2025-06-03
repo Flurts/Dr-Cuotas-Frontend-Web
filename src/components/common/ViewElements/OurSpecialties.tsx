@@ -36,15 +36,15 @@ const OurSpecialties = () => {
     }
   };
 
+
+  
   return (
     <div className="w-full h-full flex flex-col justify-center items-center lg:p-20">
-      <div className="hidden lg:block">
-        <TitleElements
-          primaryText="Paga a Cuotas"
-          secondaryText="Cirugias disponibles"
-          descriptionText=""
-        />
-      </div>
+      <TitleElements
+        primaryText="Paga a Cuotas"
+        secondaryText="Cirugias disponibles"
+        descriptionText=""
+      />
 
       <div className="relative w-full  flex justify-center items-center">
         <button
@@ -63,7 +63,7 @@ const OurSpecialties = () => {
         >
           {surgeriesList.length > 0 ? (
             surgeriesList.map((surgery) => (
-              <div key={surgery.id} className="w-[300px] flex-shrink-0">
+              <div key={surgery.id} className="w-full flex-shrink-0">
                 <SpecialtyCard
                   title={surgery.name}
                   id={surgery.id}
@@ -87,9 +87,7 @@ const OurSpecialties = () => {
               </div>
             ))
           ) : (
-            <span className="text-[#737373] text-center w-full text-xs">
-              No hay Cirugias
-            </span>
+            <span className="text-center w-full text-xs">No hay Cirugias</span>
           )}
         </div>
 

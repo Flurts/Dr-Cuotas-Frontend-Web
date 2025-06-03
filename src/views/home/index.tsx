@@ -35,7 +35,7 @@ export default function HomeView() {
       <KnowOurProfessionals />
       <div className="w-full h-full hidden lg:flex flex-col justify-center items-center bg-white p-20">
         <OurServices />
-        <AdComponents />
+        {/* <AdComponents /> */}
       </div>
     </>
   );

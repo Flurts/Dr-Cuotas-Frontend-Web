@@ -10,7 +10,7 @@ const footersMap: Record<string, React.FC<{ children: JSX.Element }>> = {
   '/forgotYourPassword/OTP': NothingFooter,
   '/forgotYourPassword/newPassword': NothingFooter,
   '/terms-and-conditions': NothingFooter,
-  '/account': NothingFooter,
+  '/account': PrincipalFooter,
   '/faq': PrincipalFooter,
   '/admin': PrincipalFooter,
   '/professionals': PrincipalFooter,

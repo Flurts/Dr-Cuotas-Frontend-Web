@@ -9,7 +9,6 @@ import { appWithTranslation } from 'next-i18next';
 import { Provider } from 'react-redux';
 
 import useApolloClient from '@/api/use_apollo_client';
-import PageTransition from '@/components/animation/PageTransition';
 import { Toaster } from '@/components/ui/toaster';
 import FooterWrapper from '@/footers';
 import LayoutWrapper from '@/layouts';
@@ -36,12 +35,10 @@ const App = ({
           <FooterWrapper>
             <>
               <SessionProvider session={session}>
-                <PageTransition>
                   <main className={poppins.className}>
                     {/* Botón flotante del carrito principal */}
                     <Component {...pageProps} />
                   </main>
-                </PageTransition>
               </SessionProvider>
               <Toaster />
             </>

@@ -8,19 +8,19 @@ function OurServices() {
   const services = [
     {
       imageSrc: '/images/surgerys/girl_face.svg',
-      link: '/store',
+      link: '/store?category=FacialSurgeries',
       title: 'Rostro',
       description: '',
     },
     {
       imageSrc: '/images/surgerys/girl_sculpture.svg',
-      link: '/store',
+      link: '/store?category=BodySurgeries',
       title: 'Cuerpo',
       description: '',
     },
     {
       imageSrc: '/images/surgerys/girl_chest.svg',
-      link: '/store',
+      link: '/store?category=BreastSurgeries',
       title: 'Mamarios',
       description: '',
     },
