@@ -26,7 +26,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           loading="lazy"
         />
         {/* Overlay oscuro */}
-        <div className="absolute inset-0 bg-white backdrop-blur-sm bg-opacity-20 z-10"></div>
+        <div className="absolute inset-0 bg-drcuotasSecondaryPrimaryColor-text bg-opacity-50 z-10"></div>
 
         {/* Contenido sobre la imagen */}
         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-4">

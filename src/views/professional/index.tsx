@@ -82,7 +82,7 @@ const ProfessionalView = () => {
             <Link
               key={doctor.id}
               href={`/view-account/doctor/${doctor.id}`}
-              className="w-full h-auto border border-drcuotasTertiary-bg rounded-xl overflow-hidden bg-white flex cursor-pointer"
+              className="w-full h-auto border  overflow-hidden bg-white flex cursor-pointer hover:shadow-lg transition duration-300 "
             >
               <div className="w-40 h-40 flex items-center justify-center bg-gray-200">
                 <Image
