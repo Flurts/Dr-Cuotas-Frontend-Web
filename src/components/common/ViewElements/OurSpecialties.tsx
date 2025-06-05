@@ -75,11 +75,12 @@ const OurSpecialties = () => {
   );
 
   return (
-    <section className="w-full h-full flex flex-col justify-center items-center lg:p-20 bg-gray-50">
+    <section className="w-full min-h-screen flex flex-col justify-center items-center  bg-gray-100 border">
       <TitleElements
-        primaryText="Paga a Cuotas"
+        primaryText="¡Visita nuestra Tienda!"
         secondaryText="Cirugías disponibles"
         descriptionText=""
+        showImage={true}
       />
 
       <div className="relative w-full max-w-7xl mx-auto">

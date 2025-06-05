@@ -14,7 +14,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useRegisterUserMutation } from '@/graphql/generated';
 import { chargeUser } from '@/store';
 
-export default function RegisterModal() {
+export default function SignUp() {
   const { t } = useTranslation(['form', 'common', 'errors']);
   const [registerUserMutation] = useRegisterUserMutation();
   const dispatch = useDispatch();

@@ -43,11 +43,12 @@ const plans = [
 
 export default function Cuotas({ className }: { className?: string }) {
   return (
-    <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen mb-40 bg-white p-8">
+    <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen ">
       <TitleElements
-        primaryText=""
+        primaryText="¡Aprovecha la Oportunidad!"
         secondaryText="TU PLAN DE FINANCIAMIENTO"
         descriptionText=""
+        showImage={false}
       />
 
       <div className="w-full flex flex-row justify-center items-center gap-4">

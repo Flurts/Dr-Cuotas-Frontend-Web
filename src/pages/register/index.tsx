@@ -1,13 +1,11 @@
 import { GetServerSideProps } from 'next';
 
-import { Head } from '@/components/constants';
 import getServerSideSharedProps from '@/lib/next';
 import RegisterView from '@/views/register';
 
 export default function Login() {
   return (
     <>
-      <Head title="Bienvendio" />
       <RegisterView />
     </>
   );

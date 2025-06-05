@@ -33,25 +33,20 @@ export default function AdminView() {
       <>
         <div className="w-full h-full flex flex-col justify-center items-center ">
           <>
-            <div className="w-full hidden lg:flex justify-center items-center shadow-2xl shadow-drcuotasPrimary">
+            <div className="w-full hidden lg:flex justify-center items-center ">
               <div
-                className="w-full h-[80vh] sm:h-screen flex flex-col justify-center items-center bg-[#E5F9F7] bg-opacity-40 border-drcuotasPrimary"
+                className="w-full h-[80vh] sm:h-screen flex flex-col justify-center items-center"
                 style={{
                   backgroundImage: 'url(/images/banners/BannerBody.svg)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               >
-                <TitleElements
-                  primaryText="Observa el Ritmo de Crecimiento"
-                  secondaryText="Resumen de Actividad"
-                  descriptionText=""
-                />
                 <div className="w-full hidden lg:flex flex-row justify-center items-center gap-2">
                   <>
                     <Link
                       href="/admin"
-                      className="bg-white w-28 lg:w-80 lg:h-44 rounded-xl border shadow-xl shadow-drcuotasPrimary border-drcuotasPrimary flex flex-col justify-center items-start p-8 gap-4 lg:gap-0"
+                      className="bg-white w-28 lg:w-80 lg:h-44 border shadow-2xl  border-drcuotasPrimary flex flex-col justify-center items-start p-8 gap-4 lg:gap-0"
                     >
                       <span className="text-drcuotasPrimary-text font-extrabold text-lg uppercase leading-tight tracking-tight text-center  w-full">
                         Total Usuarios
@@ -67,7 +62,7 @@ export default function AdminView() {
                   <>
                     <Link
                       href="/admin"
-                      className="bg-white w-28 lg:w-80 lg:h-44 rounded-xl border shadow-xl shadow-drcuotasPrimary border-drcuotasPrimary flex flex-col justify-center items-start p-8 gap-4 lg:gap-0"
+                      className="bg-white w-28 lg:w-80 lg:h-44  border shadow-2xl  border-drcuotasPrimary flex flex-col justify-center items-start p-8 gap-4 lg:gap-0"
                     >
                       <span className="text-drcuotasPrimary-text font-extrabold text-lg uppercase leading-tight tracking-tight text-center  w-full">
                         Total Cirugias
@@ -83,7 +78,7 @@ export default function AdminView() {
                   <>
                     <Link
                       href="/admin"
-                      className="bg-white w-28 lg:w-80 lg:h-44 rounded-xl border shadow-xl shadow-drcuotasPrimary border-drcuotasPrimary flex flex-col justify-center items-start p-8 gap-4 lg:gap-0"
+                      className="bg-white w-28 lg:w-80 lg:h-44  border shadow-2xl  border-drcuotasPrimary flex flex-col justify-center items-start p-8 gap-4 lg:gap-0"
                     >
                       <span className="text-drcuotasPrimary-text font-extrabold text-lg uppercase leading-tight tracking-tight text-center  w-full">
                         Total Ventas
@@ -101,11 +96,12 @@ export default function AdminView() {
             </div>
           </>
           <>
-            <div className="lg:w-full h-screen lg:h-full  flex flex-col  lg:gap-2 lg:p-20 bg-drcuotasPrimary bg-opacity-30">
+            <div className="lg:w-full h-screen   flex flex-col  lg:gap-2 p-4 bg-gray-200">
               <TitleElements
-                primaryText="Panel de Control DrCuotas"
+                primaryText=""
                 secondaryText="Panel Administrativo"
-                descriptionText="Control Cirugias Creadas y Generar Sorteos"
+                descriptionText=""
+                showImage={true}
               />
               <Accordion
                 type="single"
@@ -115,7 +111,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-1"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white  border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -134,7 +130,7 @@ export default function AdminView() {
                               setSelectedStatus(e.target.value as Status);
                             }}
                             value={selectedStatus}
-                            className="w-full h-10 px-4 rounded-xl text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border "
+                            className="w-full h-10 px-4 text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border "
                           >
                             <option value="" disabled>
                               Selecciona Status...
@@ -154,7 +150,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-3"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white  border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -173,7 +169,7 @@ export default function AdminView() {
                               setSelectedStatus(e.target.value as Status);
                             }}
                             value={selectedStatus}
-                            className="w-full h-10 px-4 rounded-xl text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border  "
+                            className="w-full h-10 px-4  text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border  "
                           >
                             <option value="" disabled>
                               Selecciona Status...
@@ -194,7 +190,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-2"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white  border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -213,7 +209,7 @@ export default function AdminView() {
                               setSelectedStatus(e.target.value as Status);
                             }}
                             value={selectedStatus}
-                            className="w-full h-10 px-4 rounded-xl text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border "
+                            className="w-full h-10 px-4  text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border "
                           >
                             <option value="" disabled>
                               Selecciona Status...
@@ -234,7 +230,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-4"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white  border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -253,7 +249,7 @@ export default function AdminView() {
                               setSelectedStatus(e.target.value as Status);
                             }}
                             value={selectedStatus}
-                            className="w-full h-10 px-4 rounded-xl text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border "
+                            className="w-full h-10 px-4  text-drcuotasSecondaryPrimaryColor leading-tight tracking-tight uppercase font-black border "
                           >
                             <option value="" disabled>
                               Selecciona Status...
@@ -274,7 +270,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-6"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white  border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -292,7 +288,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-7"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -310,7 +306,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-8"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white  border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -329,7 +325,7 @@ export default function AdminView() {
                 <>
                   <AccordionItem
                     value="item-9"
-                    className="bg-white rounded-xl border px-4 "
+                    className="bg-white border px-4 "
                   >
                     <AccordionTrigger>
                       <div className="w-full flex flex-row gap-4 items-center">
@@ -349,17 +345,17 @@ export default function AdminView() {
             </div>
           </>
           <>
-            <div className="w-full h-full hidden lg:flex flex-col justify-center bg-drcuotasPrimary bg-opacity-30 items-center p-20 gap-2">
+            <div className="w-full h-full hidden lg:flex flex-col justify-center items-center p-4">
               <TitleElements
-                primaryText="Registro de Ventas de Cirugias"
-                secondaryText="Ingresos Mensuales"
-                descriptionText="Registro de ventas completadas en el trascurso de los meses"
+                primaryText="Resumen de cada Mes"
+                secondaryText="Grafica de Ventas"
+                descriptionText=""
+                showImage={false}
               />
 
               <RevenueChart />
             </div>
           </>
-          <div className="w-full h-32 bg-drcuotasPrimary bg-opacity-30"></div>
         </div>
       </>
     </>

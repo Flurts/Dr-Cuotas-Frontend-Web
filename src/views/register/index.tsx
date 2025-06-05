@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { toast } from '@/components/ui/use-toast';
-import RegisterModal from '@/layouts/components/SignUp';
+import SignUp from '@/layouts/components/SignUp';
 import { chargeUser } from '@/store';
 import { useLoginWithGoogleTokenMutation } from '@/types';
 
@@ -94,7 +94,7 @@ export default function RegisterView() {
           </div>
         </>
         <>
-          <RegisterModal />
+          <SignUp />
         </>
       </div>
     </>
