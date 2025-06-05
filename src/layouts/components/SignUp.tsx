@@ -1,8 +1,11 @@
-import { format } from 'date-fns';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import 'react-datepicker/dist/react-datepicker.css'; // ¡IMPORTANTE: Asegúrate de importar los estilos!
+
 import { ErrorMessage, Field, Form, FormikProvider, useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
 import { ImSpinner9 } from 'react-icons/im';
 import { MdError } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
@@ -12,59 +15,19 @@ import { toast } from '@/components/ui/use-toast';
 import { useRegisterUserMutation } from '@/graphql/generated';
 import { chargeUser } from '@/store';
 
-export default function RegisterModal() {
+export default function SignUp() {
   const { t } = useTranslation(['form', 'common', 'errors']);
-  const [dias, setDias] = useState([]);
-  const [meses, setMeses] = useState([]);
-  const [anios, setAnios] = useState([]);
   const [registerUserMutation] = useRegisterUserMutation();
   const dispatch = useDispatch();
   const router = useRouter();
-
-  useEffect(() => {
-    const diasOptions = [];
-    for (let i = 1; i <= 31; i++) {
-      diasOptions.push(
-        <option key={i} value={i}>
-          {i}
-        </option>,
-      );
-    }
-    setDias(diasOptions as any);
-
-    const mesesOptions = [];
-
-    for (let i = 1; i <= 12; i++) {
-      mesesOptions.push(
-        <option key={i} value={i}>
-          {format(new Date(2000, i - 1, 1), 'MMM')}
-        </option>,
-      );
-    }
-    setMeses(mesesOptions as any);
-
-    const anioActual = new Date().getFullYear();
-    const aniosOptions = [];
-    for (let i = anioActual; i >= anioActual - 100; i--) {
-      aniosOptions.push(
-        <option key={i} value={i}>
-          {i}
-        </option>,
-      );
-    }
-    setAnios(aniosOptions as any);
-  }, []);
+  const [startDate, setStartDate] = useState<Date | null>(null);
 
   const initialValues = {
     first_name: '',
     last_name: '',
     phone_email: '',
     password: '',
-    date_birth: {
-      day: new Date().getDate(),
-      month: new Date().getMonth() + 1,
-      year: 2000, // Set the default year to 2000
-    },
+    date_birth: null as Date | null, // Cambiado a null inicialmente
     gender: '',
   };
 
@@ -86,25 +49,24 @@ export default function RegisterModal() {
     password: Yup.string()
       .required(t('errors:passwordIsRequired'))
       .min(8, t('errors:passwordMustBeAtLeast8Characters')),
-    date_birth: Yup.object({
-      day: Yup.number().required(t('errors:dayOfBirthIsRequired')),
-      month: Yup.number().required(t('errors:monthOfBirthIsRequired')),
-      year: Yup.number().required(t('errors:yearOfBirthIsRequired')),
-    }).test(
-      'is-18-or-older',
-      t('errors:mustBe18OrOlder'),
-      function (value: any) {
-        const { day, month, year } = value;
-        const birthDate = new Date(year, month - 1, day);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        return age >= 18;
-      },
-    ),
+    date_birth: Yup.date()
+      .required(t('errors:dateOfBirthIsRequired'))
+      .nullable()
+      .test(
+        'is-18-or-older',
+        t('errors:mustBe18OrOlder'),
+        function (value: Date | null) {
+          if (!value) return false;
+          const today = new Date();
+          const birthDate = new Date(value);
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const m = today.getMonth() - birthDate.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+          }
+          return age >= 18;
+        },
+      ),
     gender: Yup.string().required(t('errors:genderIsRequired')),
   });
 
@@ -116,11 +78,7 @@ export default function RegisterModal() {
           lastName: values.last_name,
           phoneEmail: values.phone_email,
           password: values.password,
-          birthDate: new Date(
-            values.date_birth.year,
-            values.date_birth.month - 1,
-            values.date_birth.day,
-          ).toISOString(),
+          birthDate: values.date_birth?.toISOString(),
           gender: values.gender,
         },
       });
@@ -133,15 +91,12 @@ export default function RegisterModal() {
         const user = response.data!.registerUser.user;
         const token = response.data!.registerUser.token;
 
-        // Guardar en localStorage
         localStorage.setItem('accessToken', token);
         localStorage.setItem('role', user.role);
 
-        // Guardar en Redux
         dispatch(
           chargeUser({
-            // @ts-expect-error The user is not null here
-            user: response.data!.registerUser.user,
+            user: { ...response.data!.registerUser.user, password: '' },
             jwt: response.data!.registerUser.token,
           }),
         );
@@ -153,8 +108,6 @@ export default function RegisterModal() {
         });
 
         const Id = localStorage.getItem('surgeryId');
-
-        // Redirigir según el rol
         const destination =
           localStorage.getItem('isRegister') === '1'
             ? `/store/${Id}`
@@ -162,10 +115,7 @@ export default function RegisterModal() {
               ? '/'
               : '/';
 
-        localStorage.removeItem('isRegister'); // Limpiar el estado de registro
-
-        // Redirigir al destino
-
+        localStorage.removeItem('isRegister');
         await router.push(destination);
       }
     } catch (error) {
@@ -183,7 +133,6 @@ export default function RegisterModal() {
     validationSchema,
     onSubmit: handleSubmit,
   });
-
   return (
     <>
       <div className="w-80 lg:w-[40vw] flex flex-col  justify-center items-center gap-4">
@@ -277,46 +226,98 @@ export default function RegisterModal() {
                 />
               </div>
             </div>
-            <span className="w-full text-xs text-black ">
-              fecha de nacimiento
-            </span>
-            <div className="w-full flex flex-col justify-center">
-              <p className="text-sm hidden">{t('form:dateOfBirth')}</p>
-              <div className="flex flex-row gap-4 w-full">
-                <Field
-                  as="select"
-                  id="date_birth.day"
-                  name="date_birth.day"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border border-black  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                >
-                  {dias}
-                </Field>
 
-                <Field
-                  as="select"
-                  id="date_birth.month"
-                  name="date_birth.month"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border border-black  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                >
-                  {meses}
-                </Field>
-
-                <Field
-                  as="select"
-                  id="date_birth.year"
-                  name="date_birth.year"
-                  className="w-full h-8 xl:h-[40px] px-2 bg-white border border-black  tracking-tight leading-tight focus:outline-none focus:ring-2 focus:ring-[#6636E2] transition-all duration-300"
-                >
-                  {anios}
-                </Field>
+            <div className="w-full flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 flex items-center justify-center bg-gradient-to-r from-[#6636E2] to-[#B398F5] rounded-full">
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 0 100-2H6z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <span className="text-sm font-semibold text-gray-700 tracking-tight">
+                  Fecha de nacimiento
+                </span>
               </div>
+
+              {/* Container del DatePicker con efectos visuales */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#6636E2] to-[#B398F5] rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                <div className="relative">
+                  <DatePicker
+                    selected={formik.values.date_birth}
+                    onChange={(date: Date | null) => {
+                      void formik.setFieldValue(
+                        'date_birth',
+                        date ?? new Date(2000, 0, 1),
+                      );
+                      setStartDate(date);
+                    }}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="DD/MM/AAAA"
+                    className="w-[770px] h-12 xl:h-[48px] pl-12 pr-4 bg-white border-2 border-gray-300 rounded-lg text-gray-700 placeholder-gray-400 tracking-tight leading-tight focus:outline-none focus:ring-0 focus:border-[#6636E2] transition-all duration-300 hover:border-[#B398F5] hover:shadow-md cursor-pointer"
+                    maxDate={new Date()}
+                    minDate={new Date(1900, 0, 1)}
+                    showPopperArrow={false}
+                    popperClassName="react-datepicker-popper z-50"
+                    calendarClassName="shadow-xl border-0 rounded-xl"
+                    dayClassName={(date: Date) =>
+                      'hover:bg-[#6636E2] hover:text-white rounded-full transition-colors duration-200 cursor-pointer'
+                    }
+                    weekDayClassName={() => 'text-gray-600 font-medium'}
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                    yearDropdownItemNumber={100}
+                    scrollableYearDropdown
+                    autoComplete="off"
+                    isClearable={false}
+                    shouldCloseOnSelect={true}
+                    todayButton="Hoy"
+                    onBlur={async () =>
+                      await formik.setFieldTouched('date_birth', true)
+                    }
+                    onFocus={async () =>
+                      await formik.setFieldTouched('date_birth', true)
+                    }
+                  />
+
+                  {/* Icono de calendario dentro del input */}
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg
+                      className="w-5 h-5 text-gray-400 group-hover:text-[#6636E2] transition-colors duration-300"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 0 100-2H6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Error message mejorado */}
               <ErrorMessage
                 name="date_birth"
                 component="div"
                 render={(msg) => (
-                  <div className="flex items-center text-red-500">
-                    <MdError className="mr-1" />
-                    <div className="text-[9px] lg:text-xs">{msg}</div>
+                  <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex-shrink-0">
+                      <MdError className="w-4 h-4 text-red-500" />
+                    </div>
+                    <div className="text-xs text-red-600 font-medium">
+                      {msg}
+                    </div>
                   </div>
                 )}
               />

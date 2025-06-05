@@ -75,14 +75,15 @@ const OurSpecialties = () => {
   );
 
   return (
-    <section className="w-full h-full flex flex-col justify-center items-center lg:p-20 bg-gray-50">
+    <section className="w-full h-screen flex flex-col justify-center items-center  bg-gray-100 border">
       <TitleElements
-        primaryText="Paga a Cuotas"
+        primaryText="¡Visita nuestra Tienda!"
         secondaryText="Cirugías disponibles"
         descriptionText=""
+        showImage={true}
       />
 
-      <div className="relative w-full max-w-7xl mx-auto">
+      <div className="w-full flex justify-center items-center">
         {showLeftArrow && (
           <button
             aria-label="Scroll left"
@@ -100,7 +101,7 @@ const OurSpecialties = () => {
         ) : (
           <div
             ref={scrollRef}
-            className="flex gap-32 overflow-x-auto scroll-smooth no-scrollbar p-4 lg:p-8"
+            className="flex gap-4 lg:gap-4 overflow-x-auto scroll-smooth no-scrollbar "
           >
             {surgeriesList.length > 0 ? (
               surgeriesList.map((surgery) => (

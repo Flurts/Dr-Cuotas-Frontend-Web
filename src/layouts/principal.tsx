@@ -107,7 +107,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
       <nav
         className={`${
           sticky ? 'sticky top-0' : 'relative'
-        } z-50 flex w-full h-24  justify-center lg:justify-end items-center  bg-white shadow-md shadow-white  transition-transform duration-500  ${
+        } z-50 flex w-full h-24  justify-center lg:justify-end items-center  bg-white shadow-md  transition-transform duration-500  ${
           hidden ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -291,7 +291,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
         </ul>
       </div>
       <Modal open={cartOpen} onClose={handleCartClose}>
-        <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96">
+        <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg w-96">
           <Typography
             variant="h6"
             className="h-40 text-center flex items-center justify-center"

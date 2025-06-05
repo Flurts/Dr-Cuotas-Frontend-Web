@@ -16,15 +16,6 @@ export const EvidenceCard = () => {
   const [evidences, setEvidences] = useState<Evidence[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  // Obtener accessToken solo en el cliente
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('accessToken');
-      setAccessToken(token);
-    }
-  }, []);
 
   // Extraemos doctorId correctamente
   useEffect(() => {
@@ -43,16 +34,19 @@ export const EvidenceCard = () => {
     }
   }, [router.isReady, router.query]);
 
+  console.log('Doctor ID:', doctorId);
+
   useEffect(() => {
-    if (!doctorId || !accessToken) return;
+    if (!doctorId) return;
 
     const fetchEvidences = async () => {
       try {
+        console.log('Fetching evidences for doctor:', doctorId);
+
         const response = await fetch(`${settings.API_URL}/graphql`, {
-          method: 'POST',
+          method: 'POST', // Cambio crítico: POST en lugar de GET
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `${accessToken}`,
           },
           body: JSON.stringify({
             query: `
@@ -68,11 +62,29 @@ export const EvidenceCard = () => {
           }),
         });
 
-        const result = await response.json();
-        if (result.errors) throw new Error(result.errors[0].message);
+        console.log('Response status:', response.status);
 
-        setEvidences(result.data.evidencesByDoctor);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('GraphQL result:', result);
+
+        if (result.errors) {
+          console.error('GraphQL errors:', result.errors);
+          throw new Error(result.errors[0].message);
+        }
+
+        if (result.data?.evidencesByDoctor) {
+          setEvidences(result.data.evidencesByDoctor);
+          console.log('Evidences loaded:', result.data.evidencesByDoctor);
+        } else {
+          console.warn('No evidences found in response');
+          setEvidences([]);
+        }
       } catch (err: any) {
+        console.error('Error fetching evidences:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -80,13 +92,21 @@ export const EvidenceCard = () => {
     };
 
     void fetchEvidences();
-  }, [doctorId, accessToken]);
+  }, [doctorId]);
 
   if (!doctorId)
     return <p className="text-center text-gray-500">Cargando doctor...</p>;
   if (loading)
     return <p className="text-center text-gray-500">Cargando evidencias...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+
+  if (evidences.length === 0) {
+    return (
+      <p className="text-center text-gray-500">
+        No se encontraron evidencias para este doctor.
+      </p>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-96 lg:grid-cols-4 gap-6 ">

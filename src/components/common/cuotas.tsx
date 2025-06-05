@@ -43,18 +43,19 @@ const plans = [
 
 export default function Cuotas({ className }: { className?: string }) {
   return (
-    <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen mb-40 bg-white p-8">
+    <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen ">
       <TitleElements
-        primaryText=""
+        primaryText="¡Aprovecha la Oportunidad!"
         secondaryText="TU PLAN DE FINANCIAMIENTO"
         descriptionText=""
+        showImage={false}
       />
 
       <div className="w-full flex flex-row justify-center items-center gap-4">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden shadow-2xl border-2  hover:shadow-md transition-shadow duration-300 ${
+            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden  border-2  hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300 ${
               plan.highlight
                 ? 'border-white bg-gradient-to-b from-purple-400 to-blue-500'
                 : 'border bg-white'

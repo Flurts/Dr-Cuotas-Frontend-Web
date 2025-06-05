@@ -1,5 +1,4 @@
 import { Form, FormikProvider, useFormik } from 'formik';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
@@ -137,11 +136,6 @@ function SignIn() {
                       Recuérdame
                     </label>
                   </div>
-                  <Link href="/forgot-your-password">
-                    <span className="text-xs leading-tight tracking-tight">
-                      Recuperar contraseña ?
-                    </span>
-                  </Link>
                 </div>
               </>
             </div>

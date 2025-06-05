@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useFormik } from 'formik';
 import {
-  LucideMessagesSquare,
+  LucideClock,
+  LucideEye,
   LucidePartyPopper,
   LucideShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { IoSettings } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -30,7 +30,6 @@ import {
 import { createS3Url, refFileImage } from '@/utils/refFileImage';
 
 export default function AccountView() {
-  const { t } = useTranslation('common');
   const user = useSelector(getCurrentUser);
   const [userData, setUserData] = useState<{
     first_name: string;
@@ -53,6 +52,22 @@ export default function AccountView() {
   const [saveImageUserS3] = useSaveImageUserS3Mutation();
   const [toggleModal, setToggleModal] = useState(false);
   const dispatch = useDispatch();
+
+  // Filtrar cirugías activas y en validación
+  const filteredAdjudicated = useMemo(() => {
+    if (!adjudicatedData?.getMyAdjudicated)
+      return { active: [], validating: [] };
+
+    const active = adjudicatedData.getMyAdjudicated.filter(
+      (adj: any) => adj.adjudicated_status === 'Active',
+    );
+
+    const validating = adjudicatedData.getMyAdjudicated.filter(
+      (adj: any) => adj.adjudicated_status === 'Validating',
+    );
+
+    return { active, validating };
+  }, [adjudicatedData]);
 
   const modalHandler = () => {
     setToggleModal(!toggleModal);
@@ -307,6 +322,8 @@ export default function AccountView() {
     // Aquí iría la lógica para enviar el formulario
   };
 
+  console.log('adjudicatedData:', adjudicatedData);
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -364,6 +381,7 @@ export default function AccountView() {
       return null;
     }
   };
+
   useEffect(() => {
     const fetchUserData = async () => {
       const data = await getUserData();
@@ -393,7 +411,7 @@ export default function AccountView() {
                   width={120}
                   height={120}
                   imageUrl={
-                    userData?.profile_picture ?? '/images/default_profile.svg'
+                    userData?.profile_picture ?? '/images/elements/doctor.svg'
                   }
                   onChange={handleImageUpload} // Cambiado: ahora usa la función copiada de DoctorView
                 />
@@ -422,10 +440,6 @@ export default function AccountView() {
                   <IoSettings className="text-2xl" />
                   Perfil
                 </Link>
-                <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
-                  <LucideMessagesSquare className="text-2xl" />
-                  Mensaje
-                </button>
               </div>
             </div>
           </>
@@ -475,10 +489,114 @@ export default function AccountView() {
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight mb-2 flex flex-row items-center justify-center sm:justify-start gap-2">
                         <LucidePartyPopper className="w-4 h-4" />{' '}
-                        {userData?.adjudicated?.length ?? 1} Cirugias Compradas
+                        {filteredAdjudicated.active.length} Cirugías Activas
                       </p>
+                      {filteredAdjudicated.validating.length > 0 && (
+                        <p className="text-sm text-yellow-600 leading-tight tracking-tight mb-2 flex flex-row items-center justify-center sm:justify-start gap-2">
+                          <LucideClock className="w-4 h-4" />{' '}
+                          {filteredAdjudicated.validating.length} En Validación
+                        </p>
+                      )}
                     </div>
                   </>
+
+                  {/* Mini vista previa de cirugías activas */}
+                  {filteredAdjudicated.active.length > 0 && (
+                    <div className="w-full border rounded-xl p-6 border-drcuotasPrimary-bg">
+                      <div className="flex justify-between items-center mb-4">
+                        <p className="text-base font-bold text-drcuotasPrimary-text uppercase leading-tight tracking-tight">
+                          Cirugías Activas
+                        </p>
+                        <LucideEye className="w-4 h-4 text-drcuotasTertiary-text" />
+                      </div>
+                      <div className="space-y-3 max-h-60 overflow-y-auto">
+                        {filteredAdjudicated.active
+                          .slice(0, 3)
+                          .map((adjudicated: any, index: number) => (
+                            <div
+                              key={index}
+                              className="bg-gray-50 rounded-lg p-3 border border-gray-200"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <h4 className="text-sm font-semibold text-drcuotasPrimary-text mb-1">
+                                    {adjudicated.surgery?.name ||
+                                      'Cirugía Estética'}
+                                  </h4>
+                                  <p className="text-xs text-drcuotasTertiary-text mb-2">
+                                    Total: $
+                                    {adjudicated.total_price?.toLocaleString() ||
+                                      '0'}
+                                  </p>
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                                      Activa
+                                    </span>
+                                    <span className="text-xs text-drcuotasTertiary-text">
+                                      Cuotas: {adjudicated.quotas_paid || 0}/
+                                      {adjudicated.quotas_number || 0}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        {filteredAdjudicated.active.length > 3 && (
+                          <div className="text-center pt-2">
+                            <span className="text-xs text-drcuotasTertiary-text">
+                              +{filteredAdjudicated.active.length - 3} más
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Mini vista previa de cirugías en validación */}
+                  {filteredAdjudicated.validating.length > 0 && (
+                    <div className="w-full border rounded-xl p-6 border-yellow-200 bg-yellow-50">
+                      <div className="flex justify-between items-center mb-4">
+                        <p className="text-base font-bold text-yellow-800 uppercase leading-tight tracking-tight">
+                          En Validación
+                        </p>
+                        <LucideClock className="w-4 h-4 text-yellow-600" />
+                      </div>
+                      <div className="space-y-3 max-h-40 overflow-y-auto">
+                        {filteredAdjudicated.validating
+                          .slice(0, 2)
+                          .map((adjudicated: any, index: number) => (
+                            <div
+                              key={index}
+                              className="bg-white rounded-lg p-3 border border-yellow-200"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <h4 className="text-sm font-semibold text-drcuotasPrimary-text mb-1">
+                                    {adjudicated.surgery?.name ||
+                                      'Cirugía Estética'}
+                                  </h4>
+                                  <p className="text-xs text-drcuotasTertiary-text mb-2">
+                                    Total: $
+                                    {adjudicated.total_price?.toLocaleString() ||
+                                      '0'}
+                                  </p>
+                                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                                    Validando
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        {filteredAdjudicated.validating.length > 2 && (
+                          <div className="text-center pt-2">
+                            <span className="text-xs text-yellow-700">
+                              +{filteredAdjudicated.validating.length - 2} más
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Actividad reciente */}
                   <></>
@@ -491,12 +609,12 @@ export default function AccountView() {
 
       {/* <UserInfoImageEditable user={user} handleChange={handleChange} /> */}
 
-      {/* Sección inferior (Ejemplo con UserInfoImageEditable y CardCirugia) */}
+      {/* Sección inferior - Solo mostrar cirugías activas */}
       <div className="flex-col w-full h-full items-center p-10 ">
         {adjudicatedLoading ? (
           <div>Loading...</div>
-        ) : adjudicatedData!.getMyAdjudicated?.length > 0 ? (
-          adjudicatedData!.getMyAdjudicated.map((adjudicated, index) => (
+        ) : filteredAdjudicated.active.length > 0 ? (
+          filteredAdjudicated.active.map((adjudicated, index) => (
             <React.Fragment key={index}>
               {/* Ajusta el tipo si tu componente CardCirugia lo requiere */}
               <CardCirugia adjudicated={adjudicated as any} />
