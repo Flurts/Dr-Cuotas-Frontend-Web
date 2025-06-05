@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import 'react-datepicker/dist/react-datepicker.css'; // ¡IMPORTANTE: Asegúrate de importar los estilos!
 
 import { ErrorMessage, Field, Form, FormikProvider, useFormik } from 'formik';
