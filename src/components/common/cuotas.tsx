@@ -55,7 +55,7 @@ export default function Cuotas({ className }: { className?: string }) {
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden shadow-2xl border-2  hover:shadow-md transition-shadow duration-300 ${
+            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden  border-2  hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300 ${
               plan.highlight
                 ? 'border-white bg-gradient-to-b from-purple-400 to-blue-500'
                 : 'border bg-white'

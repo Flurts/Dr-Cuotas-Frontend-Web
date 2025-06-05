@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import {
   LucideClock,
   LucideEye,
-  LucideMessagesSquare,
   LucidePartyPopper,
   LucideShieldCheck,
 } from 'lucide-react';
@@ -441,10 +440,6 @@ export default function AccountView() {
                   <IoSettings className="text-2xl" />
                   Perfil
                 </Link>
-                <button className="w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl">
-                  <LucideMessagesSquare className="text-2xl" />
-                  Mensaje
-                </button>
               </div>
             </div>
           </>

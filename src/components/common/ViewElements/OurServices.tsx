@@ -34,7 +34,7 @@ function OurServices() {
   ];
 
   return (
-    <div className="w-full h-screen hidden lg:flex flex-col justify-center items-center px-4">
+    <div className="w-full h-screen hidden lg:flex flex-col justify-center items-center">
       <div className="w-full ">
         <TitleElements
           primaryText="Nuestras mejores Categorias"
@@ -43,7 +43,7 @@ function OurServices() {
           showImage={true}
         />
 
-        <div className="w-full flex flex-row justify-center items-center gap-4 mt-6">
+        <div className="w-full flex flex-row justify-center items-center gap-4">
           {services.length > 0 ? (
             services.map((service, index) => (
               <ServiceCard

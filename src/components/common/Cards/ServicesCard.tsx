@@ -22,7 +22,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="w-[400px] h-[500px] relative overflow-hidden shadow-2xl border-2 border-white hover:shadow-md transition-shadow duration-300">
+    <div className="w-[400px] h-[500px] relative overflow-hidden  border-2 border-white hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300">
       <Link href={link} className="block w-full h-full relative">
         {/* Placeholder mientras carga */}
         {!imageLoaded && !imageError && (

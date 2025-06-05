@@ -34,6 +34,11 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
     variables: { limit: 10, offset: 0 },
   });
 
+  // Función para formatear el precio con separadores de miles
+  const formatPrice = (price: number): string => {
+    return price.toLocaleString('es-CO'); // Para Colombia usa puntos como separador de miles
+  };
+
   localStorage.getItem('selectedSurgeryId');
   console.log('🔍 Cirugía ID desde localStorage:', surgeryId);
 
@@ -378,13 +383,13 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
               <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4  border-l-4 border-blue-400">
                 <p className="text-sm text-gray-700">
                   {selectedCuotas
-                    ? `${selectedCuotas} cuotas de $${(price / selectedCuotas).toFixed(0)}`
+                    ? `${selectedCuotas} cuotas de $${formatPrice(Math.floor(price / selectedCuotas))}`
                     : 'Seleccione cuotas'}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">
                   Valor total:{' '}
                   <span className="text-2xl font-bold text-green-600">
-                    ${price?.toFixed(0)}
+                    ${formatPrice(Math.floor(price))}
                   </span>
                 </p>
               </div>
@@ -414,7 +419,7 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
                   <p className="text-sm font-medium text-gray-800">
                     $
                     {selectedQuota
-                      ? (price / selectedQuota).toFixed(0)
+                      ? formatPrice(Math.floor(price / selectedQuota))
                       : 'Calculando...'}
                   </p>
                 </div>

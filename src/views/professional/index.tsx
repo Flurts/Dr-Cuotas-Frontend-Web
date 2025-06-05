@@ -9,7 +9,7 @@ import { Doctor, useGetDoctorsByNameLazyQuery } from '@/types';
 const ProfessionalView = () => {
   const [getDoctorsByName, { data, error }] = useGetDoctorsByNameLazyQuery();
   const [doctorsList, setDoctorsList] = useState<Doctor[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const ProfessionalView = () => {
         <input
           type="text"
           placeholder="Buscar doctor..."
-          className="w-full border border-drcuotasTertiary-bg px-3 py-2 rounded-xl text-drcuotasTertiary-text leading-tight tracking-tight"
+          className="w-full border  px-3 py-2  text-drcuotasTertiary-text leading-tight tracking-tight"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -52,7 +52,7 @@ const ProfessionalView = () => {
         />
 
         <button
-          className={`border border-drcuotasTertiary-bg px-3 py-2 text-sm rounded-l-xl transition text-drcuotasTertiary-text ${viewMode === 'grid' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white'}`}
+          className={`border  px-3 py-2 text-sm  transition text-drcuotasTertiary-text ${viewMode === 'grid' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white'}`}
           onClick={() => {
             setViewMode('grid');
           }}
@@ -60,7 +60,7 @@ const ProfessionalView = () => {
           <FaThLarge />
         </button>
         <button
-          className={`border border-drcuotasTertiary-bg px-3 py-2 text-sm rounded-r-xl transition text-drcuotasTertiary-text ${viewMode === 'list' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white'}`}
+          className={`border px-3 py-2 text-sm  transition text-drcuotasTertiary-text ${viewMode === 'list' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white'}`}
           onClick={() => {
             setViewMode('list');
           }}
@@ -93,7 +93,7 @@ const ProfessionalView = () => {
                       : '/images/elements/doctor.svg'
                   }
                   alt={doctor.user!.first_name}
-                  className="w-full h-full object-cover rounded-t-xl"
+                  className="w-full h-full object-cover "
                   width={160}
                   height={160}
                 />

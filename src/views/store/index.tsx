@@ -187,7 +187,7 @@ export default function StoreView() {
         <div
           className={`${showFilters ? 'block' : 'hidden'} xl:block xl:w-80 xl:flex-shrink-0`}
         >
-          <div className="bg-white w-full h-screen border border-black p-4 flex flex-col gap-4">
+          <div className="bg-white w-full h-screen border p-4 flex flex-col gap-4">
             <div className="flex items-center justify-between mb-4 lg:mb-6">
               <h2 className="text-sm ">Filtros</h2>
               <button onClick={clearFilters} className="text-sm text-blue-600 ">
@@ -252,12 +252,12 @@ export default function StoreView() {
         </div>
 
         {/* Contenido principal */}
-        <div className="w-full border border-black p-10">
+        <div className="w-full  p-10">
           {/* Barra de búsqueda y controles */}
           <div className="bg-white mb-4">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
               {/* Búsqueda */}
-              <div className="relative flex-1 max-w-full sm:max-w-md">
+              <div className="relative flex-1 max-w-full ">
                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
                 <input
                   type="text"
@@ -266,7 +266,7 @@ export default function StoreView() {
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                   }}
-                  className="w-full pl-10 pr-4 py-2.5 lg:py-3 text-sm border border-black focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 lg:py-3 text-sm border  focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -290,7 +290,7 @@ export default function StoreView() {
                   onClick={() => {
                     handleCardClick(surgery.id);
                   }}
-                  className="w-full max-w-md mx-auto sm:max-w-full sm:h-52  overflow-hidden border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col sm:flex-row bg-white cursor-pointer"
+                  className="w-full max-w-md mx-auto sm:max-w-full sm:h-52  overflow-hidden border   hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-500 flex flex-col sm:flex-row bg-white cursor-pointer"
                 >
                   {/* Imagen más grande y bien centrada */}
                   <div className="w-full sm:w-48 h-48 sm:h-full relative">

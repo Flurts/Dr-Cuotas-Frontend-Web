@@ -33,6 +33,24 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
 }) => {
   const router = useRouter();
 
+  // Función para formatear el precio con separadores de miles
+  const formatPrice = (price: number): string => {
+    // Opción 1: Usando toLocaleString() - Más automático
+    return price.toLocaleString('es-CO'); // Para Colombia usa puntos como separador de miles
+
+    // Opción 2: Usando toLocaleString() con configuración personalizada
+    // return price.toLocaleString('es', {
+    //   minimumFractionDigits: 0,
+    //   maximumFractionDigits: 0
+    // });
+
+    // Opción 3: Formateo manual con puntos
+    // return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Opción 4: Formateo manual con comas (estilo estadounidense)
+    // return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
   // Función para generar el slug basado en el título
   const generateSlug = (title: string): string => {
     return title
@@ -57,10 +75,10 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   return (
     <>
       <div
-        className="w-80 lg:w-450px] h-[400px] relative overflow-hidden shadow-2xl border-2 border-white cursor-pointer hover:shadow-md transition-shadow duration-300"
+        className="w-80 lg:w-450px] h-[400px] relative overflow-hidden border-2 border-white cursor-pointer  transition-shadow duration-300"
         onClick={handleCardClick}
       >
-        <div className="block w-full h-full relative">
+        <div className="block w-full h-full relative shadow-2xl shadow-">
           <Image
             src={imageUrl || '/images/elements/girl_footer.svg'}
             alt={title}
@@ -69,14 +87,16 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
             className="z-0"
           />
           {/* Overlay oscuro */}
-          <div className="absolute inset-0 bg-white backdrop-blur-sm bg-opacity-20 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(192,132,252,0.5)] to-[rgba(59,130,246,0.5)]   z-10"></div>
 
           {/* Contenido sobre la imagen */}
-          <div className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center px-4">
-            <h1 className="text-white text-xl font-bold uppercase tracking-wide">
+          <div className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center">
+            <h1 className="text-white text-xl font-black uppercase tracking-wide">
               {title}
             </h1>
-            <p className="text-white text-sm font-bold">${price}</p>
+            <p className="text-green-500 text-xl font-bold">
+              ${formatPrice(price)}
+            </p>
           </div>
         </div>
       </div>
