@@ -1,3 +1,5 @@
+/* eslint-disable no-unmodified-loop-condition */
+/* eslint-disable prefer-const */
 import { LucideLaugh } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -60,6 +62,26 @@ function createCuotas(
   return cuotas;
 }
 
+// Mensajes motivacionales por cuota
+const getMotivationalMessage = (quotaNumber: number): string => {
+  const messages = {
+    1: 'Felicitaciones has tomado el primer paso para iniciar tu proceso de transformación física y estética con Dr cuotas. Muchas veces por los malos hábitos, mala alimentación nuestro organismo se encuentra inflamado, el hecho de estar inflamado hace que no se absorban de la mejor manera ciertos nutrientes por lo que para que tu proceso de transformación sea exitoso y duradero te sugerimos que inicies consulta con nutricionista y actividad física (personal trainer)',
+    2: 'Actividad Física: Recuerda realizar movimientos aeróbicos HIT intervalos de alta intensidad para mejorar tu salud mitocondrial y energía, esto también va a colaborar a mejorar la calidad de tu piel. Las pesas también tienen que ir en el entrenamiento diario sesiones de entrenamiento de fuerza de 30 minutos, los músculos, al contraerse -como cuando hacemos ejercicio– secretan estas sustancias químicas al torrente sanguíneo, activando todo el sistema endocrino.',
+    3: 'Consulta con tu nutricionista o médico funcional, que tu plan de alimentación no esté basado en Kcal sino alimentos que den salud a tu sistema metabólico',
+    4: '¡En buena hora! tienes la consulta con tu cirujano plástico, podrás contactar para agendar turno',
+    5: 'Recuerda que no siempre estarás motivada pero la disciplina en tu día a día es el puente entre las metas y los logros. ¡Fuerza continua así!',
+    6: 'Recuerda en tu plan de alimentación ingerir alimentos que contengan vitamina A, zinc, hierro, vitamina C, D y más que ayudan a la cicatrización, consulta a tu nutricionista o médico funcional',
+    7: 'Tu éxito no es casualidad, es el resultado de un esfuerzo constante',
+    8: 'Los cambios en tus hábitos no solo preparan el camino para un posoperatorio óptimo, sino que también te guían hacia una transformación perdurable, donde cada paso es una semilla que florece en una vida mejor.',
+    9: 'Los ácidos grasos omega-3 presentes en pescados como el salmón pueden reducir la inflamación y favorecer la curación.',
+    10: 'Descansa lo suficiente para permitir que tu cuerpo se recupere adecuadamente y reducir el estrés.',
+    11: '¡Felicitaciones en buena hora! Has llegado hasta aquí ahora debes realizarte el prequirúrgico consulta con tu cirujano plástico Dr cuotas',
+    12: 'Mantén una actitud positiva y enfócate en los beneficios a largo plazo de la cirugía para mantenerte motivado durante el proceso de recuperación',
+  };
+
+  return messages[quotaNumber as keyof typeof messages] || '';
+};
+
 function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
   const { t } = useTranslation(['common', 'constants']);
   const [expanded, setExpanded] = useState(false);
@@ -89,8 +111,28 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
     adjudicated.end_date_payment ?? new Date(),
   );
 
+  const monthsRemaining =
+    (adjudicated.quotas_number ?? 0) - (adjudicated.quotas_paid ?? 0);
+
+  const surgeryDate = new Date(adjudicated.created_at);
+
+  let nextPaymentDate = new Date(adjudicated.created_at);
+  nextPaymentDate.setMonth(
+    nextPaymentDate.getMonth() + (adjudicated.quotas_paid ?? 0),
+  );
+
+  const today = new Date();
+
+  // Si la fecha ya pasó, calcular cuál sería la siguiente cuota que debería pagar
+  while (
+    nextPaymentDate < today &&
+    (adjudicated.quotas_paid ?? 0) < (adjudicated.quotas_number ?? 0)
+  ) {
+    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+  }
+
   return (
-    <div className="w-full justify-center items-center flex flex-row relative">
+    <div className="w-full justify-center items-center flex flex-col relative gap-4">
       <div
         className={`flex flex-col bg-white w-full items-center gap-2 border rounded-xl border-drcuotasPrimary-bg`}
       >
@@ -152,6 +194,26 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                 >
                   <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
                     Doctor
+                  </span>
+                </Link>
+              </div>
+              <div className="w-full flex flex-col sm:flex-row mt-5  justify-center gap-2 md:gap-10">
+                <div className="flex w-full lg:w-1/2 h-10 justify-center items-center p-1 md:p-2 ">
+                  <span className="text-4xl md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
+                    fecha de aprox cirugia:{' '}
+                    {new Date(
+                      surgeryDate.getFullYear(),
+                      surgeryDate.getMonth() + monthsRemaining,
+                      surgeryDate.getDate(),
+                    ).toLocaleDateString('es-ES')}
+                  </span>
+                </div>
+                <Link
+                  href={`/contact`}
+                  className="flex w-full lg:w-1/2 h-10 justify-center items-center p-1 md:p-2 bg-drcuotasSecondaryPrimaryColor"
+                >
+                  <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
+                    Reprogramar Cirugía
                   </span>
                 </Link>
               </div>
@@ -231,7 +293,8 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                         })}
                       </span>
                       <span className="text-xs md:text-base text-drcuotasPrimary-text leading-tight tracking-tight ">
-                        {t('constants:nextPayment', { date: '02/25/2025' })}
+                        proximo pago{' '}
+                        {nextPaymentDate.toLocaleDateString('es-ES')}{' '}
                       </span>
                     </div>
                     <div className="lg:p-5">
@@ -270,10 +333,51 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                   </div>
                 </>
               )}
+              {adjudicated.quotas_paid &&
+                adjudicated.quotas_paid >= 1 &&
+                adjudicated.quotas_paid <= 12 && (
+                  <div className="w-full flex flex-col gap-3">
+                    {Array.from(
+                      { length: adjudicated.quotas_paid },
+                      (_, index) => {
+                        const quotaNumber = index + 1;
+                        const message = getMotivationalMessage(quotaNumber);
+
+                        if (!message) return null;
+
+                        return (
+                          <div
+                            key={quotaNumber}
+                            className="bg-gradient-to-r  rounded-xl p-4 md:p-6 shadow-lg border border-drcuotasPrimary-bg"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 bg-drcuotasSecondaryPrimaryColor rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+                                <span className="text-white font-bold text-xl md:text-base">
+                                  {quotaNumber}
+                                </span>
+                              </div>
+                              <div className="flex-1 mt-3">
+                                <h3 className="text-drcuotasSecondaryPrimaryColor font-bold text-xl md:text-base mb-2">
+                                  Cuota {quotaNumber}
+                                </h3>
+                                <p className="text-drcuotasSecondaryPrimaryColor text-xs md:text-base leading-relaxed">
+                                  {message}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      },
+                    )}
+                  </div>
+                )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Mensajes motivacionales basados en cuotas pagadas */}
+
       {expanded && hasDetails && (
         <div className="absolute -top-10 -right-4 hover:scale-110 transition">
           <button

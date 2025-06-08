@@ -252,7 +252,7 @@ export default function StoreView() {
         </div>
 
         {/* Contenido principal */}
-        <div className="w-full  p-10">
+        <div className="w-full  ">
           {/* Barra de búsqueda y controles */}
           <div className="bg-white mb-4">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
