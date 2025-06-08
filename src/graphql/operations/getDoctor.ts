@@ -22,6 +22,7 @@ interface Doctor {
     provincia: string;
     country: string;
   };
+  ratingsCount: number;
 }
 
 export default function useDoctorDetails() {
@@ -70,6 +71,7 @@ export default function useDoctorDetails() {
                 provincia
                 country
               }
+              ratingsCount
             }
           }
         `;

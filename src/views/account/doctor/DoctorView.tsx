@@ -34,6 +34,8 @@ export default function DoctorView() {
   const [userData, setUserData] = useState<{
     first_name: string;
     last_name: string;
+    profile_picture: string | null;
+    id: string;
   } | null>(null);
 
   // State for surgery creation
@@ -143,6 +145,7 @@ export default function DoctorView() {
             first_name
             last_name
             profile_picture
+            id
           }
         }
       }
@@ -163,6 +166,7 @@ export default function DoctorView() {
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
       const data = await response.json();
+      console.log('User data response:', data);
       if (data.errors)
         throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
 

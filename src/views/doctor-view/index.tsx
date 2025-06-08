@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -16,7 +17,7 @@ import {
   LucideTwitter,
 } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import EvidenceCard from '@/components/common/ViewElements/cardEvidence';
 import OurServices from '@/components/common/ViewElements/OurServices';
@@ -76,16 +77,49 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
 
   // Estado para los "Me gusta"
   const [likes, setLikes] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [liked, setLiked] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [showFloatingHeart, setShowFloatingHeart] = useState<boolean>(false);
+  const [tempLikeCount, setTempLikeCount] = useState<number>(0);
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>('');
 
   const { doctorData, error, doctorId } = useDoctorDetails();
   console.log('Doctor Data:', doctorData);
   console.log('Error:', error);
 
-  const handleLike = () => {
-    if (doctorId) {
-      void rateDoctor(doctorId);
+  // Actualizar el contador temporal cuando cambien los datos del doctor
+  useEffect(() => {
+    const realLikes = doctorData?.ratingsCount ?? 0;
+    setTempLikeCount(realLikes);
+  }, [doctorData?.ratingsCount]);
+
+  const handleLike = async () => {
+    if (doctorId && !liked) {
+      // Iniciar animación
+      setIsAnimating(true);
+      setShowFloatingHeart(true);
+
+      // Marcar como liked y sumar 1 temporalmente
+      setLiked(true);
+      setTempLikeCount((prev) => prev + 1);
+
+      try {
+        await rateDoctor(doctorId);
+      } catch (error) {
+        // Si falla, revertir los cambios
+        setLiked(false);
+        setTempLikeCount((prev) => prev - 1);
+      }
+
+      // Detener animaciones después de un tiempo
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 600);
+
+      setTimeout(() => {
+        setShowFloatingHeart(false);
+      }, 1000);
     }
   };
 
@@ -98,6 +132,121 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
 
   return (
     <>
+      <style jsx>{`
+        @keyframes heartBeat {
+          0% {
+            transform: scale(1);
+          }
+          25% {
+            transform: scale(1.2);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          75% {
+            transform: scale(1.25);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes heartFloat {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(0.8);
+          }
+          50% {
+            opacity: 0.8;
+            transform: translateY(-20px) scale(1.2);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-40px) scale(1);
+          }
+        }
+
+        @keyframes buttonPulse {
+          0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+          70% {
+            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+          }
+          100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+          }
+        }
+
+        .heart-beat {
+          animation: heartBeat 0.6s ease-in-out;
+        }
+
+        .heart-float {
+          animation: heartFloat 1s ease-out forwards;
+        }
+
+        .button-pulse {
+          animation: buttonPulse 0.6s ease-out;
+        }
+
+        .floating-heart {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+          z-index: 10;
+          color: #ef4444;
+        }
+
+        .toast {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: white;
+          padding: 12px 24px;
+          border-radius: 10px;
+          box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+          z-index: 1000;
+          font-weight: 600;
+          transform: translateX(100%);
+          transition: all 0.3s ease-in-out;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toast.show {
+          transform: translateX(0);
+        }
+
+        .toast::before {
+          content: '⚠️';
+          margin-right: 8px;
+          font-size: 16px;
+        }
+
+        @keyframes toastSlide {
+          0% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          100% {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        .toast-enter {
+          animation: toastSlide 0.3s ease-out;
+        }
+      `}</style>
+
       <div className="w-full h-full overflow-hidden">
         {/* Banner con degradado gris */}
         <div className="h-72 bg-gradient-to-b from-white to-drcuotasPrimary-bg" />
@@ -151,14 +300,28 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
 
                 <button
                   onClick={handleLike}
-                  className={`w-40 h-14 flex flex-row justify-center items-center gap-2 rounded-xl border border-white ${
+                  disabled={liked}
+                  className={`relative w-40 h-14 flex flex-row justify-center items-center gap-2 rounded-xl border border-white transition-all duration-300 ${
                     liked
-                      ? 'bg-drcuotasPrimary-bg text-white'
-                      : 'bg-drcuotasSecondary-bg text-white'
+                      ? 'bg-drcuotasSecondaryPrimaryColor text-white transform scale-105'
+                      : 'bg-drcuotasSecondary-bg text-white hover:bg-opacity-90'
+                  } ${isAnimating ? 'button-pulse' : ''} ${
+                    liked ? 'cursor-not-allowed opacity-90' : 'cursor-pointer'
                   }`}
                 >
-                  <LucideStar className="text-2xl" />
-                  {liked ? 'Me gusta' : 'Me gusta'}
+                  <LucideStar
+                    className={`text-2xl transition-all duration-300 ${
+                      isAnimating ? 'heart-beat' : ''
+                    } ${liked ? 'fill-current' : ''}`}
+                  />
+                  {liked ? 'Liked!' : 'Me gusta'}
+
+                  {/* Corazón flotante */}
+                  {showFloatingHeart && (
+                    <div className="floating-heart heart-float">
+                      <LucideStar className="w-6 h-6 fill-current" />
+                    </div>
+                  )}
                 </button>
               </div>
             </div>
@@ -233,8 +396,17 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
                         Creadas
                       </p>
                       <p className="text-sm text-drcuotasTertiary-text leading-tight tracking-tight flex flex-row items-center justify-center sm:justify-start gap-2">
-                        <LucideStar className="w-4 h-4" /> {ratingValue} Me
-                        gusta
+                        <LucideStar className="w-4 h-4" />{' '}
+                        <span
+                          className={`transition-all duration-300 ${
+                            tempLikeCount !== (doctorData?.ratingsCount ?? 0)
+                              ? 'text-drcuotasTertiary-text font-bold'
+                              : ''
+                          }`}
+                        >
+                          {tempLikeCount}
+                        </span>{' '}
+                        Me gusta
                       </p>
                     </div>
                   </>
@@ -284,6 +456,13 @@ export const DoctorView: React.FC<DoctorViewProps> = ({ doctor }) => {
       <div className="w-full mb-40">
         <OurServices />
       </div>
+
+      {/* Toast de notificación */}
+      {showToast && (
+        <div className={`toast ${showToast ? 'show toast-enter' : ''}`}>
+          {toastMessage}
+        </div>
+      )}
     </>
   );
 };
