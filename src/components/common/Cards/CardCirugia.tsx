@@ -181,7 +181,7 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
               {/* Buttons info del procedimiento e info del profesional */}
               <div className="w-full flex flex-col sm:flex-row  justify-center gap-2 md:gap-10">
                 <Link
-                  href={`/store/${adjudicated.surgery?.id}?adjudicatedId=${adjudicated.id}`}
+                  href={`/quotas/${adjudicated.surgery?.id}?adjudicatedId=${adjudicated.id}`}
                   className="flex w-full lg:w-1/2 h-10 justify-center items-center p-1 md:p-2 bg-drcuotasPrimary-bg"
                 >
                   <span className="text-white text-xs md:text-base leading-tight tracking-tight font-bold uppercase">
@@ -337,38 +337,36 @@ function CardCirugia({ adjudicated }: { adjudicated: Adjudicated }) {
                 adjudicated.quotas_paid >= 1 &&
                 adjudicated.quotas_paid <= 12 && (
                   <div className="w-full flex flex-col gap-3">
-                    {Array.from(
-                      { length: adjudicated.quotas_paid },
-                      (_, index) => {
-                        const quotaNumber = index + 1;
-                        const message = getMotivationalMessage(quotaNumber);
+                    {/* Mostrar solo el mensaje de la cuota actual (última pagada) */}
+                    {(() => {
+                      const currentQuota = adjudicated.quotas_paid;
+                      const message = getMotivationalMessage(currentQuota);
 
-                        if (!message) return null;
+                      if (!message) return null;
 
-                        return (
-                          <div
-                            key={quotaNumber}
-                            className="bg-gradient-to-r  rounded-xl p-4 md:p-6 shadow-lg border border-drcuotasPrimary-bg"
-                          >
-                            <div className="flex items-start gap-3">
-                              <div className="flex-shrink-0 bg-drcuotasSecondaryPrimaryColor rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
-                                <span className="text-white font-bold text-xl md:text-base">
-                                  {quotaNumber}
-                                </span>
-                              </div>
-                              <div className="flex-1 mt-3">
-                                <h3 className="text-drcuotasSecondaryPrimaryColor font-bold text-xl md:text-base mb-2">
-                                  Cuota {quotaNumber}
-                                </h3>
-                                <p className="text-drcuotasSecondaryPrimaryColor text-xs md:text-base leading-relaxed">
-                                  {message}
-                                </p>
-                              </div>
+                      return (
+                        <div
+                          key={currentQuota}
+                          className="bg-gradient-to-r rounded-xl p-4 md:p-6 shadow-lg border border-drcuotasPrimary-bg"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 bg-drcuotasSecondaryPrimaryColor rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+                              <span className="text-white font-bold text-xl md:text-base">
+                                {currentQuota}
+                              </span>
+                            </div>
+                            <div className="flex-1 mt-3">
+                              <h3 className="text-drcuotasSecondaryPrimaryColor font-bold text-xl md:text-base mb-2">
+                                Cuota {currentQuota}
+                              </h3>
+                              <p className="text-drcuotasSecondaryPrimaryColor text-xs md:text-base leading-relaxed">
+                                {message}
+                              </p>
                             </div>
                           </div>
-                        );
-                      },
-                    )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
             </div>
