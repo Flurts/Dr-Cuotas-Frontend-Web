@@ -341,7 +341,7 @@ export default function ProductPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Área de imagen del producto */}
             <div className="space-y-4">
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-white  shadow-lg border border-gray-200 overflow-hidden">
                 <div className="aspect-square flex items-center justify-center p-8">
                   <Image
                     src={
@@ -360,7 +360,7 @@ export default function ProductPage() {
             </div>
 
             {/* Información del producto */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+            <div className="bg-white  shadow-lg border border-gray-200 p-8">
               <div className="space-y-6">
                 {/* Título y descripción */}
                 <div>
@@ -386,7 +386,7 @@ export default function ProductPage() {
                       onClick={() => {
                         setIsDropdownOpen(!isDropdownOpen);
                       }}
-                      className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-left flex items-center justify-between hover:border-drcuotasPrimary-bg focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg focus:border-transparent transition-colors duration-200"
+                      className="w-full bg-white border border-gray-300  px-4 py-3 text-left flex items-center justify-between hover:border-drcuotasPrimary-bg focus:outline-none focus:ring-2 focus:ring-drcuotasPrimary-bg focus:border-transparent transition-colors duration-200"
                     >
                       <span className="font-medium">
                         {selectedQuotas} cuotas
@@ -397,7 +397,7 @@ export default function ProductPage() {
                     </button>
 
                     {isDropdownOpen && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300  shadow-lg">
                         {quotasOptions.map((quota) => (
                           <button
                             key={quota}
@@ -405,7 +405,7 @@ export default function ProductPage() {
                               setSelectedQuotas(quota);
                               setIsDropdownOpen(false);
                             }}
-                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200 first:rounded-t-lg last:rounded-b-lg"
+                            className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200 "
                           >
                             {quota} cuotas
                           </button>
@@ -416,7 +416,7 @@ export default function ProductPage() {
                 </div>
 
                 {/* Información de precios */}
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="bg-gray-50  p-4 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Precio por cuota:</span>
                     <span className="font-semibold">
@@ -467,13 +467,13 @@ export default function ProductPage() {
                 <div className="grid grid-cols-1 gap-3 pt-4">
                   <button
                     onClick={handlePayment}
-                    className="bg-drcuotasPrimary-bg hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 uppercase tracking-wide"
+                    className="bg-drcuotasPrimary-bg hover:bg-opacity-90 text-white font-bold py-3 px-6  transition-colors duration-200 uppercase tracking-wide"
                   >
                     Pagar con Pasarela
                   </button>
                   <button
                     onClick={createTransaction}
-                    className="border-2 border-drcuotasPrimary-bg text-drcuotasPrimary-bg hover:bg-drcuotasPrimary-bg hover:text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 uppercase tracking-wide"
+                    className="border-2 border-drcuotasPrimary-bg text-drcuotasPrimary-bg hover:bg-drcuotasPrimary-bg hover:text-white font-bold py-3 px-6  transition-colors duration-200 uppercase tracking-wide"
                   >
                     Pagar con Transacción
                   </button>
