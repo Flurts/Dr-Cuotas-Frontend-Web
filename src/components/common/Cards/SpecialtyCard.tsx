@@ -65,7 +65,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   const handleCardClick = () => {
     const slug = generateSlug(title);
     // Redirigir a la página del producto con el ID
-    console.log(`Redirigiendo a /store/${id} o /surgery/${slug}?id=${id}`);
+    console.log(
+      `Redirigiendo a /store/${id}?adjudicatedId=${id} o /surgery/${slug}?id=${id}`,
+    );
     localStorage.setItem('selectedSurgeryId', id); // Guardar el ID en localStorage
     router.push(`/store/${id}`);
     // O si prefieres usar el slug generado:

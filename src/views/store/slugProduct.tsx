@@ -65,6 +65,11 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
       // Determinar qué ID usar (prioridad: currentSurgeryId > localStorage > primera cirugía)
       const idToUse = currentSurgeryId || surgeryIdLocal;
 
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('surgeryId'); // "delete" no es válido, usa removeItem
+        localStorage.removeItem('selectedSurgeryId');
+      }
+
       if (idToUse) {
         const surgery = surgeries.find((s) => s.id === idToUse);
         if (surgery) {

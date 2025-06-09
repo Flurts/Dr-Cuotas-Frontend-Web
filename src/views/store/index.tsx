@@ -176,7 +176,11 @@ export default function StoreView() {
   };
 
   // Función para manejar el click y redirigir
+  // Función para manejar el click y redirigir
   const handleCardClick = (surgeryId: string) => {
+    console.log(`Redirigiendo a /store/${surgeryId}`);
+    // Guardar el ID en localStorage (igual que en SpecialtyCard)
+    localStorage.setItem('selectedSurgeryId', surgeryId);
     router.push(`/store/${surgeryId}`);
   };
 

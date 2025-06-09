@@ -294,6 +294,11 @@ export default function AccountView() {
     }>,
   };
 
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('surgeryId'); // "delete" no es válido, usa removeItem
+    localStorage.removeItem('selectedSurgeryId');
+  }
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Email inválido').max(50).required('Requerido'),
     phone_number: Yup.string().max(15).required('Requerido'),
@@ -320,6 +325,14 @@ export default function AccountView() {
   const handleSubmit = async (values: typeof initialValues) => {
     console.log(values);
     // Aquí iría la lógica para enviar el formulario
+  };
+
+  const handleValidationClick = (surgeryId: string) => {
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('surgeryId', surgeryId);
+      localStorage.setItem('selectedSurgeryId', surgeryId);
+    }
   };
 
   console.log('adjudicatedData:', adjudicatedData);
@@ -553,50 +566,36 @@ export default function AccountView() {
                   )}
 
                   {/* Mini vista previa de cirugías en validación */}
-                  {filteredAdjudicated.validating.length > 0 && (
-                    <div className="w-full border rounded-xl p-6 border-yellow-200 bg-yellow-50">
-                      <div className="flex justify-between items-center mb-4">
-                        <p className="text-base font-bold text-yellow-800 uppercase leading-tight tracking-tight">
-                          En Validación
-                        </p>
-                        <LucideClock className="w-4 h-4 text-yellow-600" />
-                      </div>
-                      <div className="space-y-3 max-h-40 overflow-y-auto">
-                        {filteredAdjudicated.validating
-                          .slice(0, 2)
-                          .map((adjudicated: any, index: number) => (
-                            <div
-                              key={index}
-                              className="bg-white rounded-lg p-3 border border-yellow-200"
-                            >
-                              <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-drcuotasPrimary-text mb-1">
-                                    {adjudicated.surgery?.name ||
-                                      'Cirugía Estética'}
-                                  </h4>
-                                  <p className="text-xs text-drcuotasTertiary-text mb-2">
-                                    Total: $
-                                    {adjudicated.total_price?.toLocaleString() ||
-                                      '0'}
-                                  </p>
-                                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                                    Validando
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        {filteredAdjudicated.validating.length > 2 && (
-                          <div className="text-center pt-2">
-                            <span className="text-xs text-yellow-700">
-                              +{filteredAdjudicated.validating.length - 2} más
+                  {filteredAdjudicated.validating
+                    .slice(0, 2)
+                    .map((validationItem: any, index: number) => (
+                      <Link
+                        key={index}
+                        href={`/store/${validationItem.surgery?.id}?adjudicatedId=${validationItem.id}`}
+                        onClick={() =>
+                          // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+                          handleValidationClick(validationItem.surgery?.id)
+                        }
+                        className="block bg-white rounded-lg p-3 border border-yellow-200 hover:bg-yellow-100 transition-colors"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h4 className="text-sm font-semibold text-drcuotasPrimary-text mb-1">
+                              {validationItem.surgery?.name ||
+                                'Cirugía Estética'}
+                            </h4>
+                            <p className="text-xs text-drcuotasTertiary-text mb-2">
+                              Total: $
+                              {validationItem.total_price?.toLocaleString() ||
+                                '0'}
+                            </p>
+                            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                              Validando
                             </span>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                        </div>
+                      </Link>
+                    ))}
 
                   {/* Actividad reciente */}
                   <></>
