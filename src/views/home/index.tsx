@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 
-import Cuotas from '@/components/common/cuotas';
 import AdsModal from '@/components/common/ViewElements/AdComponents';
 import CarouselHome from '@/components/common/ViewElements/Corousel';
 import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
 import OurServices from '@/components/common/ViewElements/OurServices';
-import OurSpecialties from '@/components/common/ViewElements/OurSpecialties';
 import { useGetUserDataLazyQuery } from '@/types';
 
 export default function HomeView() {
@@ -30,11 +28,13 @@ export default function HomeView() {
   return (
     <>
       <CarouselHome />
-      <OurSpecialties />
-      <Cuotas />
-      <KnowOurProfessionals />
-      <OurServices />
-      <AdsModal />
+      {/* <OurSpecialties /> */}
+      {/* <Cuotas /> */}
+      <div className="w-full mt-10 lg:mt-0 flex flex-col-reverse lg:flex-col ">
+        <KnowOurProfessionals />
+        <OurServices />
+      </div>
+      {/* <AdsModal /> */}
     </>
   );
 }

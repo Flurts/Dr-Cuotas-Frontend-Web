@@ -75,7 +75,7 @@ const OurSpecialties = () => {
   );
 
   return (
-    <section className="w-full h-screen flex flex-col justify-center items-center  bg-gray-100 border">
+    <section className="w-full h-screen hidden lg:flex flex-col justify-center items-center">
       <TitleElements
         primaryText="¡Visita nuestra Tienda!"
         secondaryText="Cirugías disponibles"
@@ -83,7 +83,7 @@ const OurSpecialties = () => {
         showImage={true}
       />
 
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full hidden lg:flex justify-center items-center">
         {showLeftArrow && (
           <button
             aria-label="Scroll left"
@@ -101,11 +101,11 @@ const OurSpecialties = () => {
         ) : (
           <div
             ref={scrollRef}
-            className="flex gap-4 lg:gap-4 overflow-x-auto scroll-smooth no-scrollbar "
+            className="flex overflow-x-auto scroll-smooth no-scrollbar "
           >
             {surgeriesList.length > 0 ? (
               surgeriesList.map((surgery) => (
-                <div key={surgery.id} className="flex- w-80">
+                <div key={surgery.id} className="flex w-80">
                   <SpecialtyCard
                     title={surgery.name}
                     id={surgery.id}

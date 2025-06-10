@@ -793,7 +793,7 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
 
   return (
     <>
-      <div className="w-full h-80 lg:h-screen flex flex-col justify-center items-center p-4 sm:p-8 ">
+      <div className="w-full h-full  flex flex-col justify-center items-center p-4 sm:p-8 ">
         <div className="w-full h-full flex flex-col justify-start">
           <Accordion
             type="single"
@@ -802,10 +802,10 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
           >
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index + 1}`}>
-                <AccordionTrigger className="text-drcuotasTertiary-text font-bold text-xs lg:text-base uppercase leading-tight tracking-tight">
+                <AccordionTrigger className=" text-xs lg:text-base  leading-tight tracking-tight">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-drcuotasTertiary-text text-[10px] lg:text-xs z-40 p-4">
+                <AccordionContent className=" text-[10px] lg:text-xs z-40 p-4">
                   {faq.subsections ? (
                     <ul className="space-y-2">
                       {faq.subsections.map((sub, subIdx) => (
@@ -818,10 +818,10 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
                             <AccordionItem
                               value={`sub-item-${index}-${subIdx}`}
                             >
-                              <AccordionTrigger className="text-drcuotasTertiary-text font-semibold text-xs lg:text-sm">
+                              <AccordionTrigger className="text-xs lg:text-sm">
                                 {sub.title}
                               </AccordionTrigger>
-                              <AccordionContent className="text-drcuotasTertiary-text text-[10px] lg:text-xs p-4">
+                              <AccordionContent className=" text-[10px] lg:text-xs p-4">
                                 {Array.isArray(sub.content) ? (
                                   <span className="list-disc list-inside space-y-1 flex flex-col gap-4">
                                     {sub.content.map((paragraph, i) => (
@@ -850,7 +850,7 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
           </Accordion>
         </div>
 
-        <div className="w-full hidden lg:flex flex-row gap-2 justify-center items-center">
+        {/* <div className="w-full hidden lg:flex flex-row gap-2 justify-center items-center">
           <a
             href="/Dr_Cuotas.pdf"
             download
@@ -869,7 +869,7 @@ por DR. CUOTAS S.A. All rights reserved. Do not duplicate, distribute, or store 
               Descargar PDF
             </p>
           </a>
-        </div>
+        </div> */}
       </div>
     </>
   );

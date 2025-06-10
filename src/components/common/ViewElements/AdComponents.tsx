@@ -75,7 +75,7 @@ const AdsCarousel: React.FC = () => {
     );
 
   return (
-    <div className="w-full h-full hidden lg:flex flex-col justify-center items-center p-4 lg:p-6">
+    <div className="w-full h-full hidden xl:flex flex-col justify-center items-center p-4 lg:p-6">
       <Carousel className="w-full max-w-screen-2xl overflow-x-auto snap-x scroll-smooth">
         <CarouselContent className="grid grid-flow-col auto-cols-[calc(100%/3)]">
           {data?.getAdsQuery && data.getAdsQuery.length > 0 ? (

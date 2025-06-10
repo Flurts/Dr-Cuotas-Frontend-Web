@@ -128,14 +128,14 @@ export const EvidenceForm = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8 border border-drcuotasPrimary-bg mx-10">
+    <div className="bg-white  shadow-md p-8 border border-drcuotasPrimary-bg mx-10">
       <h2 className="text-2xl font-bold text-drcuotasPrimary-text mb-6">
         Crear Evidencia
       </h2>
 
       {message && (
         <div
-          className={`p-3 mb-4 rounded ${
+          className={`p-3 mb-4  ${
             message.includes('Error')
               ? 'bg-red-100 text-red-700'
               : 'bg-green-100 text-green-700'
@@ -159,7 +159,7 @@ export const EvidenceForm = () => {
             onChange={(e) => {
               setType(e.target.value);
             }}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-3 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             <option value={EvidenceType.YOUTUBE}>YouTube</option>
             <option value={EvidenceType.MEDIA}>Media</option>
@@ -181,7 +181,7 @@ export const EvidenceForm = () => {
               setLink(e.target.value);
             }}
             placeholder="https://"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-3 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
         </div>
@@ -228,7 +228,7 @@ export const EvidenceForm = () => {
               value={image}
               onChange={handleImageUrlChange}
               placeholder="https://ejemplo.com/imagen.jpg"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500"
               required
             />
           ) : (
@@ -238,7 +238,7 @@ export const EvidenceForm = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+                className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 file:mr-4 file:py-2 file:px-4  file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
                 required
               />
               <p className="text-sm text-gray-500">
@@ -262,11 +262,11 @@ export const EvidenceForm = () => {
                   Eliminar
                 </button>
               </div>
-              <div className="border-2 border-gray-200 rounded-lg p-2">
+              <div className="border-2 border-gray-200 p-2">
                 <img
                   src={imagePreview}
                   alt="Vista previa"
-                  className="max-w-full max-h-48 object-contain rounded"
+                  className="max-w-full max-h-48 object-contain "
                 />
               </div>
               {imageFile && (
@@ -282,7 +282,7 @@ export const EvidenceForm = () => {
         <button
           type="submit"
           disabled={isSubmitting || !image}
-          className="w-full bg-drcuotasPrimary hover:bg-drcuotasSecondaryPrimaryColor-bg text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-drcuotasPrimary hover:bg-drcuotasSecondaryPrimaryColor-bg text-white font-bold py-2 px-4  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Procesando...' : 'Crear Evidencia'}
         </button>

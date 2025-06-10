@@ -148,7 +148,7 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
                 href="/financing"
                 className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
-                Financiación
+                Trasformación
               </Link>
               <Link
                 href="/professionals"

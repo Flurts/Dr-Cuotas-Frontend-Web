@@ -191,7 +191,7 @@ export default function StoreView() {
         <div
           className={`${showFilters ? 'block' : 'hidden'} xl:block xl:w-80 xl:flex-shrink-0`}
         >
-          <div className="bg-white w-full h-screen border p-4 flex flex-col gap-4">
+          <div className="bg-white w-full xl:h-screen border 500 p-4 hidden lg:flex flex-col gap-4">
             <div className="flex items-center justify-between mb-4 lg:mb-6">
               <h2 className="text-sm ">Filtros</h2>
               <button onClick={clearFilters} className="text-sm text-blue-600 ">
@@ -209,7 +209,7 @@ export default function StoreView() {
                 onChange={(e) => {
                   handleFilterChange('category', e.target.value);
                 }}
-                className="w-full p-2.5 lg:p-3 text-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2.5 lg:p-3 text-sm border  focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">Todas las categorías</option>
                 {Object.entries(categoryLabels).map(([key, label]) => (
@@ -236,7 +236,7 @@ export default function StoreView() {
                       e.target.value ? Number(e.target.value) : null,
                     );
                   }}
-                  className="p-2.5 lg:p-3 text-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="p-2.5 lg:p-3 text-sm border focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <input
                   type="number"
@@ -248,7 +248,7 @@ export default function StoreView() {
                       e.target.value ? Number(e.target.value) : null,
                     );
                   }}
-                  className="p-2.5 lg:p-3 text-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="p-2.5 lg:p-3 text-sm border focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function StoreView() {
         {/* Contenido principal */}
         <div className="w-full  ">
           {/* Barra de búsqueda y controles */}
-          <div className="bg-white mb-4">
+          <div className="bg-white ">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
               {/* Búsqueda */}
               <div className="relative flex-1 max-w-full ">
@@ -270,7 +270,7 @@ export default function StoreView() {
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                   }}
-                  className="w-full pl-10 pr-4 py-2.5 lg:py-3 text-sm border  focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 lg:py-3 text-sm border  focus:ring-2 focus:ring-blue-500 "
                 />
               </div>
 

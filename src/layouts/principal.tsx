@@ -5,7 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { FiMenu, FiShoppingCart, FiUser } from 'react-icons/fi';
+import {
+  FiHeart,
+  FiMail,
+  FiMenu,
+  FiMessageSquare,
+  FiShoppingCart,
+  FiUser,
+  FiUsers,
+} from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 import { RxExit } from 'react-icons/rx';
 import { useSelector } from 'react-redux';
@@ -107,23 +115,20 @@ const PrincipalLayout = ({ children, className }: Props) => {
       <nav
         className={`${
           sticky ? 'sticky top-0' : 'relative'
-        } z-50 flex w-full h-24  justify-center lg:justify-end items-center  bg-white shadow-md  transition-transform duration-500  ${
+        } z-50 flex w-full h-24  justify-center sm:justify-end items-center  bg-white shadow-md  transition-transform duration-500  ${
           hidden ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
         {/* Imagen */}
         <>
-          <div className="flex w-full items-end justify-center">
-            <Link
-              href="/"
-              className="font-extrabold uppercase leading-tight tracking-wide text-xs w-auto"
-            >
+          <div className="flex w-full lg:items-center lg:justify-center p-4 lg:p-0">
+            <Link href="/">
               <Image
                 src="/images/logo/logo-1.svg"
                 alt="Logo"
-                width={110}
-                height={110}
-                className="w-40 h-full"
+                width={100}
+                height={100}
+                className="w-24 lg:w-40 h-full"
               />
             </Link>
           </div>
@@ -148,7 +153,7 @@ const PrincipalLayout = ({ children, className }: Props) => {
                 href="/financing"
                 className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
-                Financiación
+                Trasformación
               </Link>
               <Link
                 href="/professionals"
@@ -212,22 +217,22 @@ const PrincipalLayout = ({ children, className }: Props) => {
             )}
 
             <button
-              className="text-drcuotasPrimary lg:hidden flex items-center justify-center rounded-xl w-10 h-10"
+              className="text-drcuotasSecondaryPrimaryColor-text lg:hidden flex items-center justify-center"
               onClick={handleMenuToggle}
             >
-              <FiMenu className="text-2xl" />
+              <FiMenu />
             </button>
           </div>
         </>
       </nav>
       {isMenuOpen && (
         <div
-          className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-50 z-50"
+          className="fixed inset-0 backdrop-blur-xl bg-drcuotasSecondaryPrimaryColor bg-opacity-20 z-50"
           onClick={handleMenuToggle}
         ></div>
       )}
       <div
-        className={`fixed top-0 right-0 h-full w-52 lg:w-64 bg-white  border  transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 z-50`}
+        className={`fixed top-0 right-0 h-full w-64 bg-white  shadow-2xl shadow-white  transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-600"
@@ -235,57 +240,80 @@ const PrincipalLayout = ({ children, className }: Props) => {
         >
           <IoClose className="text-2xl" />
         </button>
-        <ul className="p-6 space-y-4">
+        <ul className="p-4 flex flex-col gap-4">
           {!isLogged ? (
             <li>
               <Link
                 href="/login"
-                className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+                className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
               >
-                Iniciar Sesión
+                <FiUser />
+                <p>Ingresar</p>
               </Link>
             </li>
           ) : (
-            <li>
-              <Link
-                href="/account"
-                className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+            <div className="w-full flex flex-col gap-4">
+              <li>
+                <Link
+                  href={getAccountUrl()}
+                  className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
+                >
+                  <FiUser />
+                  <p>Perfil</p>
+                </Link>
+              </li>
+              <button
+                onClick={HandleLogOut}
+                className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
               >
-                Cuenta
-              </Link>
-            </li>
+                <RxExit />
+                <p>Salir</p>
+              </button>
+            </div>
           )}
-
           <li>
             <Link
-              href="/"
-              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              href="/store"
+              className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
             >
-              Inicio
+              <FiShoppingCart />
+              <p>Cirujías</p>
             </Link>
           </li>
           <li>
             <Link
-              href="/store"
-              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              href="/financing"
+              className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
             >
-              Tienda
+              <FiHeart />
+              <p>Trasformación</p>
             </Link>
           </li>
           <li>
             <Link
               href="/professionals"
-              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
             >
-              Doctores
+              <FiUsers />
+              <p>Cirujanos</p>
             </Link>
           </li>
           <li>
             <Link
               href="/faq"
-              className="text-drcuotasPrimary font-bold uppercase leading-tight tracking-tight"
+              className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
             >
-              Soporte
+              <FiMessageSquare />
+              <p>Preguntas</p>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/contact"
+              className="hover:text-drcuotasPrimary transition-all durations-500 flex flex-row gap-2 items-center leading-tight tracking-tight"
+            >
+              <FiMail />
+              <p>Contacto</p>
             </Link>
           </li>
         </ul>

@@ -89,7 +89,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
             className="z-0"
           />
           {/* Overlay oscuro */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(192,132,252,0.5)] to-[rgba(59,130,246,0.5)]   z-10"></div>
+          <div className="absolute inset-0 bg-drcuotasSecondaryPrimaryColor-text bg-opacity-50   z-10"></div>
 
           {/* Contenido sobre la imagen */}
           <div className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center">
