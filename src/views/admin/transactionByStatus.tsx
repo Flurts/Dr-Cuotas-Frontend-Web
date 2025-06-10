@@ -24,6 +24,7 @@ interface Transaction {
   status: string;
   user: User;
   created_at: string;
+  amount?: number; // Agregado para manejar el monto de la transacción
 }
 
 interface TransactionByStatusProps {
@@ -56,6 +57,7 @@ export default function TransactionByStatus({
             }
             created_at
             id
+            amount
           }
         }
       `;
@@ -130,7 +132,7 @@ export default function TransactionByStatus({
               title={adjudicated.surgery?.name || `Transacción ${index + 1}`}
               status={transaction.status}
               user={transaction.user}
-              amount={adjudicated.quota_price || 0}
+              amount={transaction.amount ?? 0}
               date={new Date(transaction.created_at).toLocaleDateString()}
               type={'income'}
               description={

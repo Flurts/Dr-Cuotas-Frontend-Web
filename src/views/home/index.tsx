@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 
-import AdsModal from '@/components/common/ViewElements/AdComponents';
 import CarouselHome from '@/components/common/ViewElements/Corousel';
 import KnowOurProfessionals from '@/components/common/ViewElements/KnowOurProfessionals';
 import OurServices from '@/components/common/ViewElements/OurServices';

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FiChevronDown, FiChevronLeft } from 'react-icons/fi';
 
+import { toast } from '@/components/ui/use-toast';
 import settings from '@/settings';
 
 // Define TypeScript interface for adjudicated data
@@ -150,9 +151,6 @@ export default function ProductPage() {
 
     console.log('📌 ID adjudicado enviado:', query.adjudicatedId);
 
-    // Hardcodear para debugging
-    const hardcodedAmount = 35000;
-
     const requestPayload = {
       query: `
       mutation CreateTransaction($adjudicatedId: String!, $amount: Float!) {
@@ -164,7 +162,7 @@ export default function ProductPage() {
     `,
       variables: {
         adjudicatedId: query.adjudicatedId,
-        amount: hardcodedAmount,
+        amount: adjudicatedData!.quota_price * selectedQuotas,
       },
     };
 
@@ -235,10 +233,16 @@ export default function ProductPage() {
       console.log('✅ AdjudicadosId recibido:', transactionData.AdjudicadosId);
       console.log('✅ Amount recibido:', transactionData.amount);
       console.log('✅ Tipo de amount recibido:', typeof transactionData.amount);
+      void router.push('/account');
 
-      alert(
-        `Transacción creada exitosamente.\nID: ${transactionData.AdjudicadosId}\nMonto: ${transactionData.amount}`,
-      );
+      toast({
+        title: 'Transacción creada exitosamente',
+        description: `ID de adjudicación: ${transactionData.AdjudicadosId} Espera confirmación de pago.`,
+        duration: 5000,
+        variant: 'success',
+      });
+
+      void router.push('/account');
       return transactionData.AdjudicadosId;
     } catch (error) {
       console.error('🚨 Error completo:', error);
@@ -280,9 +284,9 @@ export default function ProductPage() {
         first_total: totalAmount, // Multiplicado por las cuotas seleccionadas
         second_due_date: null,
         second_total: null,
-        back_url_success: 'http://localhost:3000/account',
-        back_url_pending: 'http://localhost:3000/',
-        back_url_rejected: 'http://localhost:3000/',
+        back_url_success: 'https://www.drcuotas.com/account',
+        back_url_pending: 'https://www.drcuotas.com/account',
+        back_url_rejected: 'https://www.drcuotas.com/account',
         adjudicadosId: String(query.adjudicatedId), // Convertir a string
         amount: totalAmount, // Monto total a pagar
       },

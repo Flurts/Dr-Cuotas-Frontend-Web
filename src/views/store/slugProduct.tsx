@@ -312,20 +312,160 @@ const ProductPage = ({ surgeryId }: ProductPageProps) => {
   };
 
   // Función para pago directo (sin cambios)
-  const subscribeSurgerieDirect = () => {
-    if (!selectedSurgery || !selectedDoctorId || !termsAccepted) {
-      alert('Por favor complete todos los campos y acepte los términos');
+  // Función para pago directo actualizada para ProductPage
+  const subscribeSurgerieDirect = async () => {
+    if (!termsAccepted) {
+      alert('Debes aceptar los términos y condiciones para continuar.');
       return;
     }
 
-    console.log('Procesando pago directo:', {
-      surgery: selectedSurgery,
-      doctor: selectedDoctorId,
-      cuotas: selectedQuota,
-      amount: selectedSurgery.amount / selectedQuota,
-    });
+    if (!selectedSurgery || !selectedDoctorId) {
+      alert('Por favor complete todos los campos requeridos.');
+      return;
+    }
 
-    // Aquí iría la lógica para el pago directo
+    localStorage.setItem('isRegister', '1');
+    localStorage.setItem('surgeryId', selectedSurgery.id);
+
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      router.push('/login');
+      console.error('No access token found');
+      return;
+    }
+
+    const { id, amount: price } = selectedSurgery;
+    console.log('ID enviado:', id);
+    console.log('Precio total:', price);
+    console.log('Número de cuotas:', selectedQuota);
+    console.log('Precio por cuota:', price / selectedQuota);
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+          mutation SubscribeSurgerie($surgerieId: String!, $phone: String!, $email: String!, $quotaPrice: Float!, $totalPrice: Float!, $quotasNumber: Int!, $documentIdentification: String!, $lastName: String!, $firstName: String!, $doctorId: String) {
+            subscribeSurgerie(surgerieId: $surgerieId, phone: $phone, email: $email, quotaPrice: $quotaPrice, totalPrice: $totalPrice, quotasNumber: $quotasNumber, document_identification: $documentIdentification, last_name: $lastName, first_name: $firstName, doctorId: $doctorId) {
+              adjudicated_status
+              id
+            }
+          }
+        `,
+          variables: {
+            surgerieId: id,
+            phone: '5551234567',
+            email: 'example@email.com',
+            documentIdentification: 'A123456789',
+            lastName: 'Doe',
+            firstName: 'John',
+            quotaPrice: Math.floor(price / selectedQuota),
+            totalPrice: price,
+            quotasNumber: selectedQuota,
+            doctorId: selectedDoctorId,
+          },
+        }),
+      });
+
+      const result = await response.json();
+      console.log('📌 Respuesta completa de la API:', result);
+
+      if (!response.ok) {
+        console.error('GraphQL Error:', result.errors);
+        throw new Error(result.errors?.[0]?.message || 'Error en la API');
+      }
+
+      if (result.errors) {
+        console.error('❌ GraphQL Errors:', result.errors);
+        throw new Error(
+          result.errors[0]?.message || 'Error desconocido en GraphQL',
+        );
+      }
+
+      if (!result.data?.subscribeSurgerie) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de subscribeSurgerie');
+      }
+
+      const adjudicadosId = result.data.subscribeSurgerie.id;
+      console.log('✅ ID adjudicado:', adjudicadosId);
+
+      // Mostrar alert de confirmación y redirigir
+      alert(
+        'El pago se ha realizado. Por favor, Espera a la confirmacion de un adminstrador para apreciar tu pago.',
+      );
+      router.push('/account');
+
+      // Crear la transacción
+      await createTransaction(adjudicadosId);
+      return adjudicadosId;
+    } catch (error) {
+      console.error('🚨 Error en subscribeSurgerie:', error);
+      alert(
+        'Hubo un error al procesar la suscripción. Por favor intente nuevamente.',
+      );
+    }
+  };
+
+  // Función para crear la transacción (agregar esta función a ProductPage)
+  const createTransaction = async (adjudicatedId: string) => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      router.push('/login');
+      console.error('No access token found');
+      return;
+    }
+
+    console.log('📌 ID adjudicado enviado:', adjudicatedId);
+
+    try {
+      const response = await fetch(`${settings.API_URL}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+         mutation CreateTransaction($amount: Float!, $adjudicatedId: String!) {
+  createTransaction(amount: $amount, adjudicatedId: $adjudicatedId) {
+    AdjudicadosId
+  }
+}
+        `,
+          variables: {
+            adjudicatedId,
+            amount: selectedSurgery
+              ? Math.floor(selectedSurgery.amount / selectedCuotas)
+              : 0, // Asegurarse de que el monto sea un número entero
+          },
+        }),
+      });
+
+      const result = await response.json();
+      console.log('📌 Respuesta completa de la API:', result);
+
+      if (!response.ok || result.errors) {
+        console.error('❌ GraphQL Error:', result.errors);
+        throw new Error(result.errors?.[0]?.message || 'Error en la API');
+      }
+
+      if (!result.data?.createTransaction) {
+        console.error('❌ Datos inválidos:', result);
+        throw new Error('No se recibió ID de createTransaction');
+      }
+
+      const adjudicadosId = result.data.createTransaction.AdjudicadosId;
+      console.log('✅ ID adjudicado:', adjudicadosId);
+      alert('Transacción creada exitosamente.');
+      return adjudicadosId;
+    } catch (error) {
+      console.error('🚨 Error en createTransaction:', error);
+    }
   };
 
   // Mostrar error si hay problemas
