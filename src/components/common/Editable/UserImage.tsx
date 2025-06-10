@@ -48,7 +48,7 @@ const CustomImageUploader: React.FC<ImageUploaderProps> = ({
             alt="avatar"
             width={width}
             height={height}
-            className="w-full h-full rounded-full"
+            className="w-full h-full "
           />
           {/* <span
               className={`absolute bottom-0 ${style === 'color' ? 'bg-drcuotasPrimary-bg text-white' : 'bg-white text-drcuotasPrimary-text text-lg tracking-tight leading-tight uppercase font-black '} w-[80px] md:w-[60%] h-8 rounded-xl text-center`}

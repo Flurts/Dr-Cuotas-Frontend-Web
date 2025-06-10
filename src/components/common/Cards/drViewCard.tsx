@@ -113,13 +113,13 @@ const fetchAdjudicated = async (
 };
 
 const SurgeryCard = ({ surgeries }: { surgeries: Surgery[] }) => (
-  <div className="w-full h-full p-4   rounded-xl ">
+  <div className="w-full h-full p-4   ">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer">
       {surgeries.length > 0 ? (
         surgeries.map((surgery, index) => (
           <div
             key={index}
-            className="bg-drcuotasPrimary-bg bg-opacity-10 rounded-xl p-4 flex flex-col gap-4"
+            className="bg-drcuotasPrimary-bg bg-opacity-10  p-4 flex flex-col gap-4"
           >
             <>
               <div className="w-full flex flex-row justify-between items-center">
@@ -127,7 +127,7 @@ const SurgeryCard = ({ surgeries }: { surgeries: Surgery[] }) => (
                   {surgery.name}
                 </h2>
                 <span
-                  className={`px-2 py-2 rounded-xl text-xs  font-bold uppercase leading-tight tracking-tight ${
+                  className={`px-2 py-2  text-xs  font-bold uppercase leading-tight tracking-tight ${
                     surgery.status === 'Active'
                       ? 'bg-green-100 text-green-800'
                       : 'bg-red-100 text-red-800'
@@ -165,20 +165,20 @@ const SurgeryCard = ({ surgeries }: { surgeries: Surgery[] }) => (
 );
 
 const AdjudicatedCard = ({ adjudicated }: { adjudicated: Adjudicated[] }) => (
-  <div className="w-full h-full p-4 rounded-xl">
+  <div className="w-full h-full p-4 ">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer">
       {adjudicated.length > 0 ? (
         adjudicated.map((adj, index) => (
           <div
             key={index}
-            className="bg-drcuotasPrimary-bg bg-opacity-10 rounded-xl p-4 flex flex-col gap-4"
+            className="bg-drcuotasPrimary-bg bg-opacity-10  p-4 flex flex-col gap-4"
           >
             <div className="w-full flex flex-row justify-between items-center">
               <h2 className="text-sm text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
                 {adj.user.first_name}
               </h2>
               <span
-                className={`px-2 py-2 rounded-xl text-xs font-bold uppercase leading-tight tracking-tight ${
+                className={`px-2 py-2  text-xs font-bold uppercase leading-tight tracking-tight ${
                   adj.status === 'Active'
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
@@ -231,14 +231,14 @@ const DrViewCard = () => {
   return (
     <div className="w-full   lg:p-10">
       <div className="w-full flex flex-col gap-4">
-        <div className="bg-white rounded-xl border  border-drcuotasPrimary-bg p-4">
+        <div className="bg-white  border  border-drcuotasPrimary-bg p-4">
           <p className="text-xl text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
             Mis Cirugías
           </p>
           <SurgeryCard surgeries={surgeries} />
         </div>
 
-        <div className="bg-white rounded-xl border border-drcuotasPrimary-bg p-4">
+        <div className="bg-white  border border-drcuotasPrimary-bg p-4">
           <p className="text-xl text-drcuotasPrimary-text font-bold uppercase leading-tight tracking-tight">
             Mis Adjudicados
           </p>

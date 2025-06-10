@@ -73,8 +73,8 @@ const ProfessionalView = () => {
       <div
         className={
           viewMode === 'grid'
-            ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'
-            : 'flex flex-col gap-4'
+            ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 '
+            : 'flex flex-col '
         }
       >
         {doctorsList.length > 0 ? (
@@ -82,7 +82,7 @@ const ProfessionalView = () => {
             <Link
               key={doctor.id}
               href={`/view-account/doctor/${doctor.id}`}
-              className="w-full h-auto border  overflow-hidden bg-white flex cursor-pointer hover:shadow-lg transition duration-300 "
+              className="w-full h-auto border   overflow-hidden   flex cursor-pointer  transition duration-300 "
             >
               <div className="w-40 h-40 flex items-center justify-center bg-gray-200">
                 <Image
@@ -99,19 +99,15 @@ const ProfessionalView = () => {
                 />
               </div>
               <div className="p-4 flex flex-col justify-center">
-                <h3 className="text-drcuotasTertiary-text text-xs lg:text-base font-bold uppercase leading-tight tracking-tight">
+                <h3 className="text-xs lg:text-base font-bold uppercase leading-tight tracking-tight">
                   {doctor.user!.first_name} {doctor.user!.last_name}
                 </h3>
-                <p className="hidden lg:block text-xs text-drcuotasTertiary-text">
-                  Cirujano
-                </p>
+                <p className="text-xs leading-tight tracking-tight">Cirujano</p>
               </div>
             </Link>
           ))
         ) : (
-          <span className="text-drcuotasTertiary-text text-sm">
-            No hay profesionales disponibles
-          </span>
+          <span className="text-xs">No hay profesionales disponibles</span>
         )}
       </div>
     </div>

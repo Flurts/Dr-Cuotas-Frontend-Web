@@ -28,7 +28,7 @@ const plans = [
     highlight: true,
   },
   {
-    title: '16 Cuotas',
+    title: '12 Cuotas',
     subtitle: 'Plan extendido de financiamiento',
     percentage: '6.25%',
     details: [
@@ -43,22 +43,22 @@ const plans = [
 
 export default function Cuotas({ className }: { className?: string }) {
   return (
-    <div className="hidden lg:flex flex-col items-center justify-center w-full h-screen ">
+    <div className="hidden lg:flex flex-col items-center justify-center w-full h-full gap-4 p-10">
       <TitleElements
         primaryText="¡Aprovecha la Oportunidad!"
         secondaryText="TU PLAN DE FINANCIAMIENTO"
         descriptionText=""
-        showImage={false}
+        showImage={true}
       />
 
-      <div className="w-full flex flex-row justify-center items-center gap-4">
+      <div className="w-full flex flex-row justify-center items-center ">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden  border-2  hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300 ${
+            className={`w-full max-w-[400px]  h-[500px] relative overflow-hidden  border-2 hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300 ${
               plan.highlight
-                ? 'border-white bg-gradient-to-b from-purple-400 to-blue-500'
-                : 'border bg-white'
+                ? 'border-white bg-gradient-to-t from-drcuotasSecondaryPrimaryColor-bg to-drcuotasSecondaryPrimaryColor-text'
+                : 'border-white bg-gradient-to-t from-drcuotasSecondaryPrimaryColor-bg to-drcuotasSecondaryPrimaryColor-text'
             }`}
           >
             {/* Contenido de la tarjeta */}
@@ -67,14 +67,14 @@ export default function Cuotas({ className }: { className?: string }) {
               <div className="text-center">
                 <h2
                   className={`text-2xl font-black uppercase leading-tight tracking-tight ${
-                    plan.highlight ? 'text-white' : 'text-gray-800'
+                    plan.highlight ? 'text-white' : 'text-white'
                   }`}
                 >
                   {plan.title}
                 </h2>
                 <p
                   className={`text-sm mb-4 ${
-                    plan.highlight ? 'text-blue-100' : 'text-gray-600'
+                    plan.highlight ? 'text-blue-100' : 'text-white'
                   }`}
                 >
                   {plan.subtitle}
@@ -83,7 +83,7 @@ export default function Cuotas({ className }: { className?: string }) {
                 {/* Porcentaje destacado */}
                 <div
                   className={`text-4xl font-bold mb-6 ${
-                    plan.highlight ? 'text-white' : 'text-blue-600'
+                    plan.highlight ? 'text-white' : 'text-white'
                   }`}
                 >
                   {plan.percentage}
@@ -97,14 +97,14 @@ export default function Cuotas({ className }: { className?: string }) {
                     <li key={detailIndex} className="flex items-start">
                       <span
                         className={`mr-2 ${
-                          plan.highlight ? 'text-blue-200' : 'text-blue-500'
+                          plan.highlight ? 'text-white' : 'text-white'
                         }`}
                       >
                         ✓
                       </span>
                       <span
                         className={`text-sm ${
-                          plan.highlight ? 'text-white' : 'text-gray-700'
+                          plan.highlight ? 'text-white' : 'text-white'
                         }`}
                       >
                         {detail}

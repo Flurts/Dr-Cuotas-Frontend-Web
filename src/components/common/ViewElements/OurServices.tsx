@@ -8,42 +8,36 @@ import TitleElements from './TitleElements';
 function OurServices() {
   const services = [
     {
-      imageSrc: '/images/surgerys/girl_face.svg',
+      imageSrc: '/images/rostro.jpg',
       link: '/store?category=FacialSurgeries',
       title: 'Rostro',
       description: '',
     },
     {
-      imageSrc: '/images/surgerys/girl_chest.svg',
+      imageSrc: '/images/mamarios.jpg',
       link: '/store?category=BreastSurgeries',
       title: 'Mamarios',
       description: '',
     },
     {
-      imageSrc: '/images/surgerys/girl_sculpture.svg',
+      imageSrc: '/images/cuerpo.jpg',
       link: '/store?category=BodySurgeries',
       title: 'Cuerpo',
-      description: '',
-    },
-    {
-      imageSrc: '/images/surgerys/chest_body.svg',
-      link: '/store',
-      title: 'General',
       description: '',
     },
   ];
 
   return (
-    <div className="w-full h-screen hidden lg:flex flex-col justify-center items-center">
+    <div className="w-full h-screen flex flex-col justify-center items-center sm:p-10">
       <div className="w-full ">
         <TitleElements
-          primaryText="Nuestras mejores Categorias"
+          primaryText="¡Visita Nuestra tienda!"
           secondaryText="nuestras especialidades"
-          descriptionText=" "
+          descriptionText=""
           showImage={true}
         />
 
-        <div className="w-full flex flex-row justify-center items-center gap-4">
+        <div className="w-full flex flex-row justify-center items-center p-4">
           {services.length > 0 ? (
             services.map((service, index) => (
               <ServiceCard

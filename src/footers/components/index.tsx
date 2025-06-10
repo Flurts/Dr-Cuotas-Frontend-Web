@@ -30,13 +30,13 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
 
   return (
     <>
-      <div className="w-full h-60 hidden lg:flex flex-row justify-center items-center">
+      <div className="w-full h-60 flex flex-col lg:flex-row justify-center items-center">
         {/* Options */}
-        <div className="w-full flex flex-row justify-end items-center gap-4">
+        <div className="w-full flex flex-row justify-center lg:justify-end items-center gap-4">
           <>
             <Link
               href="/"
-              className="w-auto h-auto flex items-center justify-center   leading-tight tracking-tight  text-xl "
+              className="w-auto h-auto flex items-center justify-center   leading-tight tracking-tight  text-lg lg:text-xl "
             >
               <FiHome />
             </Link>
@@ -44,7 +44,7 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
           <>
             <Link
               href="/store"
-              className="w-auto h-auto flex items-center justify-center   leading-tight tracking-tight text-xl"
+              className="w-auto h-auto flex items-center justify-center   leading-tight tracking-tight text-lg lg:text-xl"
             >
               <FiShoppingCart />
             </Link>
@@ -52,7 +52,7 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
           <>
             <Link
               href="/faq"
-              className="w-auto h-auto flex items-center justify-center   leading-tight tracking-tight text-xl"
+              className="w-auto h-auto flex items-center justify-center   leading-tight tracking-tight text-lg lg:text-xl"
             >
               <FiMessageSquare />
             </Link>
@@ -60,7 +60,7 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
           <>
             <button
               onClick={HandleLogOut}
-              className="w-auto h-auto flex items-center justify-center  leading-tight ttracking-tight  text-xl"
+              className="w-auto h-auto flex items-center justify-center  leading-tight ttracking-tight  text-lg lg:text-xl"
             >
               <FiRefreshCw />
             </button>
@@ -77,7 +77,7 @@ const FooterPrincipal = ({ toggleDarkMode, darkMode }) => {
         </div>
 
         {/* Social media */}
-        <div className="w-full flex flex-row justify-start items-center gap-4">
+        <div className="w-full hidden lg:flex flex-row justify-center lg:justify-start items-center gap-4">
           <>
             <Link
               href="/"

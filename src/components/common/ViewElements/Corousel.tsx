@@ -4,7 +4,7 @@ import { TypeAnimation } from 'react-type-animation';
 const CarouselHome = () => {
   return (
     <div
-      className="w-full h-[80vh] sm:h-screen flex flex-col justify-center items-center"
+      className="w-full h-screen flex flex-col justify-center items-center"
       style={{
         backgroundImage: 'url(/images/banners/BannerBody.svg)',
         backgroundSize: 'cover',
@@ -14,7 +14,7 @@ const CarouselHome = () => {
       <>
         <div className="lg:max-w-screen-2xl h-full flex flex-col justify-center gap-4">
           {/* Título principal (fijo) */}
-          <span className="text-xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-drcuotasPrimary  uppercase leading-tight tracking-tight text-center">
+          <span className="text-lg sm:text-4xl lg:text-5xl xl:text-6xl font-black text-drcuotasSecondaryPrimaryColor-text  uppercase leading-tight tracking-tight text-center p-6 lg:p-0">
             Transforma tu belleza con los mejores expertos en cirugía estética
           </span>
 

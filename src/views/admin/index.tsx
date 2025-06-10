@@ -20,7 +20,6 @@ import { Status } from '@/utils/constants';
 
 import { DoctorByStatus } from './doctorByStatus';
 import LotteryComponent from './Lottery';
-import RevenueChart from './revenuechart';
 import { SurgeryByStatus } from './surgeryByStatus';
 import TransactionByStatus from './transactionByStatus';
 
@@ -342,18 +341,6 @@ export default function AdminView() {
                 </>
                 <></>
               </Accordion>
-            </div>
-          </>
-          <>
-            <div className="w-full h-full hidden lg:flex flex-col justify-center items-center p-4">
-              <TitleElements
-                primaryText="Resumen de cada Mes"
-                secondaryText="Grafica de Ventas"
-                descriptionText=""
-                showImage={false}
-              />
-
-              <RevenueChart />
             </div>
           </>
         </div>

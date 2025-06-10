@@ -142,19 +142,19 @@ const SimpleLayoutTwo = ({ children, className }: Props) => {
                 href="/store"
                 className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
-                Tienda
+                Cirujías
               </Link>
               <Link
                 href="/financing"
                 className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
-                Financiación
+                Trasformación
               </Link>
               <Link
                 href="/professionals"
                 className=" leading-tight tracking-tight font-bold text-xs  hover:text-drcuotasPrimary transition-all durations-500"
               >
-                Doctores
+                Cirujanos
               </Link>
               <Link
                 href="/faq"

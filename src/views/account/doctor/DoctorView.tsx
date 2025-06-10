@@ -34,6 +34,8 @@ export default function DoctorView() {
   const [userData, setUserData] = useState<{
     first_name: string;
     last_name: string;
+    profile_picture: string | null;
+    id: string;
   } | null>(null);
 
   // State for surgery creation
@@ -143,6 +145,7 @@ export default function DoctorView() {
             first_name
             last_name
             profile_picture
+            id
           }
         }
       }
@@ -163,6 +166,7 @@ export default function DoctorView() {
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
       const data = await response.json();
+      console.log('User data response:', data);
       if (data.errors)
         throw new Error(`GraphQL Error: ${JSON.stringify(data.errors)}`);
 
@@ -389,7 +393,7 @@ export default function DoctorView() {
         {/* Profile header */}
         <div className="flex flex-col md:flex-row gap-4 -mt-16 items-center">
           {/* Doctor Image */}
-          <div className="h-32 w-32 border-2 border-white bg-gray-200 rounded-full overflow-hidden shadow-md">
+          <div className="h-32 w-32 border-2 border-white bg-gray-200  overflow-hidden shadow-md">
             <CustomImageUploader
               width={120}
               height={120}
@@ -414,7 +418,7 @@ export default function DoctorView() {
           <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center justify-end">
             <Link
               href="/account/settings"
-              className="w-full  sm:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text rounded-xl"
+              className="w-full  sm:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-white border border-drcuotasPrimary-bg text-drcuotasPrimary-text "
             >
               <IoSettings className="text-2xl" />
               <span className="leading-tight tracking-tight">Perfil</span>
@@ -425,7 +429,7 @@ export default function DoctorView() {
               onClick={() => {
                 setIsSurgeryModalOpen(true);
               }}
-              className="w-full sm:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white rounded-xl"
+              className="w-full sm:w-40 h-14 flex flex-row justify-center items-center gap-2 bg-drcuotasPrimary-bg border border-white text-white "
             >
               <span className="w-full">Crear Cirugía</span>
             </button>
@@ -441,7 +445,7 @@ export default function DoctorView() {
       {isSurgeryModalOpen && (
         <div className="fixed inset-0 w-full h-full backdrop-blur-md bg-drcuotasSecondary-bg bg-opacity-60 flex flex-col-reverse lg:flex-row justify-center items-center z-50 gap-2 p-10">
           {/* Panel de Imagen - SIMPLIFICADO PARA UNA IMAGEN */}
-          <div className="w-[40vw] h-[45vw] bg-white rounded-xl hidden lg:flex flex-col p-4">
+          <div className="w-[40vw] h-[45vw] bg-white hidden lg:flex flex-col p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl text-drcuotasPrimary-text font-black uppercase leading-tight tracking-tight">
                 Imagen de la Cirugía
@@ -457,12 +461,12 @@ export default function DoctorView() {
               className="hidden"
             />
 
-            <div className="w-full h-full rounded-xl flex flex-col gap-2 py-4">
+            <div className="w-full h-full s flex flex-col gap-2 py-4">
               {/* Si no hay imagen, mostrar botón para seleccionar */}
               {!newSurgery.surgeryImage && (
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-full rounded-xl border-2 border-dashed border-drcuotasPrimary-bg flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
+                  className="w-full h-full  border-2 border-dashed border-drcuotasPrimary-bg flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
                 >
                   <LucideImage className="text-4xl text-drcuotasPrimary-text mb-4" />
                   <span className="text-drcuotasPrimary-text font-medium text-lg">
@@ -476,7 +480,7 @@ export default function DoctorView() {
 
               {/* Vista previa de la imagen seleccionada */}
               {newSurgery.surgeryImage && (
-                <div className="w-full h-full rounded-xl border border-drcuotasPrimary-bg relative overflow-hidden">
+                <div className="w-full h-full border border-drcuotasPrimary-bg relative overflow-hidden">
                   <img
                     src={newSurgery.surgeryImage}
                     alt="Preview"
@@ -485,7 +489,7 @@ export default function DoctorView() {
                   <div className="absolute top-2 right-2 flex gap-1">
                     <button
                       onClick={removeImage}
-                      className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                      className="bg-red-500 text-white p-2  hover:bg-red-600 transition-colors"
                     >
                       <LucideTrash2 className="w-4 h-4" />
                     </button>
@@ -493,7 +497,7 @@ export default function DoctorView() {
                   <div className="absolute bottom-2 left-2 right-2">
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-full bg-drcuotasPrimary-bg text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                      className="w-full bg-drcuotasPrimary-bg text-white py-2 px-4  hover:bg-blue-600 transition-colors"
                     >
                       Cambiar Imagen
                     </button>
@@ -504,7 +508,7 @@ export default function DoctorView() {
           </div>
 
           {/* Panel del Formulario - SIN CAMBIOS */}
-          <div className="w-full h-screen lg:h-[45vw] bg-white rounded-xl  relative p-4 flex flex-col ">
+          <div className="w-full h-screen lg:h-[45vw] bg-white   relative p-4 flex flex-col ">
             {/* Close Button */}
             <button
               onClick={() => {
@@ -538,7 +542,7 @@ export default function DoctorView() {
                   name="name"
                   value={newSurgery.name}
                   onChange={handleInputChange}
-                  className="w-full border rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text border-drcuotasPrimary-bg leading-tight tracking-tight"
+                  className="w-full border h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text border-drcuotasPrimary-bg leading-tight tracking-tight"
                   placeholder="Nombre de la cirugía"
                   required
                 />
@@ -554,7 +558,7 @@ export default function DoctorView() {
                   name="description"
                   value={newSurgery.description}
                   onChange={handleInputChange}
-                  className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                  className="w-full border border-drcuotasPrimary-bg  h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
                   placeholder="Descripción de la cirugía"
                   required
                 />
@@ -570,7 +574,7 @@ export default function DoctorView() {
                   name="amount"
                   value={newSurgery.amount}
                   onChange={handleInputChange}
-                  className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                  className="w-full border border-drcuotasPrimary-bg h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
                   placeholder="Monto de la cirugía"
                   required
                 />
@@ -587,7 +591,7 @@ export default function DoctorView() {
                     name="surgeryType"
                     value={newSurgery.surgeryType}
                     onChange={handleInputChange}
-                    className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                    className="w-full border border-drcuotasPrimary-bg  h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
                   >
                     {Object.values(SurgeryTypes).map((type) => (
                       <option key={type} value={type}>
@@ -606,7 +610,7 @@ export default function DoctorView() {
                     name="surgeryCategory"
                     value={newSurgery.surgeryCategory}
                     onChange={handleInputChange}
-                    className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                    className="w-full border border-drcuotasPrimary-bg h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
                   >
                     {Object.values(SurgeryCategories).map((category) => (
                       <option key={category} value={category}>
@@ -626,7 +630,7 @@ export default function DoctorView() {
                   name="status"
                   value={newSurgery.status}
                   onChange={handleInputChange}
-                  className="w-full border border-drcuotasPrimary-bg rounded-xl h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
+                  className="w-full border border-drcuotasPrimary-bg h-10 xl:h-14 p-2 text-xs text-drcuotasTertiary-text leading-tight tracking-tight"
                 >
                   {Object.values(Status).map((status) => (
                     <option key={status} value={status}>
@@ -646,7 +650,7 @@ export default function DoctorView() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full h-20 border-2 border-dashed border-drcuotasPrimary-bg rounded-xl flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
+                    className="w-full h-20 border-2 border-dashed border-drcuotasPrimary-bg  flex flex-col justify-center items-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
                   >
                     <LucideImage className="text-xl text-drcuotasPrimary-text" />
                     <span className="text-xs text-drcuotasPrimary-text mt-1">
@@ -654,7 +658,7 @@ export default function DoctorView() {
                     </span>
                   </button>
                 ) : (
-                  <div className="w-full h-20 rounded-xl border border-drcuotasPrimary-bg relative overflow-hidden">
+                  <div className="w-full h-20  border border-drcuotasPrimary-bg relative overflow-hidden">
                     <img
                       src={newSurgery.surgeryImage}
                       alt="Preview"
@@ -663,7 +667,7 @@ export default function DoctorView() {
                     <button
                       type="button"
                       onClick={removeImage}
-                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                      className="absolute top-1 right-1 bg-red-500 text-white p-1 hover:bg-red-600 transition-colors"
                     >
                       <LucideTrash2 className="w-3 h-3" />
                     </button>
@@ -674,7 +678,7 @@ export default function DoctorView() {
               <div className="w-full flex flex-row gap-4">
                 <button
                   type="submit"
-                  className="w-full bg-drcuotasPrimary-text text-sm text-white leading-tight font-bold tracking-tight h-10 xl:h-14 rounded-xl"
+                  className="w-full bg-drcuotasPrimary-text text-sm text-white leading-tight font-bold tracking-tight h-10 xl:h-14 "
                 >
                   Crear Cirugía{newSurgery.surgeryImage ? ' (con imagen)' : ''}
                 </button>

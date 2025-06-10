@@ -65,7 +65,9 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
   const handleCardClick = () => {
     const slug = generateSlug(title);
     // Redirigir a la página del producto con el ID
-    console.log(`Redirigiendo a /store/${id} o /surgery/${slug}?id=${id}`);
+    console.log(
+      `Redirigiendo a /store/${id}?adjudicatedId=${id} o /surgery/${slug}?id=${id}`,
+    );
     localStorage.setItem('selectedSurgeryId', id); // Guardar el ID en localStorage
     router.push(`/store/${id}`);
     // O si prefieres usar el slug generado:
@@ -87,7 +89,7 @@ const SpecialtyCard: React.FC<HomeSpecialtieCardProps> = ({
             className="z-0"
           />
           {/* Overlay oscuro */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(192,132,252,0.5)] to-[rgba(59,130,246,0.5)]   z-10"></div>
+          <div className="absolute inset-0 bg-drcuotasSecondaryPrimaryColor-text bg-opacity-50   z-10"></div>
 
           {/* Contenido sobre la imagen */}
           <div className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center">

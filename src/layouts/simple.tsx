@@ -40,7 +40,7 @@ function SimpleLayout({ children, className }: Props) {
     <>
       <div className={`${className}`}>
         <>
-          <div className="w-full h-24  flex justify-center  items-center p-2">
+          <div className="w-full h-24  flex justify-center  items-center p-2 ">
             <>
               <div className="flex w-full items-center justify-center xl:px-20">
                 <Link

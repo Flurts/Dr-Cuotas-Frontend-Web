@@ -22,7 +22,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="w-[400px] h-[500px] relative overflow-hidden  border-2 border-white hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300">
+    <div className="w-28 h-80 sm:w-[400px] sm:h-[500px] relative overflow-hidden  border-2 border-white hover:shadow-lg hover:shadow-drcuotasPrimary-bg transition-shadow duration-300">
       <Link href={link} className="block w-full h-full relative">
         {/* Placeholder mientras carga */}
         {!imageLoaded && !imageError && (
@@ -61,16 +61,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         />
 
         {/* Overlay oscuro */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-[rgba(192,132,252,0.5)] to-[rgba(59,130,246,0.5)]"></div>
+        <div className="absolute inset-0 z-10 bg-drcuotasPrimary-bg bg-opacity-50"></div>
 
         {/* Contenido sobre la imagen */}
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-4">
-          <h2 className="text-white text-xl font-bold uppercase tracking-wide">
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-end lg:justify-center text-center px-4">
+          <h2 className="text-white text-xs sm:text-xl font-bold uppercase tracking-wide">
             {title}
           </h2>
-          {description && (
-            <p className="text-white text-xs mt-2">{description}</p>
-          )}
         </div>
       </Link>
     </div>
